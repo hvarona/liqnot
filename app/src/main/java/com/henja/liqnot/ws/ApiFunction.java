@@ -3,6 +3,8 @@ package com.henja.liqnot.ws;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,5 +17,5 @@ public interface ApiFunction {
     public String getMethodToCall();
     public String getMethod();
     public List<Serializable> getParams();
-    public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception;
+    public void onResponse(JSONObject response);
 }

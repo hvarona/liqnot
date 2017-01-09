@@ -5,6 +5,8 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +56,8 @@ public class GetLimitOrders implements ApiFunction {
     }
 
     @Override
-    public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        if(frame.isTextFrame())
-            System.out.println("<<< "+frame.getPayloadText());
+    public void onResponse(JSONObject response){
+        System.out.println("<<< "+response.toString());
         /*try {
             String response = frame.getPayloadText();
             GsonBuilder builder = new GsonBuilder();
@@ -74,23 +75,4 @@ public class GetLimitOrders implements ApiFunction {
             e.printStackTrace();
         }*/
     }
-
-    /*@Override
-    public void onFrameSent(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        if(frame.isTextFrame()){
-            System.out.println(">>> "+frame.getPayloadText());
-        }
-    }
-
-    @Override
-    public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
-        //mListener.onError(new BaseResponse.Error(cause.getMessage()));
-        websocket.disconnect();
-    }
-
-    @Override
-    public void handleCallbackError(WebSocket websocket, Throwable cause) throws Exception {
-        //mListener.onError(new BaseResponse.Error(cause.getMessage()));
-        websocket.disconnect();
-    }*/
 }

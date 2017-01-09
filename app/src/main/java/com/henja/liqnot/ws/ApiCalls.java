@@ -5,7 +5,6 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,7 +52,11 @@ public class ApiCalls extends WebSocketAdapter {
         System.out.println(frame.getPayloadText());
         JSONObject incoming = new JSONObject(frame.getPayloadText());
         int index = incoming.getInt("id");
-        functions.get(index).onTextFrame(websocket, frame);
+        try {
+            functions.get(index).onResponse((JSONObject) incoming.get("result"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         functions.remove(index);
         if(functions.isEmpty()){
             websocket.disconnect();
