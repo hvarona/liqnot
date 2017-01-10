@@ -1,7 +1,5 @@
 package bo;
 
-import android.accounts.Account;
-
 import java.util.HashMap;
 
 /**
@@ -24,8 +22,8 @@ public abstract class SharedDataCentral {
     }
 
     public static void putEquivalentsRate(AssetEquivalentRate equivalentRate){
-        String base = equivalentRate.getMonitor().getSymbol();
-        String quote = equivalentRate.getCompareTo().getSymbol();
+        String base = equivalentRate.getBaseCurrency().getSymbol();
+        String quote = equivalentRate.getQuotedCurrency().getSymbol();
         if(!equivalentsRates.containsKey(base)){
             equivalentsRates.put(base,new HashMap());
         }

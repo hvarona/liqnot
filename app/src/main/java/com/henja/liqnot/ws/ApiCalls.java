@@ -8,6 +8,7 @@ import com.neovisionaries.ws.client.WebSocketFrame;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,8 +21,12 @@ public class ApiCalls extends WebSocketAdapter {
 
     private Map<Integer,ApiFunction> functions = new HashMap();
     private int lastIndex = 0;
+    private ArrayList<ApiCallsListener> listeners; //TODO call triggerOnAllDataReceived() to trigger event
 
-    public ApiCalls() {}
+
+    public ApiCalls() {
+        this.listeners = new ArrayList<ApiCallsListener>();
+    }
 
     public void addFunction(ApiFunction function){
         ++lastIndex;
@@ -81,5 +86,21 @@ public class ApiCalls extends WebSocketAdapter {
     @Override
     public void onConnectError(WebSocket websocket, WebSocketException exception) throws Exception {
         super.onConnectError(websocket, exception);
+    }
+
+
+    //METHODS FOR LISTENERS
+    public void addApiCallsListener(ApiCallsListener listener){
+        this.listeners.add(listener);
+    }
+
+    public void triggerOnAllDataReceived(){
+        for(ApiCallsListener listener : listeners){
+            listener.OnAllDataReceived();
+        }
+    }
+
+    public interface ApiCallsListener{
+        public void OnAllDataReceived();
     }
 }

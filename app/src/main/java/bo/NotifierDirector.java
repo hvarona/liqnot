@@ -65,22 +65,28 @@ public class NotifierDirector {
 
     public void execute(){
         ApiCalls apiCalls = new ApiCalls();
-        for(Notifier not : notifiers){
-            CurrencyOperatorValueNotifierRule currencyNotifier = (CurrencyOperatorValueNotifierRule) not.getRule();
-            String accountID = "1.2.143552"; //currencyNotifier.getAccount().getID();
-            AccountBalance balance = SharedDataCentral.getAccountBalance(accountID);
-            if(!balance.isValid()){
-                apiCalls.addFunction(balance.getUpdateFunction());
+        apiCalls.addApiCallsListener(new ApiCalls.ApiCallsListener() {
+            @Override
+            public void OnAllDataReceived() {
+                evaluateAllNotifiers();
             }
-            Asset base = SharedDataCentral.getAsset(currencyNotifier.baseCurrency.getName());
-            Asset quote = SharedDataCentral.getAsset("USD");
-            AssetEquivalentRate equivalentRate = SharedDataCentral.getEquivalentRate(base.getSymbol(),quote.getSymbol());
-            if(!equivalentRate.isValid()){
-                apiCalls.addFunction(equivalentRate.getUpdateFunction());
+        });
+        for(Notifier not : notifiers){
+            NotifierRule notifierRule = not.getRule();
+            apiCalls.addFunctions(notifierRule.askData());//TODO must implement addFunctionSSSSSS
+        }
+        if(apiCalls.hasFunctions()) {
+            WebsocketWorkerThread wsthread = new WebsocketWorkerThread(apiCalls);
+            wsthread.start();
+        }
+    }
+
+    public void evaluateAllNotifiers(){
+        for(Notifier not : notifiers){
+            if (not.getRule().evaluate()){
+                //TODO TRIGGER ALARM OR NOTIFICATION TO THE USER!!!
             }
         }
-        WebsocketWorkerThread wsthread = new WebsocketWorkerThread(apiCalls);
-        wsthread.start();
     }
 
     public void addNotifierDirectorListener(NotifierDirectorListener listener){

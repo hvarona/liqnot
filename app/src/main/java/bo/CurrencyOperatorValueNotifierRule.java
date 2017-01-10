@@ -1,8 +1,12 @@
 package bo;
 
+import com.henja.liqnot.ws.ApiFunction;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by javier on 04/01/2017.
@@ -85,6 +89,18 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
     @Override
     public boolean evaluate() {
+        /*if (this.account.getId() != ""){
+            String accountId = SharedDataCentral.getAccountId(this.account.getName());
+            if (accountId != null) {
+                this.account.setId(accountId);
+            } else {
+                return
+            }
+        }
+        AccountBalance balance = SharedDataCentral.getAccountBalance();*/
+
+
+
         return false;
     }
 
@@ -121,6 +137,33 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
                 +(this.operator == NotifierRuleOperator.LESS_THAN?"reachs lower values than":"reachs higher values than")+" "
                 +this.value
                 +" in "+this.quotedCurrency.getName();
+    }
+
+    @Override
+    public ArrayList<ApiFunction> askData() {
+        ArrayList<ApiFunction> apiFunctions = new ArrayList<ApiFunction>();
+
+        AccountBalance balance = SharedDataCentral.getAccountBalance(this.account.getId());
+        if(!balance.isValid()){
+            apiFunctions.add(balance.getUpdateFunction());
+        }
+
+        Asset base = SharedDataCentral.getAsset(this.baseCurrency.getName());
+        if(!base.isValid()){
+            apiFunctions.add(base.getUpdateFunction());
+        }
+
+        Asset quoted = SharedDataCentral.getAsset(this.quotedCurrency.getName());
+        if(!quoted.isValid()){
+            apiFunctions.add(quoted.getUpdateFunction());
+        }
+
+        AssetEquivalentRate equivalentRate = SharedDataCentral.getEquivalentRate(base.getSymbol(),quoted.getSymbol());
+        if(!equivalentRate.isValid()){
+            apiFunctions.add(equivalentRate.getUpdateFunction());
+        }
+
+        return apiFunctions;
     }
 
 

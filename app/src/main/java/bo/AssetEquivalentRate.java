@@ -10,25 +10,25 @@ import java.util.Date;
  */
 
 public class AssetEquivalentRate implements SharedData {
-    private static final int EXPIRATION_TIME = 300000;
+    private static final int EXPIRATION_TIME = 300000; //5 minutes
 
-    private Asset monitor;
-    private Asset compareTo;
+    private Asset baseCurrency;
+    private Asset quotedCurrency;
     private double value = 0;
     private Date expirationDate;
 
-    public AssetEquivalentRate(Asset monitor, Asset compareTo) {
-        this.monitor = monitor;
-        this.compareTo = compareTo;
+    public AssetEquivalentRate(Asset baseCurrency, Asset quotedCurrency) {
+        this.baseCurrency = baseCurrency;
+        this.quotedCurrency = quotedCurrency;
         expirationDate = new Date(0);
     }
 
-    public Asset getMonitor() {
-        return monitor;
+    public Asset getBaseCurrency() {
+        return baseCurrency;
     }
 
-    public Asset getCompareTo() {
-        return compareTo;
+    public Asset getQuotedCurrency() {
+        return quotedCurrency;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class AssetEquivalentRate implements SharedData {
 
     @Override
     public ApiFunction getUpdateFunction() {
-        return new GetEquivalentRate(monitor,compareTo);
+        return new GetEquivalentRate(baseCurrency, quotedCurrency);
     }
 
     public double getValue() {
