@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bo.Notifier;
+import bo.NotifierDirector;
 import dao.DAO;
 import dao.DAOEnumeration;
 import dao.DAOFactory;
@@ -29,15 +31,14 @@ import dao.sqlite.DAOFactorySQLite;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link OnNotifierListFragmentInteractionListener}
  * interface.
  */
-public class NotifierListFragment extends Fragment {
+public class NotifierListFragment extends Fragment{
 
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
+    private static final String NOTIFIER_DIRECTOR_KEY = "notifier_director_key";
+    private NotifierDirector notifierDirector;
+
     private OnNotifierListFragmentInteractionListener mListener;
 
     /**
@@ -49,10 +50,10 @@ public class NotifierListFragment extends Fragment {
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static NotifierListFragment newInstance(int columnCount) {
+    public static NotifierListFragment newInstance(NotifierDirector notifierDirector) {
         NotifierListFragment fragment = new NotifierListFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putSerializable(NotifierListFragment.NOTIFIER_DIRECTOR_KEY, notifierDirector);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,10 +61,6 @@ public class NotifierListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
     }
 
     @Override
@@ -71,16 +68,18 @@ public class NotifierListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifier_list, container, false);
 
+        this.notifierDirector = (NotifierDirector) getArguments().getSerializable(NotifierListFragment.NOTIFIER_DIRECTOR_KEY);
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
+            //if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new NotifierListViewAdapter(DummyContent.ITEMS, mListener));
+            //} else {
+            //    recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+           // }
+            recyclerView.setAdapter(new NotifierListRecyclerViewAdapter(this.notifierDirector,this.notifierDirector.getNotifiers()));
         }
         return view;
     }

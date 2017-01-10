@@ -24,9 +24,11 @@
             android:layout_below="@+id/currency_recycler_view"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:id="@+id/currency_selected_text" />
+            android:id="@+id/currency_selected_text"
+            android:textAlignment="center"
+            android:textSize="24sp" />
 
-        <android.support.v7.widget.RecyclerView
+        <!--<android.support.v7.widget.RecyclerView
             android:id="@+id/operator_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -41,16 +43,33 @@
             android:layout_below="@+id/operator_recycler_view"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:id="@+id/operator_selected_text" />
+            android:id="@+id/operator_selected_text" />-->
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/currency_selected_text"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/operator_spinner" />
 
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
             android:ems="10"
-            android:layout_below="@+id/operator_selected_text"
-            android:id="@+id/editText" />
+            android:layout_below="@id/operator_spinner"
+            android:id="@+id/value_edit_text" />
 
+        <Button
+            android:text="Create Alert"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/value_edit_text"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/button_ok"
+            android:elevation="0dp" />
     </RelativeLayout>
 
 </FrameLayout>

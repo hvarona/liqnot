@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 import bo.Notifier;
+import bo.NotifierRuleFactory;
 import dao.DAO;
 import dao.DAOEnumeration;
 import dao.DAONotifier;
@@ -53,15 +55,19 @@ public class DAONotifierSQLite extends SQLiteOpenHelper implements DAONotifier, 
 
     public Notifier rowToObject(Object row){
         Cursor c = ((Cursor)row);
-        return new Notifier(
+        Notifier notifier = new Notifier(
                 c.getString(c.getColumnIndex(NotifierTable.ID))
         );
+
+        notifier.setRule(NotifierRuleFactory.importFromJson(c.getString(c.getColumnIndex(NotifierTable.RULE))));
+
+        return notifier;
     }
 
     public DAONotifierEnumerationSQLite getNotifiers(int start, int howMany){
         SQLiteDatabase db = getReadableDatabase();
 
-        Cursor result = db.query(NotifierTable.TABLE_NAME, null, null, null, null, null, null, ""+howMany);
+        Cursor result = db.query(NotifierTable.TABLE_NAME, null, null, null, null, null, null, (howMany >= 0?""+howMany:null));
 
         return new DAONotifierEnumerationSQLite(this, result, start, howMany);
     }

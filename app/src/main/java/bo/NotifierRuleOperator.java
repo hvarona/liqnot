@@ -4,6 +4,7 @@ package bo;
  * Created by javier on 04/01/2017.
  */
 public enum NotifierRuleOperator {
+    UNKNOWN("UNKNOWN"),
     LESS_THAN("<"),
     BIGGER_THAN(">");
 

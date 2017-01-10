@@ -12,11 +12,14 @@ import android.view.MenuItem;
 import com.henja.liqnot.dummy.DummyContent;
 
 import bo.Notifier;
+import bo.NotifierDirector;
 import dao.DAOFactory;
 import dao.DAONotifier;
 import dao.sqlite.DAOFactorySQLite;
 
 public class NotificationListActivity extends AppCompatActivity implements NotifierListFragment.OnNotifierListFragmentInteractionListener, CurrencyOperatorValueNotifierRuleFragment.OnCurrencyOperatorValueNotifierFragmentInteractionListener {
+
+    private NotifierDirector notifierDirector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,8 @@ public class NotificationListActivity extends AppCompatActivity implements Notif
         setContentView(R.layout.activity_notifier_main);
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+        //The directorNotifier
+        this.notifierDirector = new NotifierDirector(this.getApplicationContext());
 
         FloatingActionButton newNotifierButton = (FloatingActionButton) findViewById(R.id.newNotifierButton);
         newNotifierButton.setOnClickListener(new View.OnClickListener() {
@@ -33,7 +38,7 @@ public class NotificationListActivity extends AppCompatActivity implements Notif
             }
         });
 
-        NotifierFragmentPagerAdapter fragmentPagerAdapter = new NotifierFragmentPagerAdapter(getSupportFragmentManager());
+        NotifierFragmentPagerAdapter fragmentPagerAdapter = new NotifierFragmentPagerAdapter(getSupportFragmentManager(), this.notifierDirector);
 
         ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
         notifierPager.setAdapter(fragmentPagerAdapter);
@@ -102,5 +107,11 @@ public class NotificationListActivity extends AppCompatActivity implements Notif
     @Override
     public void OnCurrencyOperatorValueNotifierFragmentInteractionListener(Uri uri) {
         //
+    }
+
+    @Override
+    public void onNotifierCreated(Notifier notifier) {
+        ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
+        notifierPager.setCurrentItem(0);
     }
 }

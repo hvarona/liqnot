@@ -12,4 +12,8 @@ public abstract class NotifierRule {
     public abstract String toJson();
 
     public abstract boolean evaluate();
+
+    public abstract boolean isValid();
+
+    public abstract String toHumanReadableString();
 }

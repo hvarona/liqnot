@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import bo.NotifierCurrency;
 import bo.NotifierCurrencyData;
 
 /**
@@ -18,9 +19,15 @@ public class CurrencySelectionRecyclerViewAdapter extends RecyclerView.Adapter<C
 
     private int selectedPos = 0;
     private NotifierCurrencyData[] itemsData;
+    private CurrencyListener currencyListener;
 
-    public CurrencySelectionRecyclerViewAdapter(NotifierCurrencyData[] itemsData) {
+    public interface CurrencyListener {
+        public void OnCurrencyClick(NotifierCurrency currency);
+    }
+
+    public CurrencySelectionRecyclerViewAdapter(NotifierCurrencyData[] itemsData, CurrencyListener currencyListener) {
         this.itemsData = itemsData;
+        this.currencyListener = currencyListener;
     }
 
     @Override
@@ -37,6 +44,11 @@ public class CurrencySelectionRecyclerViewAdapter extends RecyclerView.Adapter<C
     public void onBindViewHolder(CurrencySelectionRecyclerViewAdapter.ViewHolder holder, int position) {
         holder.currencyName.setText(itemsData[position].getCurrency().getName());
         holder.currencyIcon.setImageResource(itemsData[position].getCurrency().getIcon());
+
+        if (selectedPos == position){
+            this.currencyListener.OnCurrencyClick(this.itemsData[position].getCurrency());
+        }
+
         holder.itemView.setSelected(selectedPos == position);
         Log.e("Item Changed","Item selected");
     }

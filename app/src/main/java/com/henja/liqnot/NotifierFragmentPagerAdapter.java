@@ -4,23 +4,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import bo.NotifierDirector;
+
 /**
  * Created by javier on 05/01/2017.
  */
 
 public class NotifierFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    public NotifierFragmentPagerAdapter(FragmentManager fragmentManager){
+    private NotifierDirector notifierDirector;
+
+    public NotifierFragmentPagerAdapter(FragmentManager fragmentManager, NotifierDirector notifierDirector){
         super(fragmentManager);
+        this.notifierDirector = notifierDirector;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position){
             case 0:
-                return new NotifierListFragment();
+                return NotifierListFragment.newInstance(this.notifierDirector);
             case 1:
-                return new CurrencyOperatorValueNotifierRuleFragment();
+                return CurrencyOperatorValueNotifierRuleFragment.newInstance(this.notifierDirector);//new CurrencyOperatorValueNotifierRuleFragment(this.notifierDirector);
         }
 
         return null;

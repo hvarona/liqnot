@@ -12,19 +12,18 @@ android:paddingBottom="10dp"
 
     <ImageView
         android:id="@+id/currency_icon"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@android:drawable/btn_star"
-        android:layout_weight="1"
         android:minWidth="96dip" />
 
     <TextView
         android:id="@+id/currency_name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_below="@id/currency_icon"
         tools:text="Currency"
         android:textAlignment="center"
-        android:textColor="@drawable/currency_selector"/>
+        android:textColor="@drawable/currency_selector"
+        android:textStyle="normal|bold" />
 </RelativeLayout>

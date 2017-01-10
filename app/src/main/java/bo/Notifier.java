@@ -28,4 +28,12 @@ public class Notifier extends BO{
     public NotifierRule getRule(){
         return this.rule;
     }
+
+    public void setRule(NotifierRule rule){
+        this.rule = rule;
+    }
+
+    public void setRuleJson(String json){
+        this.rule = rule;
+    }
 }
