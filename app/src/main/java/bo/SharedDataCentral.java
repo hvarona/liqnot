@@ -1,5 +1,7 @@
 package bo;
 
+import android.accounts.Account;
+
 import java.util.HashMap;
 
 /**
@@ -8,6 +10,7 @@ import java.util.HashMap;
 
 public abstract class SharedDataCentral {
     private static HashMap<String,Asset> assets = new HashMap();
+    private static HashMap<String,AccountBalance> accountsBalances = new HashMap();
     private static HashMap<String,HashMap<String,AssetEquivalentRate>> equivalentsRates = new HashMap();
 
     public static AssetEquivalentRate getEquivalentRate(String base, String quote){
@@ -38,5 +41,16 @@ public abstract class SharedDataCentral {
 
     public static void putAsset(Asset asset){
         assets.put(asset.getSymbol(),asset);
+    }
+
+    public static AccountBalance getAccountBalance(String accountID){
+        if(!accountsBalances.containsKey(accountID)){
+            accountsBalances.put(accountID,new AccountBalance(accountID));
+        }
+        return accountsBalances.get(accountID);
+    }
+
+    public static void putAccountBalance(String accountID, AccountBalance balance){
+        accountsBalances.put(accountID,balance);
     }
 }

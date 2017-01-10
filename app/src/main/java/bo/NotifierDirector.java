@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.henja.liqnot.ws.ApiCalls;
+import com.henja.liqnot.ws.WebsocketWorkerThread;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -61,7 +64,23 @@ public class NotifierDirector implements Serializable {
     }
 
     public void execute(){
-
+        ApiCalls apiCalls = new ApiCalls();
+        for(Notifier not : notifiers){
+            CurrencyOperatorValueNotifierRule currencyNotifier = (CurrencyOperatorValueNotifierRule) not.getRule();
+            String accountID = "1.2.143552"; //currencyNotifier.getAccount().getID();
+            AccountBalance balance = SharedDataCentral.getAccountBalance(accountID);
+            if(!balance.isValid()){
+                apiCalls.addFunction(balance.getUpdateFunction());
+            }
+            Asset base = SharedDataCentral.getAsset(currencyNotifier.currency.getName());
+            Asset quote = SharedDataCentral.getAsset("USD");
+            AssetEquivalentRate equivalentRate = SharedDataCentral.getEquivalentRate(base.getSymbol(),quote.getSymbol());
+            if(!equivalentRate.isValid()){
+                apiCalls.addFunction(equivalentRate.getUpdateFunction());
+            }
+        }
+        WebsocketWorkerThread wsthread = new WebsocketWorkerThread(apiCalls);
+        wsthread.start();
     }
 
     public void addNotifierDirectorListener(NotifierDirectorListener listener){
