@@ -72,7 +72,7 @@ public class NotifierDirector implements Serializable {
             if(!balance.isValid()){
                 apiCalls.addFunction(balance.getUpdateFunction());
             }
-            Asset base = SharedDataCentral.getAsset(currencyNotifier.currency.getName());
+            Asset base = SharedDataCentral.getAsset(currencyNotifier.baseCurrency.getName());
             Asset quote = SharedDataCentral.getAsset("USD");
             AssetEquivalentRate equivalentRate = SharedDataCentral.getEquivalentRate(base.getSymbol(),quote.getSymbol());
             if(!equivalentRate.isValid()){

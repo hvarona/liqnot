@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import bo.Account;
 import bo.CurrencyOperatorValueNotifierRule;
 import bo.Notifier;
 import bo.NotifierCurrency;
@@ -35,7 +36,7 @@ import bo.NotifierRuleOperator;
  * Use the {@link CurrencyOperatorValueNotifierRuleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CurrencyOperatorValueNotifierRuleFragment extends Fragment implements CurrencySelectionRecyclerViewAdapter.CurrencyListener {
+public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
     private static final String NOTIFIER_DIRECTOR_KEY = "notifier_director_key";
     private NotifierDirector notifierDirector;
     private CurrencyOperatorValueNotifierRule rule;
@@ -92,9 +93,55 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment implemen
             index++;
         }
 
-        CurrencySelectionRecyclerViewAdapter recyclerAdapter = new CurrencySelectionRecyclerViewAdapter(currenciesData, this);
-        RecyclerView currencyRecyvlerView = (RecyclerView) v.findViewById(R.id.currency_recycler_view);
-        currencyRecyvlerView.setAdapter(recyclerAdapter);
+        EditText accountNameEditText = (EditText) v.findViewById(R.id.account_name_edit_text);
+        accountNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (rule.getAccount() != null){
+                    Account account = rule.getAccount();
+                    account.setName(s.toString());
+                } else {
+                    rule.setAccount(new Account(s.toString()));
+                }
+                checkRule();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        CurrencySelectionRecyclerViewAdapter baseCurrencyRecyclerAdapter = new CurrencySelectionRecyclerViewAdapter(currenciesData);
+        baseCurrencyRecyclerAdapter.setOnCurrencyListener(new CurrencySelectionRecyclerViewAdapter.CurrencyListener() {
+            @Override
+            public void OnCurrencyClick(NotifierCurrency currency) {
+                TextView baseCurrencyTextView = (TextView) getView().findViewById(R.id.base_currency_selected_text);
+                baseCurrencyTextView.setText(currency.name());
+                rule.setBaseCurrency(currency);
+                checkRule();
+            }
+        });
+        RecyclerView baseCurrencyRecyclerView = (RecyclerView) v.findViewById(R.id.base_currency_recycler_view);
+        baseCurrencyRecyclerView.setAdapter(baseCurrencyRecyclerAdapter);
+
+        CurrencySelectionRecyclerViewAdapter quotedCurrencyRecyclerAdapter = new CurrencySelectionRecyclerViewAdapter(currenciesData);
+        quotedCurrencyRecyclerAdapter.setOnCurrencyListener(new CurrencySelectionRecyclerViewAdapter.CurrencyListener() {
+            @Override
+            public void OnCurrencyClick(NotifierCurrency currency) {
+                TextView quotedCurrencyTextView = (TextView) getView().findViewById(R.id.quoted_currency_selected_text);
+                quotedCurrencyTextView.setText(currency.name());
+                rule.setQuotedCurrency(currency);
+                checkRule();
+            }
+        });
+        RecyclerView quotedCurrencyRecyclerView = (RecyclerView) v.findViewById(R.id.quoted_currency_recycler_view);
+        quotedCurrencyRecyclerView.setAdapter(quotedCurrencyRecyclerAdapter);
 
 
         Spinner operatorSpinner = (Spinner) v.findViewById(R.id.operator_spinner);
@@ -218,13 +265,5 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment implemen
         } else {
             okButton.setEnabled(false);
         }
-    }
-
-    @Override
-    public void OnCurrencyClick(NotifierCurrency currency) {
-        TextView currencyTextView = (TextView) this.getView().findViewById(R.id.currency_selected_text);
-        currencyTextView.setText(currency.name());
-        this.rule.setCurrency(currency);
-        checkRule();
     }
 }

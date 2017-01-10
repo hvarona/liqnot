@@ -25,9 +25,12 @@ public class CurrencySelectionRecyclerViewAdapter extends RecyclerView.Adapter<C
         public void OnCurrencyClick(NotifierCurrency currency);
     }
 
-    public CurrencySelectionRecyclerViewAdapter(NotifierCurrencyData[] itemsData, CurrencyListener currencyListener) {
+    public CurrencySelectionRecyclerViewAdapter(NotifierCurrencyData[] itemsData) {
         this.itemsData = itemsData;
-        this.currencyListener = currencyListener;
+    }
+
+    public void setOnCurrencyListener(CurrencyListener currencyListener){
+       this.currencyListener = currencyListener;
     }
 
     @Override

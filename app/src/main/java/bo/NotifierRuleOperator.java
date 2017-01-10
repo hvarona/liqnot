@@ -16,4 +16,15 @@ public enum NotifierRuleOperator {
     public String toString(){
         return this.symbol;
     }
+
+    public static NotifierRuleOperator fromSymbol(String symbol) {
+        if (symbol != null) {
+            for (NotifierRuleOperator nro : NotifierRuleOperator.values()) {
+                if (symbol.equalsIgnoreCase(nro.symbol)) {
+                    return nro;
+                }
+            }
+        }
+        return null;
+    }
 }

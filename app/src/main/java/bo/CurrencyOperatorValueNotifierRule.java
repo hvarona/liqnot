@@ -10,13 +10,16 @@ import org.json.JSONObject;
 
 public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
-    //Account account;
-    NotifierCurrency currency;
+    Account account;
+    NotifierCurrency baseCurrency;
+    NotifierCurrency quotedCurrency;
     NotifierRuleOperator operator;
     double value;
 
     public CurrencyOperatorValueNotifierRule(){
-        this.currency = NotifierCurrency.UNKNOWN;
+        this.account = null;
+        this.baseCurrency = NotifierCurrency.UNKNOWN;
+        this.quotedCurrency = NotifierCurrency.UNKNOWN;
         this.operator = NotifierRuleOperator.UNKNOWN;
         this.value = -1;
     }
@@ -25,8 +28,10 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
     public void loadFromJson(String json) {
         try {
             JSONObject jsonObj = new JSONObject(json);
-            this.currency = NotifierCurrency.valueOf(jsonObj.getString("currency"));
-            this.operator = NotifierRuleOperator.valueOf(jsonObj.getString("operator"));
+            this.account = new Account(jsonObj.getString("account_name"),jsonObj.getString("account_id"));
+            this.baseCurrency = NotifierCurrency.valueOf(jsonObj.getString("baseCurrency"));
+            this.quotedCurrency = NotifierCurrency.valueOf(jsonObj.getString("quotedCurrency"));
+            this.operator = NotifierRuleOperator.fromSymbol(jsonObj.getString("operator"));
             this.value = jsonObj.getDouble("value");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -38,7 +43,10 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
         JSONObject json = new JSONObject();
         try {
             json.put("type", NotifierRuleFactory.getNotifierRuleTypeFromNotifierRule(this));
-            json.put("currency", this.currency.toString());
+            json.put("account_name", this.account.getName());
+            json.put("account_id", this.account.getId());
+            json.put("baseCurrency", this.baseCurrency.toString());
+            json.put("quotedCurrency", this.quotedCurrency.toString());
             json.put("operator", this.operator.toString());
             json.put("value", this.value);
             return json.toString();
@@ -49,8 +57,20 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
         return null;
     }
 
-    public void setCurrency(NotifierCurrency currency){
-        this.currency = currency;
+    public void setAccount(Account account){
+        this.account = account;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setBaseCurrency(NotifierCurrency currency){
+        this.baseCurrency = currency;
+    }
+
+    public void setQuotedCurrency(NotifierCurrency currency){
+        this.quotedCurrency = currency;
     }
 
     public void setOperator(NotifierRuleOperator operator){
@@ -70,7 +90,15 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
     @Override
     public boolean isValid() {
-        if (this.currency == NotifierCurrency.UNKNOWN){
+        if (this.account == null){
+            return false;
+        }
+
+        if (this.baseCurrency == NotifierCurrency.UNKNOWN){
+            return false;
+        }
+
+        if (this.quotedCurrency == NotifierCurrency.UNKNOWN){
             return false;
         }
 
@@ -88,9 +116,11 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
     @Override
     public String toHumanReadableString() {
         return "Alarm will fire when "
-                +this.currency.getName()+" "
+                +this.baseCurrency.getName()
+                +" from the account \""+this.account.getName()+"\" "
                 +(this.operator == NotifierRuleOperator.LESS_THAN?"reachs lower values than":"reachs higher values than")+" "
-                +this.value;
+                +this.value
+                +" in "+this.quotedCurrency.getName();
     }
 
 
