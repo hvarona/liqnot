@@ -24,7 +24,7 @@ public class WebsocketWorkerThread extends Thread {
 
         WebSocketFactory factory = new WebSocketFactory().setConnectionTimeout(5000);
         try {
-            mWebSocket = factory.createSocket("");
+            mWebSocket = factory.createSocket("wss://de.blockpay.ch:8089"); //TODO server list
             mWebSocket.addListener(webSocketListener);
         } catch (IOException e) {
             e.printStackTrace();
