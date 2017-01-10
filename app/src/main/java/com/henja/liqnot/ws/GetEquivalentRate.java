@@ -1,33 +1,25 @@
 package com.henja.liqnot.ws;
 
-import com.neovisionaries.ws.client.WebSocket;
-import com.neovisionaries.ws.client.WebSocketAdapter;
-import com.neovisionaries.ws.client.WebSocketException;
-import com.neovisionaries.ws.client.WebSocketFrame;
-
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import bo.Asset;
 
 /**
  * Created by henry on 08/01/2017.
  */
 
-public class GetLimitOrders implements ApiFunction {
+public class GetEquivalentRate implements ApiFunction {
 
-    private String a;
-    private String b;
-    private int limit;
-    //private WitnessResponseListener mListener;
+    private Asset base;
+    private Asset quote;
 
-    public GetLimitOrders(String a, String b, int limit/*, WitnessResponseListener mListener*/) {
-        this.a = a;
-        this.b = b;
-        this.limit = limit;
-        //this.mListener = mListener;
+    public GetEquivalentRate(Asset base, Asset quote) {
+        this.base = base;
+        this.quote = quote;
     }
 
 
@@ -49,9 +41,9 @@ public class GetLimitOrders implements ApiFunction {
     @Override
     public List<Serializable> getParams() {
         ArrayList<Serializable> accountParams = new ArrayList<>();
-        accountParams.add(this.a);
-        accountParams.add(this.b);
-        accountParams.add(this.limit);
+        accountParams.add(this.base.getId());
+        accountParams.add(this.quote.getId());
+        accountParams.add(1);
         return accountParams;
     }
 
