@@ -19,6 +19,8 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.henja.liqnot.app.LiqNotApp;
+
 import bo.Account;
 import bo.CurrencyOperatorValueNotifierRule;
 import bo.Notifier;
@@ -50,18 +52,14 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param notifierDirector the notifier director to include the new notifier.
      * @return A new instance of fragment CurrencyOperatorValueNotifierRuleFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CurrencyOperatorValueNotifierRuleFragment newInstance(NotifierDirector notifierDirector) {
+    public static CurrencyOperatorValueNotifierRuleFragment newInstance() {
         CurrencyOperatorValueNotifierRuleFragment fragment = new CurrencyOperatorValueNotifierRuleFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(CurrencyOperatorValueNotifierRuleFragment.NOTIFIER_DIRECTOR_KEY, notifierDirector);
-
-        /*args.put putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);*/
-        fragment.setArguments(args);
+        //Bundle args = new Bundle();
+        //args.putSerializable(CurrencyOperatorValueNotifierRuleFragment.NOTIFIER_DIRECTOR_KEY, notifierDirector);
+        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -80,7 +78,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        this.notifierDirector = (NotifierDirector) getArguments().getSerializable(CurrencyOperatorValueNotifierRuleFragment.NOTIFIER_DIRECTOR_KEY);
+        this.notifierDirector = ((LiqNotApp)getActivity().getApplication()).getNotifierDirector();//(NotifierDirector) getArguments().getSerializable(CurrencyOperatorValueNotifierRuleFragment.NOTIFIER_DIRECTOR_KEY);
 
 
         View v = inflater.inflate(R.layout.fragment_currency_operator_value_notifier_rule, container, false);

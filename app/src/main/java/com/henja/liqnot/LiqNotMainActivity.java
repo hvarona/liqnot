@@ -1,5 +1,6 @@
 package com.henja.liqnot;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,7 +10,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.henja.liqnot.app.LiqNotApp;
 import com.henja.liqnot.dummy.DummyContent;
+import com.henja.liqnot.service.LiqNotService;
 
 import bo.Notifier;
 import bo.NotifierDirector;
@@ -17,7 +20,7 @@ import dao.DAOFactory;
 import dao.DAONotifier;
 import dao.sqlite.DAOFactorySQLite;
 
-public class NotificationListActivity extends AppCompatActivity implements NotifierListFragment.OnNotifierListFragmentInteractionListener, CurrencyOperatorValueNotifierRuleFragment.OnCurrencyOperatorValueNotifierFragmentInteractionListener {
+public class LiqNotMainActivity extends AppCompatActivity implements NotifierListFragment.OnNotifierListFragmentInteractionListener, CurrencyOperatorValueNotifierRuleFragment.OnCurrencyOperatorValueNotifierFragmentInteractionListener {
 
     private NotifierDirector notifierDirector;
 
@@ -28,7 +31,11 @@ public class NotificationListActivity extends AppCompatActivity implements Notif
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         //The directorNotifier
-        this.notifierDirector = new NotifierDirector(this.getApplicationContext());
+        this.notifierDirector = ((LiqNotApp)getApplication()).getNotifierDirector();
+
+        Intent intent = new Intent(this, LiqNotService.class);
+        startService(intent);
+
 
         FloatingActionButton newNotifierButton = (FloatingActionButton) findViewById(R.id.newNotifierButton);
         newNotifierButton.setOnClickListener(new View.OnClickListener() {

@@ -23,7 +23,7 @@ import dao.sqlite.DAONotifierSQLite;
  * Created by javier on 08/01/2017.
  */
 
-public class NotifierDirector implements Serializable {
+public class NotifierDirector {
 
     private ArrayList<Notifier> notifiers;
     private Context context;

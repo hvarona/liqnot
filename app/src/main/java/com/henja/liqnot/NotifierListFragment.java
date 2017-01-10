@@ -14,6 +14,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.henja.liqnot.app.LiqNotApp;
 import com.henja.liqnot.dummy.DummyContent;
 import com.henja.liqnot.dummy.DummyContent.DummyItem;
 
@@ -50,11 +51,11 @@ public class NotifierListFragment extends Fragment{
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static NotifierListFragment newInstance(NotifierDirector notifierDirector) {
+    public static NotifierListFragment newInstance() {
         NotifierListFragment fragment = new NotifierListFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(NotifierListFragment.NOTIFIER_DIRECTOR_KEY, notifierDirector);
-        fragment.setArguments(args);
+        //Bundle args = new Bundle();
+        //args.putSerializable(NotifierListFragment.NOTIFIER_DIRECTOR_KEY, notifierDirector);
+        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -68,7 +69,7 @@ public class NotifierListFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifier_list, container, false);
 
-        this.notifierDirector = (NotifierDirector) getArguments().getSerializable(NotifierListFragment.NOTIFIER_DIRECTOR_KEY);
+        this.notifierDirector = ((LiqNotApp)getActivity().getApplication()).getNotifierDirector();
 
         // Set the adapter
         if (view instanceof RecyclerView) {
