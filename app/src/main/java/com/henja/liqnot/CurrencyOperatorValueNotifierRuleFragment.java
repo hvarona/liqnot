@@ -21,6 +21,9 @@ import android.widget.TextView;
 
 import com.henja.liqnot.app.LiqNotApp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import bo.Account;
 import bo.CurrencyOperatorValueNotifierRule;
 import bo.Notifier;
@@ -115,7 +118,70 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             }
         });
 
-        CurrencySelectionRecyclerViewAdapter baseCurrencyRecyclerAdapter = new CurrencySelectionRecyclerViewAdapter(currenciesData);
+
+        ArrayList<String> baseCurrencyStringList = new ArrayList<String>();
+        for(NotifierCurrency nc : NotifierCurrency.values()){
+            if (nc == NotifierCurrency.UNKNOWN){
+                baseCurrencyStringList.add("Choose Base Currency");
+            } else {
+                baseCurrencyStringList.add(nc.getName());
+            }
+        }
+
+        //ArrayAdapter baseCurrencyAdapter = ArrayAdapter.createFromResource(this, R.array.sound, R.layout.spinner_layout);
+        ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
+        final Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
+        baseCurrencySpinner.setAdapter(baseCurrencyAdapter);
+        baseCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    NotifierCurrency nc = NotifierCurrency.valueOf(baseCurrencySpinner.getSelectedItem().toString());
+                    rule.setBaseCurrency(nc);
+                } catch(IllegalArgumentException e){
+                    rule.setBaseCurrency(NotifierCurrency.UNKNOWN);
+                }
+                checkRule();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        ArrayList<String> quotedCurrencyStringList = new ArrayList<String>();
+        for(NotifierCurrency nc : NotifierCurrency.values()){
+            if (nc == NotifierCurrency.UNKNOWN){
+                quotedCurrencyStringList.add("Choose Quoted Currency");
+            } else {
+                quotedCurrencyStringList.add(nc.getName());
+            }
+        }
+
+        //ArrayAdapter quotedCurrencyAdapter = ArrayAdapter.createFromResource(this, R.array.sound, R.layout.spinner_layout);
+        ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
+        final Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
+        quotedCurrencySpinner.setAdapter(quotedCurrencyAdapter);
+        quotedCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    NotifierCurrency nc = NotifierCurrency.valueOf(quotedCurrencySpinner.getSelectedItem().toString());
+                    rule.setQuotedCurrency(NotifierCurrency.valueOf(quotedCurrencySpinner.getSelectedItem().toString()));
+                } catch(IllegalArgumentException e){
+                    rule.setQuotedCurrency(NotifierCurrency.UNKNOWN);
+                }
+                checkRule();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        /*CurrencySelectionRecyclerViewAdapter baseCurrencyRecyclerAdapter = new CurrencySelectionRecyclerViewAdapter(currenciesData);
         baseCurrencyRecyclerAdapter.setOnCurrencyListener(new CurrencySelectionRecyclerViewAdapter.CurrencyListener() {
             @Override
             public void OnCurrencyClick(NotifierCurrency currency) {
@@ -139,11 +205,11 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             }
         });
         RecyclerView quotedCurrencyRecyclerView = (RecyclerView) v.findViewById(R.id.quoted_currency_recycler_view);
-        quotedCurrencyRecyclerView.setAdapter(quotedCurrencyRecyclerAdapter);
+        quotedCurrencyRecyclerView.setAdapter(quotedCurrencyRecyclerAdapter);*/
 
 
         Spinner operatorSpinner = (Spinner) v.findViewById(R.id.operator_spinner);
-        final ArrayAdapter<CharSequence> operatorAdapter = ArrayAdapter.createFromResource(this.getActivity(), R.array.operators_array, android.R.layout.simple_spinner_item);
+        final ArrayAdapter<CharSequence> operatorAdapter = ArrayAdapter.createFromResource(this.getActivity(), R.array.operators_array, R.layout.spinner_layout);
         operatorSpinner.setAdapter(operatorAdapter);
         operatorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -181,7 +247,11 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                rule.setValue(Double.parseDouble(s.toString()));
+                try {
+                    rule.setValue(Double.parseDouble(s.toString()));
+                } catch (NumberFormatException e){
+                    rule.setValue(-1);
+                }
                 checkRule();
             }
 
