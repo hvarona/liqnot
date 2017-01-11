@@ -100,9 +100,9 @@ public class ApiCalls extends WebSocketAdapter {
 
 
     //METHODS FOR LISTENERS
-    public void addApiCallsListener(ApiCallsListener listener){
+    /*public void addApiCallsListener(ApiCallsListener listener){
         this.listeners.add(listener);
-    }
+    }*/
 
     public void triggerOnAllDataReceived(){
         for(ApiCallsListener listener : listeners){
