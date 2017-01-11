@@ -12,7 +12,7 @@ import java.util.List;
 
 public class GetAccountBalances implements ApiFunction {
     public String accountId;
-    public ArrayList<String> assetIds;
+    public ArrayList<String> assetIds =new ArrayList();
 
     public GetAccountBalances(String accountId) {
         this.accountId = accountId;
@@ -42,9 +42,7 @@ public class GetAccountBalances implements ApiFunction {
     public List<Serializable> getParams() {
         ArrayList<Serializable> answer = new ArrayList<>();
         answer.add(this.accountId);
-        if(this.assetIds != null) {
-            answer.add(this.assetIds);
-        }
+        answer.add(this.assetIds);
         return answer;
     }
 
