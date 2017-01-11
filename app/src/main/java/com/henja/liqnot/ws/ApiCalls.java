@@ -39,23 +39,21 @@ public class ApiCalls extends WebSocketAdapter {
         listeners.add(listener);
     }
 
-    public String toJsonString() {
-        StringBuilder answer = new StringBuilder();
+    public String sendMessage(WebSocket webSocket) {
 
         for(int index : functions.keySet()){
             ApiFunction function = functions.get(index);
             try {
-                answer.append(new ApiCall(function.getApiID(),function.getMethodToCall(),function.getParams(),"2.0").toJsonObject(index)).append("\r\n");
+                webSocket.sendText(new ApiCall(function.getApiID(),function.getMethodToCall(),function.getParams(),"2.0").toJsonObject(index).toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        return answer.toString();
     }
 
     @Override
     public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception {
-        websocket.sendText(this.toJsonString());
+        sendMessage(websocket);
     }
 
     @Override
