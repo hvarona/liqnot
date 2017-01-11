@@ -40,7 +40,7 @@ public class ApiCalls extends WebSocketAdapter {
         listeners.add(listener);
     }
 
-    public String sendMessage(WebSocket webSocket) {
+    public void sendMessage(WebSocket webSocket) {
 
         for(int index : functions.keySet()){
             ApiFunction function = functions.get(index);
