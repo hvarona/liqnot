@@ -21,7 +21,7 @@ public class ApiCalls extends WebSocketAdapter {
 
     private Map<Integer,ApiFunction> functions = new HashMap();
     private int lastIndex = 0;
-    private ArrayList<ApiCallsListener> listeners; //TODO call triggerOnAllDataReceived() to trigger event
+    private ArrayList<ApiCallsListener> listeners;
 
 
     public ApiCalls() {
@@ -29,8 +29,14 @@ public class ApiCalls extends WebSocketAdapter {
     }
 
     public void addFunction(ApiFunction function){
-        ++lastIndex;
-        functions.put(lastIndex,function);
+        if(!functions.containsValue(function)) {
+            ++lastIndex;
+            functions.put(lastIndex, function);
+        }
+    }
+
+    public void addListener(ApiCallsListener listener){
+        listeners.add(listener);
     }
 
     public String toJsonString() {
@@ -60,11 +66,15 @@ public class ApiCalls extends WebSocketAdapter {
         try {
             functions.get(index).onResponse((JSONObject) incoming.get("result"));
         }catch(Exception e){
+            //TODO manage error call
             e.printStackTrace();
         }
         functions.remove(index);
         if(functions.isEmpty()){
             websocket.disconnect();
+            for(ApiCallsListener listener : listeners){
+                listener.OnAllDataReceived();
+            }
         }
     }
 
@@ -98,6 +108,16 @@ public class ApiCalls extends WebSocketAdapter {
         for(ApiCallsListener listener : listeners){
             listener.OnAllDataReceived();
         }
+    }
+
+    public void addFunctions(ArrayList<ApiFunction> apiFunctions) {
+        for(ApiFunction apiFunction : apiFunctions){
+            addFunction(apiFunction);
+        }
+    }
+
+    public boolean hasFunctions() {
+        return !functions.isEmpty();
     }
 
     public interface ApiCallsListener{

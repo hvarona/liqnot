@@ -47,4 +47,20 @@ public class GetAsset implements ApiFunction {
     public void onResponse(JSONObject response) {
         System.out.println("GetAsset <<< "+response.toString());
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GetAsset getAsset = (GetAsset) o;
+
+        return assetName.equals(getAsset.assetName);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return assetName.hashCode();
+    }
 }

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bo.Asset;
+import bo.SharedDataCentral;
 
 /**
  * Created by henry on 08/01/2017.
@@ -49,7 +50,8 @@ public class GetEquivalentRate implements ApiFunction {
 
     @Override
     public void onResponse(JSONObject response){
-        System.out.println("<<< "+response.toString());
+        System.out.println("GetEquivalentRate <<< "+response.toString());
+        //SharedDataCentral.getEquivalentRate(base.getSymbol(),quote.getSymbol()).setValue();
         /*try {
             String response = frame.getPayloadText();
             GsonBuilder builder = new GsonBuilder();
@@ -66,5 +68,24 @@ public class GetEquivalentRate implements ApiFunction {
         } catch (Exception e) {
             e.printStackTrace();
         }*/
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GetEquivalentRate that = (GetEquivalentRate) o;
+
+        if (!base.equals(that.base)) return false;
+        return quote.equals(that.quote);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = base.hashCode();
+        result = 31 * result + quote.hashCode();
+        return result;
     }
 }

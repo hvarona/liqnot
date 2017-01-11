@@ -73,9 +73,15 @@ public class NotifierDirector {
         });
         for(Notifier not : notifiers){
             NotifierRule notifierRule = not.getRule();
-            apiCalls.addFunctions(notifierRule.askData());//TODO must implement addFunctionSSSSSS
+            apiCalls.addFunctions(notifierRule.askData());
         }
         if(apiCalls.hasFunctions()) {
+            apiCalls.addListener(new ApiCalls.ApiCallsListener() {
+                @Override
+                public void OnAllDataReceived() {
+                    evaluateAllNotifiers();
+                }
+            });
             WebsocketWorkerThread wsthread = new WebsocketWorkerThread(apiCalls);
             wsthread.start();
         }

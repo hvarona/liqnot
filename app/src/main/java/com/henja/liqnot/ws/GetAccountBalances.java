@@ -50,6 +50,25 @@ public class GetAccountBalances implements ApiFunction {
 
     @Override
     public void onResponse(JSONObject response) {
-        System.out.println("<<< "+response.toString());
+        System.out.println("GetAccount Balance <<< "+response.toString());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GetAccountBalances that = (GetAccountBalances) o;
+
+        if (!accountId.equals(that.accountId)) return false;
+        return assetIds != null ? assetIds.equals(that.assetIds) : that.assetIds == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = accountId.hashCode();
+        result = 31 * result + (assetIds != null ? assetIds.hashCode() : 0);
+        return result;
     }
 }
