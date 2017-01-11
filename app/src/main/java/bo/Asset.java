@@ -1,6 +1,7 @@
 package bo;
 
 import com.henja.liqnot.ws.ApiFunction;
+import com.henja.liqnot.ws.GetAsset;
 
 /**
  * Created by henry on 09/01/2017.
@@ -66,6 +67,6 @@ public class Asset implements SharedData{
 
     @Override
     public ApiFunction getUpdateFunction() {
-        return null;
+        return new GetAsset(this.symbol);
     }
 }
