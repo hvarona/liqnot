@@ -89,17 +89,26 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
     @Override
     public boolean evaluate() {
-        /*if (this.account.getId() != ""){
-            String accountId = SharedDataCentral.getAccountId(this.account.getName());
-            if (accountId != null) {
-                this.account.setId(accountId);
-            } else {
-                return
+        AccountBalance balance = SharedDataCentral.getAccountBalance(this.account.getId());
+        Asset baseAsset = SharedDataCentral.getAsset(this.baseCurrency.getName());
+        Asset quotedAsset = SharedDataCentral.getAsset(this.quotedCurrency.getName());
+
+        if(balance.isValid() && baseAsset.isValid() && quotedAsset.isValid()){
+            AssetEquivalentRate equivalentRate = SharedDataCentral.getEquivalentRate(baseAsset.getSymbol(),quotedAsset.getSymbol());
+
+            if(equivalentRate.isValid()) {
+                double baseBalance = balance.getAssetBalance(baseAsset.getId());
+                double baseBalancePrecise = baseBalance / (10 * baseAsset.getPrecision());
+                double quotedBalance = baseBalancePrecise * equivalentRate.getValue();
+
+                switch (this.operator) {
+                    case LESS_THAN:
+                        return quotedBalance < this.value;
+                    case BIGGER_THAN:
+                        return quotedBalance > this.value;
+                }
             }
         }
-        AccountBalance balance = SharedDataCentral.getAccountBalance();*/
-
-
 
         return false;
     }
