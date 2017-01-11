@@ -1,9 +1,15 @@
 package bo;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.app.NotificationCompat;
 
+import com.henja.liqnot.R;
 import com.henja.liqnot.ws.ApiCalls;
 import com.henja.liqnot.ws.WebsocketWorkerThread;
 
@@ -65,12 +71,12 @@ public class NotifierDirector {
 
     public void execute(){
         ApiCalls apiCalls = new ApiCalls();
-        apiCalls.addApiCallsListener(new ApiCalls.ApiCallsListener() {
+        /*apiCalls.addApiCallsListener(new ApiCalls.ApiCallsListener() {
             @Override
             public void OnAllDataReceived() {
                 evaluateAllNotifiers();
             }
-        });
+        });*/
         for(Notifier not : notifiers){
             NotifierRule notifierRule = not.getRule();
             apiCalls.addFunctions(notifierRule.askData());
@@ -88,8 +94,18 @@ public class NotifierDirector {
     }
 
     public void evaluateAllNotifiers(){
+        NotificationManager NM = (NotificationManager)
+                this.context.getSystemService(this.context.NOTIFICATION_SERVICE);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this.context);
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        notificationBuilder.setContentTitle("LiqNot Notification");
+
         for(Notifier not : notifiers){
             if (not.getRule().evaluate()){
+                notificationBuilder.setContentText(not.getRule().triggerText());
+                Notification notification = notificationBuilder.build();
+                NM.notify(0, notification);
                 //TODO TRIGGER ALARM OR NOTIFICATION TO THE USER!!!
             }
         }

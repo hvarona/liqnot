@@ -21,5 +21,7 @@ public abstract class NotifierRule {
 
     public abstract String toHumanReadableString();
 
+    public abstract String triggerText();
+
     public abstract ArrayList<ApiFunction> askData();
 }

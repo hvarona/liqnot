@@ -11,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.henja.liqnot.app.LiqNotApp;
+
 import bo.NotifierDirector;
 
 /**
@@ -46,8 +48,9 @@ public class LiqNotService extends Service {
 
         while(this.keepFillingNotifierData){
             //this.notifierDirector.execute();
-            Log.e("LiqNotService.FNDThread","I'm alive");
             try{
+                Log.i("LiqNotService.FNDThread","Filling notifiers data");
+                notifierDirector.execute();
                 Thread.sleep(60000);//Sleep for 1 minute
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -57,6 +60,9 @@ public class LiqNotService extends Service {
 
     @Override
     public void onCreate() {
+        this.notifierDirector = ((LiqNotApp)getApplication()).getNotifierDirector();
+
+
         // Start up the thread running the service.  Note that we create a
         // separate thread because the service normally runs in the process's
         // main thread, which we don't want to block.  We also make it

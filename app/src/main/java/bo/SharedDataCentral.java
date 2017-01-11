@@ -32,7 +32,21 @@ public abstract class SharedDataCentral {
 
     public static Asset getAsset(String assetName){
         if(!assets.containsKey(assetName)){
-            assets.put(assetName,new Asset(assetName));
+            Asset newAsset = new Asset(assetName);
+
+            //TODO this has to be removed, it's used only for testing
+            if (assetName == "BTS"){//TODO this has to be removed, it's used only for testing
+                newAsset.setId("1.3.0");//TODO this has to be removed, it's used only for testing
+                newAsset.setPrecision(5);//TODO this has to be removed, it's used only for testing
+            } else if (assetName == "BLOCKPAY"){//TODO this has to be removed, it's used only for testing
+                newAsset.setId("1.3.1072");//TODO this has to be removed, it's used only for testing
+                newAsset.setPrecision(4);//TODO this has to be removed, it's used only for testing
+            } else if (assetName == "USD"){//TODO this has to be removed, it's used only for testing
+                newAsset.setId("1.3.121");//TODO this has to be removed, it's used only for testing
+                newAsset.setPrecision(4);//TODO this has to be removed, it's used only for testing
+            }
+
+            assets.put(assetName,newAsset);
         }
         return assets.get(assetName);
     }

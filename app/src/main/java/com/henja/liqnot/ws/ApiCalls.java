@@ -5,6 +5,7 @@ import com.neovisionaries.ws.client.WebSocketAdapter;
 import com.neovisionaries.ws.client.WebSocketException;
 import com.neovisionaries.ws.client.WebSocketFrame;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,6 +50,8 @@ public class ApiCalls extends WebSocketAdapter {
                 e.printStackTrace();
             }
         }
+
+        return "";
     }
 
     @Override
@@ -62,7 +65,15 @@ public class ApiCalls extends WebSocketAdapter {
         JSONObject incoming = new JSONObject(frame.getPayloadText());
         int index = incoming.getInt("id");
         try {
-            functions.get(index).onResponse((JSONObject) incoming.get("result"));
+            Object unknowJsonClass = incoming.get("result");
+
+            if (unknowJsonClass instanceof JSONObject){
+                JSONObject jsonObject = (JSONObject)unknowJsonClass;
+                functions.get(index).onResponse(jsonObject);
+            } else if (unknowJsonClass instanceof JSONArray){
+                JSONArray jsonArray = (JSONArray)unknowJsonClass;
+                functions.get(index).onResponse(jsonArray);
+            }
         }catch(Exception e){
             //TODO manage error call
             e.printStackTrace();

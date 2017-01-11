@@ -7,6 +7,7 @@ import com.henja.liqnot.R;
  */
 public enum NotifierCurrency {
     UNKNOWN("UNKNOWN", R.mipmap.bitshares_icon, false),
+    USD("USD", R.mipmap.bitshares_icon, false),
     BTS("BTS", R.mipmap.bitshares_icon, false),
     BLOCKPAY("BLOCKPAY", R.mipmap.blockpay_icon, false);
 

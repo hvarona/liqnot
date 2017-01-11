@@ -144,13 +144,25 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
                 +this.baseCurrency.getName()
                 +" from the account \""+this.account.getName()+"\" "
                 +(this.operator == NotifierRuleOperator.LESS_THAN?"reachs lower values than":"reachs higher values than")+" "
-                +this.value
-                +" in "+this.quotedCurrency.getName();
+                +this.value+" "+this.quotedCurrency.getName();
+    }
+
+    @Override
+    public String triggerText() {
+        return this.baseCurrency.getName()
+                +" from \""+this.account.getName()+"\" "
+                +(this.operator == NotifierRuleOperator.LESS_THAN?"has reach lower values than":"has reach higher values than")+" "
+                +this.value+" "+this.quotedCurrency.getName();
     }
 
     @Override
     public ArrayList<ApiFunction> askData() {
         ArrayList<ApiFunction> apiFunctions = new ArrayList<ApiFunction>();
+
+        if ((this.account.getId().equals("")) && (this.account.getName().equals("henrytest-3"))){//TODO this has to be removed, it's used only for testing
+            this.account.setId("1.2.143552"); //TODO this has to be removed, it's used only for testing
+        }//TODO this has to be removed, it's used only for testing
+
 
         AccountBalance balance = SharedDataCentral.getAccountBalance(this.account.getId());
         if(!balance.isValid()){
