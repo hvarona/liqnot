@@ -19,10 +19,27 @@ public class LiqNotApp extends Application {
     public final static List<String> SMARTCOINS = Arrays.asList(new String[] {"CNY","BTC","USD","GOLD","EUR","SILVER",
             "ARS","CAD","GBP","KRW","CHF","JPY","HKD","SGD","AUD","RUB","SBK"});
 
+    public static String urlsSocketConnection[] =
+            {
+
+                    "wss://de.blockpay.ch:8089",                // German node
+                    "wss://fr.blockpay.ch:8089",               // France node
+                    "wss://bitshares.openledger.info/ws",      // Openledger node
+                    "wss://bit.btsabc.org/ws",
+                    "wss://bts.transwiser.com/ws",
+                    "wss://freedom.bts123.cc:15138",
+                    "wss://okbtc.org:8089/ws",
+                    "wss://ratebts.com:8089",
+                    "wss://webber.tech:8089/ws",
+                    "wss://bitshares.dacplay.org:8089/ws"
+            };
+    public static int lastServerIndexResponse;
+
     @Override
     public void onCreate() {
         super.onCreate();
         GetAssetList.getAllAssets();
+        lastServerIndexResponse = 0;
         this.notifierDirector = new NotifierDirector(this.getApplicationContext());
     }
 

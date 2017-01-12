@@ -97,7 +97,6 @@ public class NotifierDirector {
 
         for(Notifier not : notifiers){
             if (not.getRule().evaluate()){
-                System.out.println("Dentro del if");
                 notificationBuilder.setContentText(not.getRule().triggerText());
                 Notification notification = notificationBuilder.build();
                 NM.notify(0, notification);

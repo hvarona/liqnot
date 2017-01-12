@@ -59,7 +59,6 @@ public class ApiCalls extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
-        System.out.println(frame.getPayloadText());
         JSONObject incoming = new JSONObject(frame.getPayloadText());
         int index = incoming.getInt("id");
         try {
@@ -71,6 +70,11 @@ public class ApiCalls extends WebSocketAdapter {
             }
         }catch(Exception e){
             //TODO manage error call
+            try {
+                Object unknowJsonClass = incoming.get("error");
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
             e.printStackTrace();
         }
         functions.remove(index);
