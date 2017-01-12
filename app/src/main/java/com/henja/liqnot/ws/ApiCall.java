@@ -61,7 +61,7 @@ public class ApiCall {
                 }
                 methodParams.put(array);
             }else{
-                System.out.println("Skipping parameter of type: "+this.params.get(i).getClass());
+                //System.out.println("Skipping parameter of type: "+this.params.get(i).getClass());
             }
         }
         paramsArray.put(methodParams);

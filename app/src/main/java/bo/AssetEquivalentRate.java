@@ -31,6 +31,14 @@ public class AssetEquivalentRate implements SharedData {
         return quotedCurrency;
     }
 
+    public void setBaseCurrency(Asset baseCurrency) {
+        this.baseCurrency = baseCurrency;
+    }
+
+    public void setQuotedCurrency(Asset quotedCurrency) {
+        this.quotedCurrency = quotedCurrency;
+    }
+
     @Override
     public boolean isValid() {
         return expirationDate.after(new Date());

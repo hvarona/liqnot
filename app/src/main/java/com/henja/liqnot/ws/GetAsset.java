@@ -67,7 +67,7 @@ public class GetAsset implements ApiFunction {
                     type="smatcoin";
                 }
                 Asset asset = new Asset(id,symbol,precision,type);
-                //SharedDataCentral.putAsset(asset);
+                SharedDataCentral.putAsset(asset);
             }catch (JSONException e){
                 e.printStackTrace();
             }

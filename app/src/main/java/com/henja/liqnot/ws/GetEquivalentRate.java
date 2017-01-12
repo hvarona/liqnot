@@ -53,7 +53,6 @@ public class GetEquivalentRate implements ApiFunction {
 
     @Override
     public void onResponse(JSONArray response){
-        System.out.println("GetEquivalentRate <<< "+response.toString());
         for(int i = 0; i < response.length();i++){
             JSONObject eqObject = null;
             try {
@@ -73,23 +72,6 @@ public class GetEquivalentRate implements ApiFunction {
                 e.printStackTrace();
             }
         }
-        //SharedDataCentral.getEquivalentRate(base.getSymbol(),quote.getSymbol()).setValue();
-        /*try {
-            String response = frame.getPayloadText();
-            GsonBuilder builder = new GsonBuilder();
-
-            Type GetLimitOrdersResponse = new TypeToken<WitnessResponse<List<LimitOrder>>>() {}.getType();
-            builder.registerTypeAdapter(AssetAmount.class, new AssetAmount.AssetDeserializer());
-            builder.registerTypeAdapter(UserAccount.class, new UserAccount.UserAccountSimpleDeserializer());
-            WitnessResponse<List<LimitOrder>> witnessResponse = builder.create().fromJson(response, GetLimitOrdersResponse);
-            if (witnessResponse.error != null) {
-                this.mListener.onError(witnessResponse.error);
-            } else {
-                this.mListener.onSuccess(witnessResponse);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
     }
 
     @Override

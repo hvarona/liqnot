@@ -18,8 +18,6 @@ import bo.SharedDataCentral;
  */
 
 public class GetAssetList implements ApiFunction {
-    private static final String[] finalAssets = new String[]{"","BDR.VIRT","BTSHOME","CREDIT","EXPRESSO","GRATIS","KOKADUKATS","NEOSHARE","PAYALT","SHARES","TESTNOTE","WALLET"};
-
     private String startingAssetSymbol;
 
     public GetAssetList(String startingAssetSymbol) {
@@ -28,9 +26,7 @@ public class GetAssetList implements ApiFunction {
 
     public static void getAllAssets(){
         ApiCalls apiCalls = new ApiCalls();
-        for(String asset : finalAssets){
-            apiCalls.addFunction(new GetAssetList(asset));
-        }
+        apiCalls.addFunction(new GetAssetList(""));
         WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
         thread.start();
     }
@@ -60,6 +56,7 @@ public class GetAssetList implements ApiFunction {
 
     @Override
     public void onResponse(JSONArray response) {
+        String finalAsset = "";
         for(int i = 0; i < response.length();i++) {
             JSONObject eqObject = null;
             try {
@@ -73,12 +70,18 @@ public class GetAssetList implements ApiFunction {
                 }else if(LiqNotApp.SMARTCOINS.contains(symbol)){
                     type="smatcoin";
                 }
-                System.out.println("id " + id + " symbol " + symbol);
                 Asset asset = new Asset(id,symbol,precision,type);
+                finalAsset = asset.getSymbol();
                 SharedDataCentral.putAsset(asset);
             }catch (JSONException e){
                 e.printStackTrace();
             }
+        }
+        if(response.length()>= 100 && !finalAsset.isEmpty()){
+            ApiCalls apiCalls = new ApiCalls();
+            apiCalls.addFunction(new GetAssetList(finalAsset));
+            WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
+            thread.start();
         }
     }
 }
