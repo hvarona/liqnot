@@ -13,17 +13,26 @@ import java.util.List;
 import bo.Asset;
 import bo.SharedDataCentral;
 
-
 /**
- * Created by henry on 09/01/2017.
+ * Created by henry on 11/01/2017.
  */
 
-public class GetAsset implements ApiFunction {
+public class GetAssetList implements ApiFunction {
+    private static final String[] finalAssets = new String[]{"","BDR.VIRT","BTSHOME","CREDIT","EXPRESSO","GRATIS","KOKADUKATS","NEOSHARE","PAYALT","SHARES","TESTNOTE","WALLET"};
 
-    public String assetName;
+    private String startingAssetSymbol;
 
-    public GetAsset(String assetName) {
-        this.assetName = assetName;
+    public GetAssetList(String startingAssetSymbol) {
+        this.startingAssetSymbol = startingAssetSymbol;
+    }
+
+    public static void getAllAssets(){
+        ApiCalls apiCalls = new ApiCalls();
+        for(String asset : finalAssets){
+            apiCalls.addFunction(new GetAssetList(asset));
+        }
+        WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
+        thread.start();
     }
 
     @Override
@@ -33,7 +42,7 @@ public class GetAsset implements ApiFunction {
 
     @Override
     public String getMethodToCall() {
-        return "lookup_asset_symbols";
+        return "list_assets";
     }
 
     @Override
@@ -43,16 +52,14 @@ public class GetAsset implements ApiFunction {
 
     @Override
     public List<Serializable> getParams() {
-        ArrayList<Serializable> params = new ArrayList<>();
-        ArrayList<String> subArray = new ArrayList<>();
-        subArray.add(assetName);
-        params.add(subArray);
+        ArrayList<Serializable> params = new ArrayList();
+        params.add(startingAssetSymbol);
+        params.add("100");
         return params;
     }
 
     @Override
     public void onResponse(JSONArray response) {
-        System.out.println("GetAsset <<< "+response.toString());
         for(int i = 0; i < response.length();i++) {
             JSONObject eqObject = null;
             try {
@@ -66,27 +73,12 @@ public class GetAsset implements ApiFunction {
                 }else if(LiqNotApp.SMARTCOINS.contains(symbol)){
                     type="smatcoin";
                 }
+                System.out.println("id " + id + " symbol " + symbol);
                 Asset asset = new Asset(id,symbol,precision,type);
-                //SharedDataCentral.putAsset(asset);
+                SharedDataCentral.putAsset(asset);
             }catch (JSONException e){
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        GetAsset getAsset = (GetAsset) o;
-
-        return assetName.equals(getAsset.assetName);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return assetName.hashCode();
     }
 }

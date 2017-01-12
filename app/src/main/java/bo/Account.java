@@ -1,5 +1,8 @@
 package bo;
 
+import com.henja.liqnot.ws.ApiFunction;
+import com.henja.liqnot.ws.GetAccountInfo;
+
 /**
  * Created by javier on 10/01/2017.
  */
@@ -42,5 +45,9 @@ public class Account {
             }
             this.id = id;
         }
+    }
+
+    public ApiFunction getUpdateFunction(){
+        return new GetAccountInfo(this.name);
     }
 }

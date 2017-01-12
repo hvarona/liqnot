@@ -2,6 +2,8 @@ package com.henja.liqnot.app;
 
 import android.app.Application;
 
+import com.henja.liqnot.ws.GetAssetList;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class LiqNotApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        GetAssetList.getAllAssets();
         this.notifierDirector = new NotifierDirector(this.getApplicationContext());
     }
 
