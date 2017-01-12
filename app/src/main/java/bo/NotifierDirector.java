@@ -71,12 +71,6 @@ public class NotifierDirector {
 
     public void execute(){
         ApiCalls apiCalls = new ApiCalls();
-        /*apiCalls.addApiCallsListener(new ApiCalls.ApiCallsListener() {
-            @Override
-            public void OnAllDataReceived() {
-                evaluateAllNotifiers();
-            }
-        });*/
         for(Notifier not : notifiers){
             NotifierRule notifierRule = not.getRule();
             apiCalls.addFunctions(notifierRule.askData());
@@ -103,6 +97,7 @@ public class NotifierDirector {
 
         for(Notifier not : notifiers){
             if (not.getRule().evaluate()){
+                System.out.println("Dentro del if");
                 notificationBuilder.setContentText(not.getRule().triggerText());
                 Notification notification = notificationBuilder.build();
                 NM.notify(0, notification);

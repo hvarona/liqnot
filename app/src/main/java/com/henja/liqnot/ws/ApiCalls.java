@@ -50,8 +50,6 @@ public class ApiCalls extends WebSocketAdapter {
                 e.printStackTrace();
             }
         }
-
-        return "";
     }
 
     @Override
@@ -67,10 +65,7 @@ public class ApiCalls extends WebSocketAdapter {
         try {
             Object unknowJsonClass = incoming.get("result");
 
-            if (unknowJsonClass instanceof JSONObject){
-                JSONObject jsonObject = (JSONObject)unknowJsonClass;
-                functions.get(index).onResponse(jsonObject);
-            } else if (unknowJsonClass instanceof JSONArray){
+            if (unknowJsonClass instanceof JSONArray){
                 JSONArray jsonArray = (JSONArray)unknowJsonClass;
                 functions.get(index).onResponse(jsonArray);
             }

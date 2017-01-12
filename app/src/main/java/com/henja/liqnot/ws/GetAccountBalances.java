@@ -1,10 +1,17 @@
 package com.henja.liqnot.ws;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import bo.AccountBalance;
+import bo.Asset;
+import bo.SharedDataCentral;
 
 /**
  * Created by henry on 08/01/2017.
@@ -47,8 +54,23 @@ public class GetAccountBalances implements ApiFunction {
     }
 
     @Override
-    public void onResponse(JSONObject response) {
+    public void onResponse(JSONArray response) {
         System.out.println("GetAccount Balance <<< "+response.toString());
+        AccountBalance balance = SharedDataCentral.getAccountBalance(accountId);
+        HashMap<String,Double> balances = new HashMap();
+        for(int i = 0; i < response.length();i++) {
+            JSONObject eqObject = null;
+            try {
+                eqObject = (JSONObject) response.get(i);
+                Asset asset = SharedDataCentral.getAssetByID(eqObject.get("asset_id").toString());
+                if(asset.isValid()) {
+                    balances.put(eqObject.get("asset_id").toString(), Double.parseDouble(eqObject.get("amount").toString())*Math.pow(10,-(asset.getPrecision())));
+                }
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        balance.setBalances(balances);
     }
 
     @Override

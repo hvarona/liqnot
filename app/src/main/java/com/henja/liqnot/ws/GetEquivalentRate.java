@@ -1,5 +1,7 @@
 package com.henja.liqnot.ws;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -7,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bo.Asset;
+import bo.AssetEquivalentRate;
 import bo.SharedDataCentral;
 
 /**
@@ -49,8 +52,27 @@ public class GetEquivalentRate implements ApiFunction {
     }
 
     @Override
-    public void onResponse(JSONObject response){
+    public void onResponse(JSONArray response){
         System.out.println("GetEquivalentRate <<< "+response.toString());
+        for(int i = 0; i < response.length();i++){
+            JSONObject eqObject = null;
+            try {
+                eqObject = (JSONObject) response.get(i);
+                JSONObject sellPriceObject =(JSONObject)eqObject.get("sell_price");
+                JSONObject baseObject =(JSONObject)sellPriceObject.get("base");
+                JSONObject quoteObject =(JSONObject)sellPriceObject.get("quote");
+                if(baseObject.get("asset_id").toString().equals(base.getId())){
+                    double value = Double.parseDouble(quoteObject.get("amount").toString())/Double.parseDouble(baseObject.get("amount").toString());
+                    value = value * Math.pow(10,base.getPrecision()-quote.getPrecision());
+                    AssetEquivalentRate eqRate = SharedDataCentral.getEquivalentRate(base.getSymbol(),quote.getSymbol());
+                    eqRate.setValue(value);
+                    SharedDataCentral.putEquivalentsRate(eqRate);
+                    return;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         //SharedDataCentral.getEquivalentRate(base.getSymbol(),quote.getSymbol()).setValue();
         /*try {
             String response = frame.getPayloadText();

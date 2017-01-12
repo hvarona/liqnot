@@ -1,5 +1,6 @@
 package com.henja.liqnot.ws;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
@@ -44,7 +45,7 @@ public class GetAsset implements ApiFunction {
     }
 
     @Override
-    public void onResponse(JSONObject response) {
+    public void onResponse(JSONArray response) {
         System.out.println("GetAsset <<< "+response.toString());
     }
 

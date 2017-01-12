@@ -51,6 +51,15 @@ public abstract class SharedDataCentral {
         return assets.get(assetName);
     }
 
+    public static Asset getAssetByID(String assetID){
+        for(Asset asset : assets.values()){
+            if(asset.getId().equals(assetID)){
+                return asset;
+            }
+        }
+        return new Asset(assetID);
+    }
+
     public static void putAsset(Asset asset){
         assets.put(asset.getSymbol(),asset);
     }
