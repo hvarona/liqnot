@@ -117,6 +117,10 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
     public boolean isValid() {
         if (this.account == null){
             return false;
+        } else {
+            if ((this.account.getId() == null) || (this.account.getId().equals(""))){
+                return false;
+            }
         }
 
         if (this.baseCurrency == NotifierCurrency.UNKNOWN){

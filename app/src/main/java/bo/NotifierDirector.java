@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.henja.liqnot.R;
 import com.henja.liqnot.ws.ApiCalls;
+import com.henja.liqnot.ws.ApiFunction;
 import com.henja.liqnot.ws.WebsocketWorkerThread;
 
 import java.io.Serializable;
@@ -80,6 +81,16 @@ public class NotifierDirector {
                 @Override
                 public void OnAllDataReceived() {
                     evaluateAllNotifiers();
+                }
+
+                @Override
+                public void OnError(ApiFunction errorFunction) {
+
+                }
+
+                @Override
+                public void OnConnectError() {
+
                 }
             });
             WebsocketWorkerThread wsthread = new WebsocketWorkerThread(apiCalls);

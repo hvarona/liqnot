@@ -76,6 +76,7 @@ public class ApiCalls extends WebSocketAdapter {
                 ex.printStackTrace();
             }
             e.printStackTrace();
+            triggerOnError(functions.get(index));
         }
         functions.remove(index);
         if(functions.isEmpty()){
@@ -104,6 +105,7 @@ public class ApiCalls extends WebSocketAdapter {
     @Override
     public void onConnectError(WebSocket websocket, WebSocketException exception) throws Exception {
         super.onConnectError(websocket, exception);
+        triggerOnConnectError();
     }
 
 
@@ -115,6 +117,18 @@ public class ApiCalls extends WebSocketAdapter {
     public void triggerOnAllDataReceived(){
         for(ApiCallsListener listener : listeners){
             listener.OnAllDataReceived();
+        }
+    }
+
+    public void triggerOnError(ApiFunction errorFunction){
+        for(ApiCallsListener listener : listeners){
+            listener.OnError(errorFunction);
+        }
+    }
+
+    public void triggerOnConnectError(){
+        for(ApiCallsListener listener : listeners){
+            listener.OnConnectError();
         }
     }
 
@@ -130,5 +144,9 @@ public class ApiCalls extends WebSocketAdapter {
 
     public interface ApiCallsListener{
         public void OnAllDataReceived();
+
+        public void OnError(ApiFunction errorFunction);
+
+        public void OnConnectError();
     }
 }
