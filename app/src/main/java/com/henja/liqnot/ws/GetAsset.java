@@ -15,12 +15,13 @@ import bo.SharedDataCentral;
 
 
 /**
+ *
  * Created by henry on 09/01/2017.
  */
 
 public class GetAsset implements ApiFunction {
 
-    public String assetName;
+    private String assetName;
 
     public GetAsset(String assetName) {
         this.assetName = assetName;
@@ -54,7 +55,7 @@ public class GetAsset implements ApiFunction {
     public void onResponse(JSONArray response) {
         System.out.println("GetAsset <<< "+response.toString());
         for(int i = 0; i < response.length();i++) {
-            JSONObject eqObject = null;
+            JSONObject eqObject;
             try {
                 eqObject = (JSONObject) response.get(i);
                 String id = eqObject.get("id").toString();

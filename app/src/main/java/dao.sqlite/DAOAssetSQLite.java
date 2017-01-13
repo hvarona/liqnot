@@ -50,13 +50,12 @@ public class DAOAssetSQLite extends SQLiteOpenHelper implements DAOAsset, DAOSQL
 
     public boolean insertAsset(Asset asset){
         SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
         ContentValues newAsset = new ContentValues();
         newAsset.put(AssetTable.ID, asset.getId());
         newAsset.put(AssetTable.SYMBOL, asset.getSymbol());
         newAsset.put(AssetTable.PRECISION, asset.getPrecision());
         newAsset.put(AssetTable.TYPE, asset.getType());
-
+        db.beginTransaction();
         boolean answer = db.insert(AssetTable.TABLE_NAME, null, newAsset) != -1;
         db.endTransaction();
         db.close();

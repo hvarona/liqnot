@@ -1,10 +1,11 @@
 package bo;
 
 /**
+ *
  * Created by javier on 09/01/2017.
  */
 
-public enum NotifierRuleType {
+enum NotifierRuleType {
     UNKNOWN("UNKNOWN"),
     CURRENCY_OPERATOR_VALUE("CUR_OP_VAL");
 

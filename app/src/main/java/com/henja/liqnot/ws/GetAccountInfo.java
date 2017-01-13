@@ -1,7 +1,5 @@
 package com.henja.liqnot.ws;
 
-import com.henja.liqnot.app.LiqNotApp;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bo.Account;
-import bo.Asset;
 import bo.SharedDataCentral;
 
 /**
+ *
  * Created by henry on 11/01/2017.
  */
 
@@ -43,7 +41,7 @@ public class GetAccountInfo implements ApiFunction {
 
     @Override
     public List<Serializable> getParams() {
-        ArrayList<Serializable> params = new ArrayList();
+        ArrayList<Serializable> params = new ArrayList<>();
         params.add(accountId);
         return params;
     }

@@ -1,7 +1,5 @@
 package com.henja.liqnot.ws;
 
-import android.util.Log;
-
 import com.henja.liqnot.app.LiqNotApp;
 import com.neovisionaries.ws.client.WebSocket;
 import com.neovisionaries.ws.client.WebSocketException;
@@ -11,6 +9,7 @@ import com.neovisionaries.ws.client.WebSocketListener;
 import java.io.IOException;
 
 /**
+ *
  * Created by hvarona on 10/01/2017.
  */
 

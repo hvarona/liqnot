@@ -4,6 +4,8 @@ import com.henja.liqnot.ws.ApiFunction;
 import com.henja.liqnot.ws.GetAccountInfo;
 
 /**
+ * Account Bussiness Object, holds the name and the id of a BitShare Account
+ *
  * Created by javier on 10/01/2017.
  */
 
@@ -26,8 +28,8 @@ public class Account extends BO {
     }
 
     public void setName(String name) {
-        if (name != this.name){
-            if (this.name != "") {//This is to prevent an incorrect name/id pair
+        if (!name.equals(this.name)){
+            if (!this.name.equals("")) {//This is to prevent an incorrect name/id pair
                 this.id = "";
             }
             this.name = name;
@@ -39,8 +41,8 @@ public class Account extends BO {
     }
 
     public void setId(String id) {
-        if (id != this.id){
-            if (this.id != "") {//This is to prevent an incorrect name/id pair
+        if (!id.equals(this.id)){
+            if (!this.id.equals("")) {//This is to prevent an incorrect name/id pair
                 this.name = "";
             }
             this.id = id;

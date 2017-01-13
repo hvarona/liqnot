@@ -16,9 +16,6 @@ import com.henja.liqnot.service.LiqNotService;
 
 import bo.Notifier;
 import bo.NotifierDirector;
-import dao.DAOFactory;
-import dao.DAONotifier;
-import dao.sqlite.DAOFactorySQLite;
 
 public class LiqNotMainActivity extends AppCompatActivity implements NotifierListFragment.OnNotifierListFragmentInteractionListener, CurrencyOperatorValueNotifierRuleFragment.OnCurrencyOperatorValueNotifierFragmentInteractionListener {
 
@@ -28,8 +25,6 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifier_main);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
         //The directorNotifier
         this.notifierDirector = ((LiqNotApp)getApplication()).getNotifierDirector();
 
@@ -49,8 +44,6 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
 
         ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
         notifierPager.setAdapter(fragmentPagerAdapter);
-
-        //loadNotifiers();
     }
 
     @Override
@@ -75,35 +68,9 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
         return super.onOptionsItemSelected(item);
     }
 
-    public void loadNotifiers(){
-        /*ListView notifierListView = (ListView) findViewById(R.id.notifier_list_view);
-        DAOFactorySQLite db = DAOFactory.getSQLiteFactory(getApplicationContext());
-        DAONotifier daoNotifier = db.getNotifierDAO();
-
-        DAOEnumeration<DAO<Notifier>,Notifier> enumeration = daoNotifier.getNotifiers(0,10);
-        TextView notifierTextView;
-        final ArrayList<String> list = new ArrayList<String>();
-
-        while (enumeration.hasNext()){
-            Notifier nextNotifier = enumeration.next();
-            list.add("id:"+nextNotifier.getId());
-        }
-
-        final ArrayAdapter adapter = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_1, list);
-        notifierListView.setAdapter(adapter);*/
-
-    }
-
     public void onNewNotifierAction(){
         ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
         notifierPager.setCurrentItem(1);
-
-        /*Notifier newNotifier = new Notifier("");
-
-        DAOFactorySQLite db = DAOFactory.getSQLiteFactory(getApplicationContext());
-        DAONotifier daoNotifier = db.getNotifierDAO();
-        daoNotifier.insertNotifier(newNotifier);*/
     }
 
     @Override

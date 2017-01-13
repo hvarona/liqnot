@@ -14,12 +14,13 @@ import bo.Asset;
 import bo.SharedDataCentral;
 
 /**
+ *
  * Created by henry on 08/01/2017.
  */
 
 public class GetAccountBalances implements ApiFunction {
-    public String accountId;
-    public ArrayList<String> assetIds =new ArrayList();
+    private String accountId;
+    private ArrayList<String> assetIds =new ArrayList<>();
 
     public GetAccountBalances(String accountId) {
         this.accountId = accountId;
@@ -57,9 +58,9 @@ public class GetAccountBalances implements ApiFunction {
     public void onResponse(JSONArray response) {
         System.out.println("GetAccount Balance <<< "+response.toString());
         AccountBalance balance = SharedDataCentral.getAccountBalance(accountId);
-        HashMap<String,Double> balances = new HashMap();
+        HashMap<String,Double> balances = new HashMap<>();
         for(int i = 0; i < response.length();i++) {
-            JSONObject eqObject = null;
+            JSONObject eqObject;
             try {
                 eqObject = (JSONObject) response.get(i);
                 Asset asset = SharedDataCentral.getAssetByID(eqObject.get("asset_id").toString());
@@ -85,8 +86,8 @@ public class GetAccountBalances implements ApiFunction {
 
         GetAccountBalances that = (GetAccountBalances) o;
 
-        if (!accountId.equals(that.accountId)) return false;
-        return assetIds != null ? assetIds.equals(that.assetIds) : that.assetIds == null;
+        return accountId.equals(that.accountId)
+                && (assetIds != null ? assetIds.equals(that.assetIds) : that.assetIds == null);
 
     }
 

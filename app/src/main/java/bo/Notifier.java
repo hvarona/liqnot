@@ -2,16 +2,15 @@ package bo;
 
 import java.util.UUID;
 
-import static java.util.UUID.*;
-
 /**
+ *
  * Created by javier on 03/01/2017.
  */
 
 public class Notifier extends BO{
 
-    String id;
-    NotifierRule rule;
+    private String id;
+    private NotifierRule rule;
 
     public Notifier(String id){
         if (id.equals("")) {

@@ -2,11 +2,7 @@ package bo;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 
 import com.henja.liqnot.R;
@@ -15,7 +11,6 @@ import com.henja.liqnot.ws.GetAssetList;
 import com.henja.liqnot.ws.ApiFunction;
 import com.henja.liqnot.ws.WebsocketWorkerThread;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import dao.DAO;
@@ -25,11 +20,9 @@ import dao.DAOEnumeration;
 import dao.DAOFactory;
 import dao.DAONotifier;
 import dao.sqlite.DAOFactorySQLite;
-import dao.sqlite.DAONotifierEnumerationSQLite;
-import dao.sqlite.DAONotifierSQLite;
-
 
 /**
+ *
  * Created by javier on 08/01/2017.
  */
 
@@ -41,8 +34,8 @@ public class NotifierDirector {
     private DAOFactorySQLite db;
 
     public NotifierDirector(Context context){
-        this.notifiers = new ArrayList<Notifier>();
-        this.listeners = new ArrayList<NotifierDirectorListener>();
+        this.notifiers = new ArrayList<>();
+        this.listeners = new ArrayList<>();
         this.context = context;
         this.db = DAOFactory.getSQLiteFactory(this.context);
         DAOAsset daoAsset = this.db.getAssetDAO();
@@ -83,34 +76,26 @@ public class NotifierDirector {
             this.notifiers.add(notifier);
             tellNewNotifierToListeners(notifier);
         } else {
+            System.err.println("error adding notifier");
             //TODO should throw an error
         }
     }
 
     public void addAsset(Asset asset){
         DAOAsset daoAsset = this.db.getAssetDAO();
-
-        if (daoAsset.insertAsset(asset)) {
-
-        } else {
-            //TODO should throw an error
-        }
+        if(!daoAsset.insertAsset(asset))
+            System.err.println("error inserting asset "); //TODO handle error
     }
 
-    public void tellNewNotifierToListeners(Notifier notifier){
+    private void tellNewNotifierToListeners(Notifier notifier){
         for (NotifierDirectorListener listener: this.listeners){
             listener.OnNewNotifier(notifier);
         }
     }
 
     public void addAccount(Account account){
-        DAOAccount daodaoAccount = this.db.getAccountDAO();
-
-        if (daodaoAccount.insertAccount(account)) {
-
-        } else {
-            //TODO should throw an error
-        }
+        DAOAccount daoAccount = this.db.getAccountDAO();
+        daoAccount.insertAccount(account);//TODO handle error
     }
 
     public void execute(){
@@ -141,9 +126,9 @@ public class NotifierDirector {
         }
     }
 
-    public void evaluateAllNotifiers(){
+    private void evaluateAllNotifiers(){
         NotificationManager NM = (NotificationManager)
-                this.context.getSystemService(this.context.NOTIFICATION_SERVICE);
+                this.context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this.context);
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);

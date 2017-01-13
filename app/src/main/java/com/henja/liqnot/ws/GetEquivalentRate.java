@@ -13,6 +13,7 @@ import bo.AssetEquivalentRate;
 import bo.SharedDataCentral;
 
 /**
+ *
  * Created by henry on 08/01/2017.
  */
 
@@ -54,7 +55,7 @@ public class GetEquivalentRate implements ApiFunction {
     @Override
     public void onResponse(JSONArray response){
         for(int i = 0; i < response.length();i++){
-            JSONObject eqObject = null;
+            JSONObject eqObject;
             try {
                 eqObject = (JSONObject) response.get(i);
                 JSONObject sellPriceObject =(JSONObject)eqObject.get("sell_price");
@@ -86,8 +87,7 @@ public class GetEquivalentRate implements ApiFunction {
 
         GetEquivalentRate that = (GetEquivalentRate) o;
 
-        if (!base.equals(that.base)) return false;
-        return quote.equals(that.quote);
+        return base.equals(that.base) && quote.equals(that.quote);
 
     }
 
