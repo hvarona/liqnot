@@ -2,6 +2,13 @@
     <string name="app_name">LiqNot</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Service section !-->
+    <string name="liqnot_service_starting">LiqNot Service Starting!</string>
+    <string name="liqnot_service_stopped">LiqNot Service Stopped.</string>
+
+    <string name="choose_base_currency">Choose Base Currency</string>
+    <string name="choose_quoted_currency">Choose Quoted Currency</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

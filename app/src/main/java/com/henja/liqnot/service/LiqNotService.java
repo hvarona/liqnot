@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.henja.liqnot.R;
 import com.henja.liqnot.app.LiqNotApp;
 
 import bo.NotifierDirector;
@@ -51,7 +52,7 @@ public class LiqNotService extends Service {
             try{
                 Log.i("LiqNotService.FNDThread","Filling notifiers data");
                 notifierDirector.execute();
-                Thread.sleep(60000);//Sleep for 1 minute
+                Thread.sleep(60000);//Sleep for 1 minute //TODO Configurable time
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -61,32 +62,11 @@ public class LiqNotService extends Service {
     @Override
     public void onCreate() {
         this.notifierDirector = ((LiqNotApp)getApplication()).getNotifierDirector();
-
-
-        // Start up the thread running the service.  Note that we create a
-        // separate thread because the service normally runs in the process's
-        // main thread, which we don't want to block.  We also make it
-        // background priority so CPU-intensive work will not disrupt our UI.
-        /*HandlerThread thread = new HandlerThread("ServiceStartArguments",
-                Process.THREAD_PRIORITY_BACKGROUND);
-        thread.start();
-
-        // Get the HandlerThread's Looper and use it for our Handler
-        mServiceLooper = thread.getLooper();
-        mServiceHandler = new ServiceHandler(mServiceLooper);*/
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, "LiqNot Service Starting!", Toast.LENGTH_SHORT).show();
-
-        // For each start request, send a message to start a job and deliver the
-        // start ID so we know which request we're stopping when we finish the job
-        /*Message msg = mServiceHandler.obtainMessage();
-        msg.arg1 = startId;
-        mServiceHandler.sendMessage(msg);*/
-
-
+        Toast.makeText(this, getResources().getString(R.string.liqnot_service_starting), Toast.LENGTH_SHORT).show();
         //The thread to fillNotifiersData is created
         if (FillNotifiersDataThread == null) {
             FillNotifiersDataThread = new Thread() {
@@ -109,6 +89,6 @@ public class LiqNotService extends Service {
 
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "LiqNot Service Stopped.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getResources().getString(R.string.liqnot_service_stopped), Toast.LENGTH_SHORT).show();
     }
 }
