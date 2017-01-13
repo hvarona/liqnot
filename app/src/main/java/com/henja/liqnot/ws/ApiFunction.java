@@ -10,14 +10,15 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ *
  * Created by henry on 08/01/2017.
  */
 
 public interface ApiFunction {
-    public int getApiID();
-    public String getMethodToCall();
-    public String getMethod();
-    public List<Serializable> getParams();
-    public void onResponse(JSONArray response);
-    public void onResponse(JSONObject response);
+    int getApiID();
+    String getMethodToCall();
+    String getMethod();
+    List<Serializable> getParams();
+    void onResponse(JSONArray response);
+    void onResponse(JSONObject response);
 }

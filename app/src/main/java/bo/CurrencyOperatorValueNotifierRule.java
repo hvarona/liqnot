@@ -2,23 +2,23 @@ package bo;
 
 import com.henja.liqnot.ws.ApiFunction;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 /**
+ *
  * Created by javier on 04/01/2017.
  */
 
 public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
-    Account account;
-    NotifierCurrency baseCurrency;
-    NotifierCurrency quotedCurrency;
-    NotifierRuleOperator operator;
-    double value;
+    private Account account;
+    private NotifierCurrency baseCurrency;
+    private NotifierCurrency quotedCurrency;
+    private NotifierRuleOperator operator;
+    private double value;
 
     public CurrencyOperatorValueNotifierRule(){
         this.account = null;
@@ -115,31 +115,18 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
     @Override
     public boolean isValid() {
-        if (this.account == null){
+        if (this.account == null) {
             return false;
         } else {
-            if ((this.account.getId() == null) || (this.account.getId().equals(""))){
+            if ((this.account.getId() == null) || (this.account.getId().equals(""))) {
                 return false;
             }
         }
 
-        if (this.baseCurrency == NotifierCurrency.UNKNOWN){
-            return false;
-        }
+        return this.baseCurrency != NotifierCurrency.UNKNOWN
+                && this.quotedCurrency != NotifierCurrency.UNKNOWN
+                && this.operator != NotifierRuleOperator.UNKNOWN && this.value > 0;
 
-        if (this.quotedCurrency == NotifierCurrency.UNKNOWN){
-            return false;
-        }
-
-        if (this.operator == NotifierRuleOperator.UNKNOWN){
-            return false;
-        }
-
-        if (this.value <= 0){
-            return false;
-        }
-
-        return true;
     }
 
     @Override
@@ -161,7 +148,7 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
     @Override
     public ArrayList<ApiFunction> askData() {
-        ArrayList<ApiFunction> apiFunctions = new ArrayList<ApiFunction>();
+        ArrayList<ApiFunction> apiFunctions = new ArrayList<>();
 
         AccountBalance balance = SharedDataCentral.getAccountBalance(this.account.getId());
         if(!balance.isValid()){

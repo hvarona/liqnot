@@ -15,21 +15,22 @@ import bo.NotifierDirector;
 import bo.SharedDataCentral;
 
 /**
+ *
  * Created by henry on 11/01/2017.
  */
 
 public class GetAssetList implements ApiFunction {
     private String startingAssetSymbol;
-    private static NotifierDirector DIRECTOR;
+    private NotifierDirector director;
 
-    public GetAssetList(String startingAssetSymbol) {
+    public GetAssetList(String startingAssetSymbol,NotifierDirector director) {
         this.startingAssetSymbol = startingAssetSymbol;
+        this.director = director;
     }
 
     public static void getAllAssets(NotifierDirector director){
-        GetAssetList.DIRECTOR = director;
         ApiCalls apiCalls = new ApiCalls();
-        apiCalls.addFunction(new GetAssetList(""));
+        apiCalls.addFunction(new GetAssetList("",director));
         WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
         thread.start();
 
@@ -52,7 +53,7 @@ public class GetAssetList implements ApiFunction {
 
     @Override
     public List<Serializable> getParams() {
-        ArrayList<Serializable> params = new ArrayList();
+        ArrayList<Serializable> params = new ArrayList<>();
         params.add(startingAssetSymbol);
         params.add("100");
         return params;
@@ -60,9 +61,10 @@ public class GetAssetList implements ApiFunction {
 
     @Override
     public void onResponse(JSONArray response) {
+        System.out.println("En getAssetList con " + startingAssetSymbol);
         String finalAsset = "";
         for(int i = 0; i < response.length();i++) {
-            JSONObject eqObject = null;
+            JSONObject eqObject;
             try {
                 eqObject = (JSONObject) response.get(i);
                 String id = eqObject.get("id").toString();
@@ -77,8 +79,8 @@ public class GetAssetList implements ApiFunction {
                 Asset asset = new Asset(id,symbol,precision,type);
                 finalAsset = asset.getSymbol();
                 SharedDataCentral.putAsset(asset);
-                if(DIRECTOR != null) {
-                    DIRECTOR.addAsset(asset);
+                if(director != null) {
+                    director.addAsset(asset);
                 }
             }catch (JSONException e){
                 e.printStackTrace();
@@ -86,7 +88,7 @@ public class GetAssetList implements ApiFunction {
         }
         if(response.length()>= 100 && !finalAsset.isEmpty()){
             ApiCalls apiCalls = new ApiCalls();
-            apiCalls.addFunction(new GetAssetList(finalAsset));
+            apiCalls.addFunction(new GetAssetList(finalAsset,this.director));
             WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
             thread.start();
         }

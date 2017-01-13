@@ -3,6 +3,7 @@ package bo;
 import com.henja.liqnot.R;
 
 /**
+ *
  * Created by javier on 04/01/2017.
  */
 public enum NotifierCurrency {

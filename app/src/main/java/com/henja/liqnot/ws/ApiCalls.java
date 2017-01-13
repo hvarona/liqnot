@@ -15,18 +15,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ *
  * Created by henry on 08/01/2017.
  */
 
 public class ApiCalls extends WebSocketAdapter {
 
-    private Map<Integer,ApiFunction> functions = new HashMap();
+    private Map<Integer,ApiFunction> functions = new HashMap<>();
     private int lastIndex = 0;
     private ArrayList<ApiCallsListener> listeners;
 
 
     public ApiCalls() {
-        this.listeners = new ArrayList<ApiCallsListener>();
+        this.listeners = new ArrayList<>();
     }
 
     public void addFunction(ApiFunction function){
@@ -40,7 +41,7 @@ public class ApiCalls extends WebSocketAdapter {
         listeners.add(listener);
     }
 
-    public void sendMessage(WebSocket webSocket) {
+    private void sendMessage(WebSocket webSocket) {
 
         for(int index : functions.keySet()){
             ApiFunction function = functions.get(index);
@@ -72,6 +73,7 @@ public class ApiCalls extends WebSocketAdapter {
                 functions.get(index).onResponse(jsonObject);
             }
         }catch(Exception e){
+            System.out.println("error en incoming " + incoming.toString());
             //TODO manage error call
             try {
                 Object unknowJsonClass = incoming.get("error");
@@ -111,12 +113,6 @@ public class ApiCalls extends WebSocketAdapter {
         triggerOnConnectError();
     }
 
-
-    //METHODS FOR LISTENERS
-    /*public void addApiCallsListener(ApiCallsListener listener){
-        this.listeners.add(listener);
-    }*/
-
     public void triggerOnAllDataReceived(){
         for(ApiCallsListener listener : listeners){
             listener.OnAllDataReceived();
@@ -146,10 +142,10 @@ public class ApiCalls extends WebSocketAdapter {
     }
 
     public interface ApiCallsListener{
-        public void OnAllDataReceived();
+        void OnAllDataReceived();
 
-        public void OnError(ApiFunction errorFunction);
+        void OnError(ApiFunction errorFunction);
 
-        public void OnConnectError();
+        void OnConnectError();
     }
 }

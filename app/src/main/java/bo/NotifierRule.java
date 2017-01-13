@@ -2,11 +2,10 @@ package bo;
 
 import com.henja.liqnot.ws.ApiFunction;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
 
 /**
+ *
  * Created by javier on 04/01/2017.
  */
 public abstract class NotifierRule {

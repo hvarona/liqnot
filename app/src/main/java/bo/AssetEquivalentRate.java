@@ -6,6 +6,8 @@ import com.henja.liqnot.ws.GetEquivalentRate;
 import java.util.Date;
 
 /**
+ * Class that holds the equivalent rate of two Assets
+ *
  * Created by henry on 09/01/2017.
  */
 
@@ -17,25 +19,25 @@ public class AssetEquivalentRate implements SharedData {
     private double value = 0;
     private Date expirationDate;
 
-    public AssetEquivalentRate(Asset baseCurrency, Asset quotedCurrency) {
+    AssetEquivalentRate(Asset baseCurrency, Asset quotedCurrency) {
         this.baseCurrency = baseCurrency;
         this.quotedCurrency = quotedCurrency;
         expirationDate = new Date(0);
     }
 
-    public Asset getBaseCurrency() {
+    Asset getBaseCurrency() {
         return baseCurrency;
     }
 
-    public Asset getQuotedCurrency() {
+    Asset getQuotedCurrency() {
         return quotedCurrency;
     }
 
-    public void setBaseCurrency(Asset baseCurrency) {
+    void setBaseCurrency(Asset baseCurrency) {
         this.baseCurrency = baseCurrency;
     }
 
-    public void setQuotedCurrency(Asset quotedCurrency) {
+    void setQuotedCurrency(Asset quotedCurrency) {
         this.quotedCurrency = quotedCurrency;
     }
 
@@ -49,7 +51,7 @@ public class AssetEquivalentRate implements SharedData {
         return new GetEquivalentRate(baseCurrency, quotedCurrency);
     }
 
-    public double getValue() {
+    double getValue() {
         return value;
     }
 

@@ -3,12 +3,13 @@ package bo;
 import android.media.Image;
 
 /**
+ *
  * Created by javier on 06/01/2017.
  */
 
 public class NotifierCurrencyData {
-    public NotifierCurrency currency;
-    public Image image;
+    private NotifierCurrency currency;
+    private Image image;
 
     public NotifierCurrencyData(NotifierCurrency currency, Image image){
         this.currency = currency;

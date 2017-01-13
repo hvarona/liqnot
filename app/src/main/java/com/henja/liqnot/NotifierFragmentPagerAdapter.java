@@ -25,7 +25,7 @@ public class NotifierFragmentPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return NotifierListFragment.newInstance();
             case 1:
-                return CurrencyOperatorValueNotifierRuleFragment.newInstance();//new CurrencyOperatorValueNotifierRuleFragment(this.notifierDirector);
+                return CurrencyOperatorValueNotifierRuleFragment.newInstance();
         }
 
         return null;

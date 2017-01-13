@@ -1,13 +1,11 @@
 package com.henja.liqnot;
 
 import android.content.Context;
-import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -19,8 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TextView;
 
 import com.henja.liqnot.app.LiqNotApp;
 import com.henja.liqnot.ws.ApiCalls;
@@ -29,7 +25,6 @@ import com.henja.liqnot.ws.GetAccountInfo;
 import com.henja.liqnot.ws.WebsocketWorkerThread;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import bo.Account;
 import bo.CurrencyOperatorValueNotifierRule;
@@ -71,8 +66,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
      */
     // TODO: Rename and change types and number of parameters
     public static CurrencyOperatorValueNotifierRuleFragment newInstance() {
-        CurrencyOperatorValueNotifierRuleFragment fragment = new CurrencyOperatorValueNotifierRuleFragment();
-        return fragment;
+        return new CurrencyOperatorValueNotifierRuleFragment();
     }
 
     @Override
@@ -205,7 +199,6 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             }
         }
 
-        //ArrayAdapter baseCurrencyAdapter = ArrayAdapter.createFromResource(this, R.array.sound, R.layout.spinner_layout);
         ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
         final Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
         baseCurrencySpinner.setAdapter(baseCurrencyAdapter);

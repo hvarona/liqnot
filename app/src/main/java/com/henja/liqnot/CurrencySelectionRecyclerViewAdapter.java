@@ -12,6 +12,7 @@ import bo.NotifierCurrency;
 import bo.NotifierCurrencyData;
 
 /**
+ *
  * Created by javier on 06/01/2017.
  */
 
@@ -22,7 +23,7 @@ public class CurrencySelectionRecyclerViewAdapter extends RecyclerView.Adapter<C
     private CurrencyListener currencyListener;
 
     public interface CurrencyListener {
-        public void OnCurrencyClick(NotifierCurrency currency);
+        void OnCurrencyClick(NotifierCurrency currency);
     }
 
     public CurrencySelectionRecyclerViewAdapter(NotifierCurrencyData[] itemsData) {
@@ -38,9 +39,7 @@ public class CurrencySelectionRecyclerViewAdapter extends RecyclerView.Adapter<C
                                                                     int viewType) {
         View itemLayoutView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.currency_item_layout, null);
-
-        ViewHolder viewHolder = new ViewHolder(itemLayoutView);
-        return viewHolder;
+        return new ViewHolder(itemLayoutView);
     }
 
     @Override
@@ -56,12 +55,12 @@ public class CurrencySelectionRecyclerViewAdapter extends RecyclerView.Adapter<C
         Log.e("Item Changed","Item selected");
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView currencyName;
-        public ImageView currencyIcon;
+        TextView currencyName;
+        ImageView currencyIcon;
 
-        public ViewHolder(View itemLayoutView) {
+        ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
             currencyName = (TextView) itemLayoutView.findViewById(R.id.currency_name);
             currencyIcon = (ImageView) itemLayoutView.findViewById(R.id.currency_icon);

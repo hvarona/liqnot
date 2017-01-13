@@ -4,6 +4,8 @@ import com.henja.liqnot.ws.ApiFunction;
 import com.henja.liqnot.ws.GetAsset;
 
 /**
+ * Asset Bussisness Object
+ *
  * Created by henry on 09/01/2017.
  */
 
@@ -40,24 +42,12 @@ public class Asset extends BO implements SharedData{
         return symbol;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
-    }
-
     public int getPrecision() {
         return precision;
     }
 
-    public void setPrecision(int precision) {
-        this.precision = precision;
-    }
-
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     @Override

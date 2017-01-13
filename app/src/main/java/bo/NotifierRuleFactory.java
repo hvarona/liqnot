@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
+ *
  * Created by javier on 09/01/2017.
  */
 
@@ -28,7 +29,7 @@ public class NotifierRuleFactory {
         return null;
     }
 
-    public static NotifierRuleType getNotifierRuleTypeFromNotifierRule(NotifierRule notifierRule){
+    static NotifierRuleType getNotifierRuleTypeFromNotifierRule(NotifierRule notifierRule){
         if (notifierRule instanceof CurrencyOperatorValueNotifierRule){
             return NotifierRuleType.CURRENCY_OPERATOR_VALUE;
         } else {

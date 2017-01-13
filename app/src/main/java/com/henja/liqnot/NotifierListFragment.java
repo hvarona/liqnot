@@ -53,9 +53,6 @@ public class NotifierListFragment extends Fragment{
     @SuppressWarnings("unused")
     public static NotifierListFragment newInstance() {
         NotifierListFragment fragment = new NotifierListFragment();
-        //Bundle args = new Bundle();
-        //args.putSerializable(NotifierListFragment.NOTIFIER_DIRECTOR_KEY, notifierDirector);
-        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -75,11 +72,7 @@ public class NotifierListFragment extends Fragment{
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            //if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            //} else {
-            //    recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-           // }
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(new NotifierListRecyclerViewAdapter(this.notifierDirector,this.notifierDirector.getNotifiers()));
         }
         return view;
@@ -101,26 +94,6 @@ public class NotifierListFragment extends Fragment{
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    public void loadNotifiers(){
-        /*ListView notifierListView = (ListView) findViewById(R.id.notifier_list_view);
-        DAOFactorySQLite db = DAOFactory.getSQLiteFactory(getView().getContext());
-        DAONotifier daoNotifier = db.getNotifierDAO();
-
-        DAOEnumeration<DAO<Notifier>,Notifier> enumeration = daoNotifier.getNotifiers(0,10);
-        TextView notifierTextView;
-        final ArrayList<String> list = new ArrayList<String>();
-
-        while (enumeration.hasNext()){
-            Notifier nextNotifier = enumeration.next();
-            list.add("id:"+nextNotifier.getId());
-        }
-
-        final ArrayAdapter adapter = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_1, list);
-        notifierListView.setAdapter(adapter);*/
-
     }
 
     /**

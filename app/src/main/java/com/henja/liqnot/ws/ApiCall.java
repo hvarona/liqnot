@@ -9,17 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ *
  * Created by henry on 08/01/2017.
  */
 
-public class ApiCall {
-    public String method;
-    public String methodToCall;
-    public String jsonrpc;
-    public List<Serializable> params;
-    public int apiId;
+class ApiCall {
+    private String method;
+    private String methodToCall;
+    private String jsonrpc;
+    private List<Serializable> params;
+    private int apiId;
 
-    public ApiCall(int apiId, String methodToCall, List<Serializable> params, String jsonrpc){
+    ApiCall(int apiId, String methodToCall, List<Serializable> params, String jsonrpc){
 
         this.apiId = apiId;
         this.method = "call";
@@ -28,15 +29,8 @@ public class ApiCall {
         this.params = params;
     }
 
-    public ApiCall(int apiId, String method, String methodToCall, List<Serializable> params, String jsonrpc){
-        this.apiId = apiId;
-        this.method = method;
-        this.methodToCall = methodToCall;
-        this.jsonrpc = jsonrpc;
-        this.params = params;
-    }
 
-    public JSONObject toJsonObject(int seq) throws JSONException {
+    JSONObject toJsonObject(int seq) throws JSONException {
         JSONObject obj = new JSONObject();
         obj.put("id", seq);
         obj.put("method", this.method);
@@ -47,7 +41,7 @@ public class ApiCall {
 
         for(int i = 0; i < this.params.size(); i++){
             if (Number.class.isInstance(this.params.get(i))){
-                methodParams.put( (Number) this.params.get(i));
+                methodParams.put((Number) this.params.get(i));
             }else if(this.params.get(i) instanceof String || this.params.get(i) == null){
                 methodParams.put((String) this.params.get(i));
             }else if(this.params.get(i) instanceof ArrayList){
@@ -60,8 +54,6 @@ public class ApiCall {
                     }
                 }
                 methodParams.put(array);
-            }else{
-                //System.out.println("Skipping parameter of type: "+this.params.get(i).getClass());
             }
         }
         paramsArray.put(methodParams);

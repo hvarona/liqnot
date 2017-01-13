@@ -3,11 +3,12 @@ package bo;
 import com.henja.liqnot.ws.ApiFunction;
 
 /**
+ * Shared Data to use with SharedDataCentral
  * Created by henry on 09/01/2017.
  */
 
-public interface SharedData {
+interface SharedData {
 
-    public boolean isValid();
-    public ApiFunction getUpdateFunction();
+    boolean isValid();
+    ApiFunction getUpdateFunction();
 }

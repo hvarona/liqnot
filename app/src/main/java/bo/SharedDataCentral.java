@@ -3,18 +3,19 @@ package bo;
 import java.util.HashMap;
 
 /**
+ *
  * Created by henry on 09/01/2017.
  */
 
 public abstract class SharedDataCentral {
-    private static HashMap<String,Asset> assets = new HashMap();
-    private static HashMap<String,AccountBalance> accountsBalances = new HashMap();
-    private static HashMap<String,HashMap<String,AssetEquivalentRate>> equivalentsRates = new HashMap();
-    private static HashMap<String,Account> accounts = new HashMap();
+    private static HashMap<String,Asset> assets = new HashMap<>();
+    private static HashMap<String,AccountBalance> accountsBalances = new HashMap<>();
+    private static HashMap<String,HashMap<String,AssetEquivalentRate>> equivalentsRates = new HashMap<>();
+    private static HashMap<String,Account> accounts = new HashMap<>();
 
     public static AssetEquivalentRate getEquivalentRate(String base, String quote){
         if(!equivalentsRates.containsKey(base)){
-            equivalentsRates.put(base,new HashMap());
+            equivalentsRates.put(base,new HashMap<String,AssetEquivalentRate>());
         }
         if(!equivalentsRates.get(base).containsKey(quote)){
             equivalentsRates.get(base).put(quote,new AssetEquivalentRate(getAsset(base),getAsset(quote)));
@@ -29,7 +30,7 @@ public abstract class SharedDataCentral {
         String base = equivalentRate.getBaseCurrency().getSymbol();
         String quote = equivalentRate.getQuotedCurrency().getSymbol();
         if(!equivalentsRates.containsKey(base)){
-            equivalentsRates.put(base,new HashMap());
+            equivalentsRates.put(base,new HashMap<String,AssetEquivalentRate>());
         }
         if(equivalentsRates.get(base).containsKey(quote)){
             equivalentsRates.get(base).remove(quote);
@@ -37,7 +38,7 @@ public abstract class SharedDataCentral {
         equivalentsRates.get(base).put(quote,equivalentRate);
     }
 
-    public static Asset getAsset(String assetName){
+    static Asset getAsset(String assetName){
             if (!assets.containsKey(assetName)) {
                 Asset newAsset = new Asset(assetName);
                 assets.put(assetName, newAsset);
