@@ -67,6 +67,9 @@ public class ApiCalls extends WebSocketAdapter {
             if (unknowJsonClass instanceof JSONArray){
                 JSONArray jsonArray = (JSONArray)unknowJsonClass;
                 functions.get(index).onResponse(jsonArray);
+            } else if (unknowJsonClass instanceof JSONObject){
+                JSONObject jsonObject = (JSONObject)unknowJsonClass;
+                functions.get(index).onResponse(jsonObject);
             }
         }catch(Exception e){
             //TODO manage error call

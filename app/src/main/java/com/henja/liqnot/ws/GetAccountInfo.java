@@ -50,18 +50,19 @@ public class GetAccountInfo implements ApiFunction {
 
     @Override
     public void onResponse(JSONArray response) {
-        for(int i = 0; i < response.length();i++) {
-            JSONObject eqObject = null;
-            try {
-                eqObject = (JSONObject) response.get(i);
-                String id = eqObject.get("id").toString();
-                String name = eqObject.get("name").toString();
 
-                Account account = new Account(name,id);
-                SharedDataCentral.putAccount(account);
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
+    }
+
+    @Override
+    public void onResponse(JSONObject response) {
+        try {
+            String id = response.get("id").toString();
+            String name = response.get("name").toString();
+
+            Account account = new Account(name,id);
+            SharedDataCentral.putAccount(account);
+        }catch (JSONException e){
+            e.printStackTrace();
         }
     }
 }

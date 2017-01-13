@@ -91,4 +91,9 @@ public class GetAssetList implements ApiFunction {
             thread.start();
         }
     }
+
+    @Override
+    public void onResponse(JSONObject response) {
+
+    }
 }

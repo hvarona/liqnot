@@ -75,6 +75,11 @@ public class GetEquivalentRate implements ApiFunction {
     }
 
     @Override
+    public void onResponse(JSONObject response) {
+
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

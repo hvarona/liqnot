@@ -19,4 +19,5 @@ public interface ApiFunction {
     public String getMethod();
     public List<Serializable> getParams();
     public void onResponse(JSONArray response);
+    public void onResponse(JSONObject response);
 }

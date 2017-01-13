@@ -163,11 +163,6 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
     public ArrayList<ApiFunction> askData() {
         ArrayList<ApiFunction> apiFunctions = new ArrayList<ApiFunction>();
 
-        if ((this.account.getId().equals("")) && (this.account.getName().equals("henrytest-3"))){//TODO this has to be removed, it's used only for testing
-            this.account.setId("1.2.143552"); //TODO this has to be removed, it's used only for testing
-        }//TODO this has to be removed, it's used only for testing
-
-
         AccountBalance balance = SharedDataCentral.getAccountBalance(this.account.getId());
         if(!balance.isValid()){
             apiFunctions.add(balance.getUpdateFunction());

@@ -109,10 +109,13 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                 accountNameEditText.setTextColor(Color.BLACK);
                 searchForAccountInfoTimer.cancel();
                 account = SharedDataCentral.getAccount(s.toString());
+                rule.setAccount(account);
 
-                if (account == null){
+                if ((account == null) || (account.getId() == null) || (account.getId().equals(""))){
                     account = new Account(s.toString());
                     searchForAccountInfoTimer.start();
+                } else {
+                    accountNameEditText.setTextColor(Color.GREEN);
                 }
 
                 checkRule();
@@ -153,6 +156,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                                         Account accountInfo = SharedDataCentral.getAccount(account.getName());
                                         if (accountInfo != null) {
                                             account = accountInfo;
+                                            rule.setAccount(account);
                                             accountNameEditText.setTextColor(Color.GREEN);
                                             checkRule();
                                         } else {
