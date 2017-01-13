@@ -22,6 +22,11 @@ public abstract class SharedDataCentral {
         AssetEquivalentRate eqRate = equivalentsRates.get(base).get(quote);
         eqRate.setBaseCurrency(getAsset(base));
         eqRate.setQuotedCurrency(getAsset(quote));
+
+        if (base.equals(quote)){
+            eqRate.setValue(1);
+        }
+
         return eqRate;
     }
 

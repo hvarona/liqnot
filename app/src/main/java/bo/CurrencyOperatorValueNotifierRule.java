@@ -92,25 +92,29 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
         AccountBalance balance = SharedDataCentral.getAccountBalance(this.account.getId());
         Asset baseAsset = SharedDataCentral.getAsset(this.baseCurrency.getName());
         Asset quotedAsset = SharedDataCentral.getAsset(this.quotedCurrency.getName());
+        boolean result = false;
 
         if(balance.isValid() && baseAsset.isValid() && quotedAsset.isValid()){
             AssetEquivalentRate equivalentRate = SharedDataCentral.getEquivalentRate(baseAsset.getSymbol(),quotedAsset.getSymbol());
 
             if(equivalentRate.isValid()) {
-                double baseBalance = balance.getAssetBalance(baseAsset.getId());
-                double baseBalancePrecise = baseBalance / (10 * baseAsset.getPrecision());
+                double baseBalancePrecise = balance.getAssetBalance(baseAsset.getId());
                 double quotedBalance = baseBalancePrecise * equivalentRate.getValue();
 
                 switch (this.operator) {
                     case LESS_THAN:
-                        return quotedBalance < this.value;
+                        result = (quotedBalance < this.value);
+                        break;
+                        //return result;
                     case BIGGER_THAN:
-                        return quotedBalance > this.value;
+                        result = (quotedBalance > this.value);
+                        //return result;
+                        break;
                 }
             }
         }
 
-        return false;
+        return result;
     }
 
     @Override
