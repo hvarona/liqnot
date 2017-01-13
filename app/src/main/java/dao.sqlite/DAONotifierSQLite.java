@@ -21,7 +21,7 @@ import dao.DAONotifier;
 public class DAONotifierSQLite extends SQLiteOpenHelper implements DAONotifier, DAOSQLite<Notifier> {
 
     public DAONotifierSQLite(Context context){
-        super(context, "liqnot.db", null, 1);
+        super(context, "liqnotnotifier.db", null, 1);
     }
 
     public static abstract class NotifierTable implements BaseColumns {

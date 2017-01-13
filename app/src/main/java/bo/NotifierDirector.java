@@ -11,12 +11,15 @@ import android.support.v4.app.NotificationCompat;
 
 import com.henja.liqnot.R;
 import com.henja.liqnot.ws.ApiCalls;
+import com.henja.liqnot.ws.GetAssetList;
 import com.henja.liqnot.ws.WebsocketWorkerThread;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import dao.DAO;
+import dao.DAOAccount;
+import dao.DAOAsset;
 import dao.DAOEnumeration;
 import dao.DAOFactory;
 import dao.DAONotifier;
@@ -41,6 +44,27 @@ public class NotifierDirector {
         this.listeners = new ArrayList<NotifierDirectorListener>();
         this.context = context;
         this.db = DAOFactory.getSQLiteFactory(this.context);
+        DAOAsset daoAsset = this.db.getAssetDAO();
+        DAOEnumeration<DAO<Asset>, Asset> assets = daoAsset.getAsset(0,-1);
+        if(assets.count()<=0){
+            GetAssetList.getAllAssets(this);
+        }else {
+            Asset nextAsset;
+            while (assets.hasNext()) {
+                nextAsset = assets.next();
+                SharedDataCentral.putAsset(nextAsset);
+            }
+        }
+
+        DAOAccount daoAccount = this.db.getAccountDAO();
+        DAOEnumeration<DAO<Account>,Account> accounts = daoAccount.getAccount(0,-1);
+
+        Account nextAccount;
+        while(accounts.hasNext()){
+            nextAccount = accounts.next();
+            SharedDataCentral.putAccount(nextAccount);
+        }
+
         DAONotifier daoNotifier = this.db.getNotifierDAO();
         DAOEnumeration<DAO<Notifier>, Notifier> notifiers = daoNotifier.getNotifiers(0,-1);
 
@@ -52,7 +76,6 @@ public class NotifierDirector {
     }
 
     public void addNotifier(Notifier notifier){
-        this.db = DAOFactory.getSQLiteFactory(this.context);
         DAONotifier daoNotifier = this.db.getNotifierDAO();
 
         if (daoNotifier.insertNotifier(notifier)) {
@@ -63,9 +86,29 @@ public class NotifierDirector {
         }
     }
 
+    public void addAsset(Asset asset){
+        DAOAsset daoAsset = this.db.getAssetDAO();
+
+        if (daoAsset.insertAsset(asset)) {
+
+        } else {
+            //TODO should throw an error
+        }
+    }
+
     public void tellNewNotifierToListeners(Notifier notifier){
         for (NotifierDirectorListener listener: this.listeners){
             listener.OnNewNotifier(notifier);
+        }
+    }
+
+    public void addAccount(Account account){
+        DAOAccount daodaoAccount = this.db.getAccountDAO();
+
+        if (daodaoAccount.insertAccount(account)) {
+
+        } else {
+            //TODO should throw an error
         }
     }
 

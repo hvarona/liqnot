@@ -7,7 +7,7 @@ import com.henja.liqnot.ws.GetAsset;
  * Created by henry on 09/01/2017.
  */
 
-public class Asset implements SharedData{
+public class Asset extends BO implements SharedData{
 
     private String id;
     private String symbol;

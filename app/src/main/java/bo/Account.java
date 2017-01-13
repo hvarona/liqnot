@@ -7,7 +7,7 @@ import com.henja.liqnot.ws.GetAccountInfo;
  * Created by javier on 10/01/2017.
  */
 
-public class Account {
+public class Account extends BO {
     private String name;
     private String id;
 

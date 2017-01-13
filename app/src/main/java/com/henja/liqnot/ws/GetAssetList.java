@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bo.Asset;
+import bo.NotifierDirector;
 import bo.SharedDataCentral;
 
 /**
@@ -19,16 +20,19 @@ import bo.SharedDataCentral;
 
 public class GetAssetList implements ApiFunction {
     private String startingAssetSymbol;
+    private static NotifierDirector DIRECTOR;
 
     public GetAssetList(String startingAssetSymbol) {
         this.startingAssetSymbol = startingAssetSymbol;
     }
 
-    public static void getAllAssets(){
+    public static void getAllAssets(NotifierDirector director){
+        GetAssetList.DIRECTOR = director;
         ApiCalls apiCalls = new ApiCalls();
         apiCalls.addFunction(new GetAssetList(""));
         WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
         thread.start();
+
     }
 
     @Override
@@ -73,6 +77,9 @@ public class GetAssetList implements ApiFunction {
                 Asset asset = new Asset(id,symbol,precision,type);
                 finalAsset = asset.getSymbol();
                 SharedDataCentral.putAsset(asset);
+                if(DIRECTOR != null) {
+                    DIRECTOR.addAsset(asset);
+                }
             }catch (JSONException e){
                 e.printStackTrace();
             }

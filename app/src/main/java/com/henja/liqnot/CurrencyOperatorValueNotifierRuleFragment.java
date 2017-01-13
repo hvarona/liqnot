@@ -31,6 +31,7 @@ import bo.NotifierCurrency;
 import bo.NotifierCurrencyData;
 import bo.NotifierDirector;
 import bo.NotifierRuleOperator;
+import bo.SharedDataCentral;
 
 
 /**
