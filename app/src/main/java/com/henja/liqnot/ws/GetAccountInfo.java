@@ -33,7 +33,7 @@ public class GetAccountInfo implements ApiFunction {
 
     @Override
     public String getMethodToCall() {
-        return "get_full_accounts";
+        return "get_account_by_name";
     }
 
     @Override
@@ -44,10 +44,7 @@ public class GetAccountInfo implements ApiFunction {
     @Override
     public List<Serializable> getParams() {
         ArrayList<Serializable> params = new ArrayList();
-        ArrayList<Serializable> accountIds = new ArrayList();
-        accountIds.add(accountId);
-        params.add(accountIds);
-        params.add("false");
+        params.add(accountId);
         return params;
     }
 
