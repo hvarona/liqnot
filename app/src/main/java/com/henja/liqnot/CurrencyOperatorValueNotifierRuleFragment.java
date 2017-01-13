@@ -72,20 +72,12 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
     // TODO: Rename and change types and number of parameters
     public static CurrencyOperatorValueNotifierRuleFragment newInstance() {
         CurrencyOperatorValueNotifierRuleFragment fragment = new CurrencyOperatorValueNotifierRuleFragment();
-        //Bundle args = new Bundle();
-        //args.putSerializable(CurrencyOperatorValueNotifierRuleFragment.NOTIFIER_DIRECTOR_KEY, notifierDirector);
-        //fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
-
         rule = new CurrencyOperatorValueNotifierRule();
     }
 
@@ -203,7 +195,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         ArrayList<String> baseCurrencyStringList = new ArrayList<String>();
         for(NotifierCurrency nc : NotifierCurrency.values()){
             if (nc == NotifierCurrency.UNKNOWN){
-                baseCurrencyStringList.add("Choose Base Currency");
+                baseCurrencyStringList.add(getResources().getString(R.string.choose_base_currency));
             } else {
                 baseCurrencyStringList.add(nc.getName());
             }
@@ -234,13 +226,12 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         ArrayList<String> quotedCurrencyStringList = new ArrayList<String>();
         for(NotifierCurrency nc : NotifierCurrency.values()){
             if (nc == NotifierCurrency.UNKNOWN){
-                quotedCurrencyStringList.add("Choose Quoted Currency");
+                quotedCurrencyStringList.add(getResources().getString(R.string.choose_quoted_currency));
             } else {
                 quotedCurrencyStringList.add(nc.getName());
             }
         }
 
-        //ArrayAdapter quotedCurrencyAdapter = ArrayAdapter.createFromResource(this, R.array.sound, R.layout.spinner_layout);
         ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
         final Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
         quotedCurrencySpinner.setAdapter(quotedCurrencyAdapter);
@@ -262,33 +253,6 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             }
         });
 
-        /*CurrencySelectionRecyclerViewAdapter baseCurrencyRecyclerAdapter = new CurrencySelectionRecyclerViewAdapter(currenciesData);
-        baseCurrencyRecyclerAdapter.setOnCurrencyListener(new CurrencySelectionRecyclerViewAdapter.CurrencyListener() {
-            @Override
-            public void OnCurrencyClick(NotifierCurrency currency) {
-                TextView baseCurrencyTextView = (TextView) getView().findViewById(R.id.base_currency_selected_text);
-                baseCurrencyTextView.setText(currency.name());
-                rule.setBaseCurrency(currency);
-                checkRule();
-            }
-        });
-        RecyclerView baseCurrencyRecyclerView = (RecyclerView) v.findViewById(R.id.base_currency_recycler_view);
-        baseCurrencyRecyclerView.setAdapter(baseCurrencyRecyclerAdapter);
-
-        CurrencySelectionRecyclerViewAdapter quotedCurrencyRecyclerAdapter = new CurrencySelectionRecyclerViewAdapter(currenciesData);
-        quotedCurrencyRecyclerAdapter.setOnCurrencyListener(new CurrencySelectionRecyclerViewAdapter.CurrencyListener() {
-            @Override
-            public void OnCurrencyClick(NotifierCurrency currency) {
-                TextView quotedCurrencyTextView = (TextView) getView().findViewById(R.id.quoted_currency_selected_text);
-                quotedCurrencyTextView.setText(currency.name());
-                rule.setQuotedCurrency(currency);
-                checkRule();
-            }
-        });
-        RecyclerView quotedCurrencyRecyclerView = (RecyclerView) v.findViewById(R.id.quoted_currency_recycler_view);
-        quotedCurrencyRecyclerView.setAdapter(quotedCurrencyRecyclerAdapter);*/
-
-
         Spinner operatorSpinner = (Spinner) v.findViewById(R.id.operator_spinner);
         final ArrayAdapter<CharSequence> operatorAdapter = ArrayAdapter.createFromResource(this.getActivity(), R.array.operators_array, R.layout.spinner_layout);
         operatorSpinner.setAdapter(operatorAdapter);
@@ -298,10 +262,10 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                 String operatorLabel = operatorAdapter.getItem(position).toString();
 
                 switch(operatorLabel){
-                    case "Less than":
+                    case "<":
                         rule.setOperator(NotifierRuleOperator.LESS_THAN);
                         break;
-                    case "Bigger than":
+                    case ">":
                         rule.setOperator(NotifierRuleOperator.BIGGER_THAN);
                         break;
                     default:

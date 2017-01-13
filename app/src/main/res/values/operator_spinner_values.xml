@@ -2,7 +2,7 @@
 <resources>
     <string-array name="operators_array">
         <item>Choose Condition</item>
-        <item>Less than</item>
-        <item>Bigger than</item>
+        <item>&lt;</item>
+        <item>&gt;</item>
     </string-array>
 </resources>

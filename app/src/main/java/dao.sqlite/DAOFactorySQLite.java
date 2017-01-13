@@ -2,6 +2,8 @@ package dao.sqlite;
 
 import android.content.Context;
 
+import dao.DAOAccount;
+import dao.DAOAsset;
 import dao.DAOFactory;
 import dao.DAONotifier;
 
@@ -20,5 +22,15 @@ public class DAOFactorySQLite extends DAOFactory{
     @Override
     public DAONotifier getNotifierDAO() {
         return new DAONotifierSQLite(this.context);
+    }
+
+    @Override
+    public DAOAsset getAssetDAO() {
+        return new DAOAssetSQLite(this.context);
+    }
+
+    @Override
+    public DAOAccount getAccountDAO() {
+        return new DAOAccountSQLite(this.context);
     }
 }

@@ -47,7 +47,7 @@ public abstract class SharedDataCentral {
 
     public static Asset getAssetByID(String assetID){
         for(Asset asset : assets.values()){
-            if(asset.getId().equals(assetID)){
+            if(asset != null && asset.getId().equals(assetID)){
                 return asset;
             }
         }
@@ -55,10 +55,12 @@ public abstract class SharedDataCentral {
     }
 
     public static void putAsset(Asset asset){
-                if (assets.containsKey(asset.getSymbol())) {
-                    assets.remove(asset.getSymbol());
-                }
-                assets.put(asset.getSymbol(), asset);
+        if(asset != null){
+        if (assets.containsKey(asset.getSymbol())) {
+            assets.remove(asset.getSymbol());
+        }
+        assets.put(asset.getSymbol(), asset);
+        }
     }
 
     public static AccountBalance getAccountBalance(String accountID){

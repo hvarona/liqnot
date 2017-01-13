@@ -11,6 +11,8 @@ import dao.sqlite.DAOFactorySQLite;
 public abstract class DAOFactory {
 
     public abstract DAONotifier getNotifierDAO();
+    public abstract DAOAsset getAssetDAO();
+    public abstract DAOAccount getAccountDAO();
 
     public static DAOFactorySQLite getSQLiteFactory(Context context){
         return new DAOFactorySQLite(context);

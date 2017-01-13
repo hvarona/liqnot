@@ -33,7 +33,7 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
         //The directorNotifier
         this.notifierDirector = ((LiqNotApp)getApplication()).getNotifierDirector();
 
-        Intent intent = new Intent(this, LiqNotService.class);
+        Intent intent = new Intent(getApplicationContext(), LiqNotService.class);
         startService(intent);
 
 

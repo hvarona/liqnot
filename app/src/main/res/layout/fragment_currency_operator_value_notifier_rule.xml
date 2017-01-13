@@ -10,17 +10,34 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <EditText
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/account_name_edit_text"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:hint="Insert account name" />
+            android:id="@+id/relative_layout_account_name"
+            >
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/account_name_edit_text"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:hint="Insert account name">
 
+            </EditText>
+            <ProgressBar
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/accountNameProgressBar"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
+        </RelativeLayout>
         <Spinner
             android:id="@+id/base_currency_recycler_view"
-            android:layout_below="@+id/account_name_edit_text"
+            android:layout_below="@+id/relative_layout_account_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"/>

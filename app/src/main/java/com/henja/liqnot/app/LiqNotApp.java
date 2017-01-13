@@ -38,7 +38,6 @@ public class LiqNotApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        GetAssetList.getAllAssets();
         lastServerIndexResponse = 0;
         this.notifierDirector = new NotifierDirector(this.getApplicationContext());
     }
