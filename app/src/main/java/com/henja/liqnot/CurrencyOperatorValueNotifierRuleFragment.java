@@ -2,8 +2,10 @@ package com.henja.liqnot;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -15,11 +17,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.henja.liqnot.app.LiqNotApp;
+import com.henja.liqnot.ws.ApiCalls;
+import com.henja.liqnot.ws.ApiFunction;
+import com.henja.liqnot.ws.GetAccountInfo;
+import com.henja.liqnot.ws.WebsocketWorkerThread;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +38,7 @@ import bo.NotifierCurrency;
 import bo.NotifierCurrencyData;
 import bo.NotifierDirector;
 import bo.NotifierRuleOperator;
+import bo.SharedDataCentral;
 
 
 /**
@@ -46,6 +54,10 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
     private NotifierDirector notifierDirector;
     private CurrencyOperatorValueNotifierRule rule;
     private OnCurrencyOperatorValueNotifierFragmentInteractionListener mListener;
+    private CountDownTimer searchForAccountInfoTimer;
+    private Account account;
+    private String lastAccountNameCall;
+    private ApiFunction lastApiFunctionCall;
 
     public CurrencyOperatorValueNotifierRuleFragment() {
         // Required empty public constructor
@@ -83,7 +95,6 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         // Inflate the layout for this fragment
         this.notifierDirector = ((LiqNotApp)getActivity().getApplication()).getNotifierDirector();//(NotifierDirector) getArguments().getSerializable(CurrencyOperatorValueNotifierRuleFragment.NOTIFIER_DIRECTOR_KEY);
 
-
         View v = inflater.inflate(R.layout.fragment_currency_operator_value_notifier_rule, container, false);
 
         NotifierCurrencyData[] currenciesData = new NotifierCurrencyData[NotifierCurrency.values().length];
@@ -94,7 +105,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             index++;
         }
 
-        EditText accountNameEditText = (EditText) v.findViewById(R.id.account_name_edit_text);
+        final EditText accountNameEditText = (EditText) v.findViewById(R.id.account_name_edit_text);
         accountNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -103,12 +114,15 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (rule.getAccount() != null){
-                    Account account = rule.getAccount();
-                    account.setName(s.toString());
-                } else {
-                    rule.setAccount(new Account(s.toString()));
+                accountNameEditText.setTextColor(Color.BLACK);
+                searchForAccountInfoTimer.cancel();
+                account = SharedDataCentral.getAccount(s.toString());
+
+                if (account == null){
+                    account = new Account(s.toString());
+                    searchForAccountInfoTimer.start();
                 }
+
                 checkRule();
             }
 
@@ -118,6 +132,73 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             }
         });
 
+
+        //Creation of the timer for searching the user info inserted by the user
+        this.searchForAccountInfoTimer = new CountDownTimer(1000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+            }
+
+            @Override
+            public void onFinish() {
+                final ProgressBar accountNameProgressBar = (ProgressBar) getView().findViewById(R.id.accountNameProgressBar);
+                accountNameProgressBar.setVisibility(View.VISIBLE);
+
+                if (account.getName() != "") {
+                    lastAccountNameCall = account.getName();
+                    ApiCalls apiCalls = new ApiCalls();
+                    ApiFunction function = new GetAccountInfo(account.getName());
+                    lastApiFunctionCall = function;
+                    apiCalls.addFunction(function);
+                    apiCalls.addListener(new ApiCalls.ApiCallsListener() {
+                        @Override
+                        public void OnAllDataReceived() {
+                            getActivity().runOnUiThread(new Runnable() {
+                                public void run() {
+                                    if (lastAccountNameCall == account.getName()) {
+                                        accountNameProgressBar.setVisibility(View.GONE);
+
+                                        Account accountInfo = SharedDataCentral.getAccount(account.getName());
+                                        if (accountInfo != null) {
+                                            account = accountInfo;
+                                            accountNameEditText.setTextColor(Color.GREEN);
+                                            checkRule();
+                                        } else {
+                                            //TODO notify the user that the account doesn't exists
+                                            accountNameEditText.setTextColor(Color.RED);
+                                            checkRule();
+                                        }
+                                    }
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void OnError(final ApiFunction errorFunction) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                public void run() {
+                                    if (lastApiFunctionCall == errorFunction) {
+                                        accountNameProgressBar.setVisibility(View.GONE);
+                                        accountNameEditText.setTextColor(Color.RED);
+                                    }
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void OnConnectError() {
+                            getActivity().runOnUiThread(new Runnable() {
+                                public void run() {
+                                    accountNameProgressBar.setVisibility(View.GONE);
+                                }
+                            });
+                        }
+                    });
+                    WebsocketWorkerThread wsthread = new WebsocketWorkerThread(apiCalls);
+                    wsthread.start();
+                }
+            }
+        };
 
         ArrayList<String> baseCurrencyStringList = new ArrayList<String>();
         for(NotifierCurrency nc : NotifierCurrency.values()){
