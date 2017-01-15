@@ -98,6 +98,7 @@ public class GetAssetList implements ApiFunction {
                 thread.start();
             } catch (ConnectionException e) {
                 e.printStackTrace();
+                GetAssetList.listener.OnConnectError();
                 //TODO error conexion
             }
         }else{
