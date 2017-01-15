@@ -68,12 +68,13 @@ public class NotifierListFragment extends Fragment{
 
         this.notifierDirector = ((LiqNotApp)getActivity().getApplication()).getNotifierDirector();
 
+
+        RecyclerView listView = (RecyclerView) view.findViewById(R.id.notifier_list_view);
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new NotifierListRecyclerViewAdapter(this.notifierDirector,this.notifierDirector.getNotifiers()));
+        if (listView instanceof RecyclerView) {
+            Context context = listView.getContext();
+            listView.setLayoutManager(new LinearLayoutManager(context));
+            listView.setAdapter(new NotifierListRecyclerViewAdapter(this.notifierDirector,this.notifierDirector.getNotifiers()));
         }
         return view;
     }

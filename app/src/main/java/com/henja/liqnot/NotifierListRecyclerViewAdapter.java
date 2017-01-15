@@ -57,7 +57,7 @@ public class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
 
     @Override
     public void onBindViewHolder(NotifierListRecyclerViewAdapter.ViewHolder holder, int position) {
-        holder.idText.setText(itemsData.get(position).getId());
+        //holder.idText.setText(itemsData.get(position).getId());
         if (itemsData.get(position).getRule() != null) {
             holder.contentText.setText(itemsData.get(position).getRule().toHumanReadableString());
         } else {
@@ -67,12 +67,12 @@ public class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView idText;
+        //public TextView idText;
         public TextView contentText;
 
         public ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
-            idText = (TextView) itemLayoutView.findViewById(R.id.id_text);
+            //idText = (TextView) itemLayoutView.findViewById(R.id.id_text);
             contentText = (TextView) itemLayoutView.findViewById(R.id.content_text);
         }
 

@@ -4,16 +4,20 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <TextView
+    <!--<TextView
         android:id="@+id/id_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceListItem" />
-
-    <TextView
-        android:id="@+id/content_text"
+        android:textAppearance="?attr/textAppearanceListItem" />-->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:layout_below="@id/id_text" />
+        android:layout_height="match_parent"
+        android:padding="10sp">
+        <TextView
+            android:id="@+id/content_text"
+            android:padding="5sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ccc"/>
+    </RelativeLayout>
 </RelativeLayout>
