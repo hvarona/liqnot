@@ -11,8 +11,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import bo.Notifier;
-import bo.NotifierCurrency;
-import bo.NotifierCurrencyData;
 import bo.NotifierDirector;
 
 /**
@@ -38,6 +36,11 @@ public class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         int position = this.itemsData.indexOf(notifier);
         this.itemsData.remove(notifier);
         this.notifyItemRemoved(position);
+    }
+
+    @Override
+    public void OnAssetsLoaded() {
+        //
     }
 
     public interface NotifierListListener {

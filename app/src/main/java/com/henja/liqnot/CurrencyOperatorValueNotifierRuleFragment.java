@@ -27,10 +27,9 @@ import com.henja.liqnot.ws.WebsocketWorkerThread;
 import java.util.ArrayList;
 
 import bo.Account;
+import bo.Asset;
 import bo.CurrencyOperatorValueNotifierRule;
 import bo.Notifier;
-import bo.NotifierCurrency;
-import bo.NotifierCurrencyData;
 import bo.NotifierDirector;
 import bo.NotifierRuleOperator;
 import bo.SharedDataCentral;
@@ -80,16 +79,38 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         this.notifierDirector = ((LiqNotApp)getActivity().getApplication()).getNotifierDirector();//(NotifierDirector) getArguments().getSerializable(CurrencyOperatorValueNotifierRuleFragment.NOTIFIER_DIRECTOR_KEY);
+        this.notifierDirector.addNotifierDirectorListener(new NotifierDirector.NotifierDirectorListener() {
+            @Override
+            public void OnNewNotifier(Notifier notifier) {
+                //
+            }
+
+            @Override
+            public void OnNotifierRemoved(Notifier notifier) {
+                //
+            }
+
+            @Override
+            public void OnAssetsLoaded() {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final Spinner baseCurrencySpinner = (Spinner) getView().findViewById(R.id.base_currency_recycler_view);
+                        final Spinner quotedCurrencySpinner = (Spinner) getView().findViewById(R.id.quoted_currency_recycler_view);
+
+                        ArrayAdapter<String> baseCurrencyAdapter = (ArrayAdapter) baseCurrencySpinner.getAdapter();
+                        baseCurrencyAdapter.clear();
+                        baseCurrencyAdapter.addAll(SharedDataCentral.getAssetsList());
+                        ArrayAdapter<String> quotedCurrencyAdapter = (ArrayAdapter) quotedCurrencySpinner.getAdapter();
+                        quotedCurrencyAdapter.clear();
+                        quotedCurrencyAdapter.addAll(SharedDataCentral.getSmartcoinAssesList());
+                    }
+                });
+            }
+        });
+
 
         View v = inflater.inflate(R.layout.fragment_currency_operator_value_notifier_rule, container, false);
-
-        NotifierCurrencyData[] currenciesData = new NotifierCurrencyData[NotifierCurrency.values().length];
-        int index = 0;
-
-        for (NotifierCurrency currency : NotifierCurrency.values()) {
-            currenciesData[index] = new NotifierCurrencyData(currency, null);
-            index++;
-        }
 
         final EditText accountNameEditText = (EditText) v.findViewById(R.id.account_name_edit_text);
         accountNameEditText.addTextChangedListener(new TextWatcher() {
@@ -103,15 +124,17 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                 accountNameEditText.setTextColor(Color.BLACK);
                 searchForAccountInfoTimer.cancel();
                 account = SharedDataCentral.getAccount(s.toString());
-                rule.setAccount(account);
 
-                if ((account == null) || (account.getId() == null) || (account.getId().equals(""))){
-                    account = new Account(s.toString());
-                    searchForAccountInfoTimer.start();
-                } else {
-                    accountNameEditText.setTextColor(Color.GREEN);
+                if (rule != null) {
+                    rule.setAccount(account);
+
+                    if ((account == null) || (account.getId() == null) || (account.getId().equals(""))) {
+                        account = new Account(s.toString());
+                        searchForAccountInfoTimer.start();
+                    } else {
+                        accountNameEditText.setTextColor(Color.GREEN);
+                    }
                 }
-
                 checkRule();
             }
 
@@ -206,18 +229,27 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             }
         }*/
 
+        ArrayList<String> baseCurrencyStringList;
+        if (SharedDataCentral.getAssetsCount() <= 0){
+            baseCurrencyStringList = new ArrayList<String>();
+            baseCurrencyStringList.add("Loading...");
+        } else {
+            baseCurrencyStringList = SharedDataCentral.getAssetsList();
+        }
+
+
         //ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
-        ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter(this.getContext(),R.layout.spinner_layout,SharedDataCentral.getAssesList());
+        ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
         final Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
         baseCurrencySpinner.setAdapter(baseCurrencyAdapter);
         baseCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    NotifierCurrency nc = NotifierCurrency.valueOf(baseCurrencySpinner.getSelectedItem().toString());
-                    rule.setBaseCurrency(nc);
+                    Asset baseCurrency = SharedDataCentral.getAssetBySymbol(baseCurrencySpinner.getSelectedItem().toString());
+                    rule.setBaseCurrency(baseCurrency);
                 } catch(IllegalArgumentException e){
-                    rule.setBaseCurrency(NotifierCurrency.UNKNOWN);
+                    rule.setBaseCurrency(null);
                 }
                 checkRule();
             }
@@ -228,27 +260,26 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             }
         });
 
-        ArrayList<String> quotedCurrencyStringList = new ArrayList<String>();
-        for(NotifierCurrency nc : NotifierCurrency.values()){
-            if (nc == NotifierCurrency.UNKNOWN){
-                quotedCurrencyStringList.add(getResources().getString(R.string.choose_quoted_currency));
-            } else {
-                quotedCurrencyStringList.add(nc.getName());
-            }
+        ArrayList<String> quotedCurrencyStringList;
+        if (SharedDataCentral.getAssetsCount() <= 0){
+            quotedCurrencyStringList = new ArrayList<String>();
+            quotedCurrencyStringList.add("Loading...");
+        } else {
+            quotedCurrencyStringList = SharedDataCentral.getSmartcoinAssesList();
         }
 
         //ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
-        ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter(this.getContext(),R.layout.spinner_layout,SharedDataCentral.getSmartcoinAssesList());
+        ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
         final Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
         quotedCurrencySpinner.setAdapter(quotedCurrencyAdapter);
         quotedCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    NotifierCurrency nc = NotifierCurrency.valueOf(quotedCurrencySpinner.getSelectedItem().toString());
-                    rule.setQuotedCurrency(NotifierCurrency.valueOf(quotedCurrencySpinner.getSelectedItem().toString()));
+                    Asset quotedCurrency = SharedDataCentral.getAssetBySymbol(quotedCurrencySpinner.getSelectedItem().toString());
+                    rule.setQuotedCurrency(quotedCurrency);
                 } catch(IllegalArgumentException e){
-                    rule.setQuotedCurrency(NotifierCurrency.UNKNOWN);
+                    rule.setQuotedCurrency(null);
                 }
                 checkRule();
             }
@@ -343,10 +374,37 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         }
     }
 
+    public void cleanFragment(){
+        View v = getView();
+        this.rule = new CurrencyOperatorValueNotifierRule();
+        this.account = null;
+        this.lastAccountNameCall = null;
+        this.lastApiFunctionCall = null;
+        this.rule = new CurrencyOperatorValueNotifierRule();
+        this.account = null;
+        this.lastAccountNameCall = null;
+        this.lastApiFunctionCall = null;
+
+        EditText accountNameEditText = (EditText) v.findViewById(R.id.account_name_edit_text);
+        accountNameEditText.setText("");
+        final Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
+        baseCurrencySpinner.setSelection(0);
+        final Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
+        quotedCurrencySpinner.setSelection(0);
+        Spinner operatorSpinner = (Spinner) v.findViewById(R.id.operator_spinner);
+        operatorSpinner.setSelection(0);
+        EditText valueEditText = (EditText) v.findViewById(R.id.value_edit_text);
+        valueEditText.setText("");
+        Button okButton = (Button) v.findViewById(R.id.button_ok);
+        okButton.setEnabled(false);
+
+    }
+
     public void createNotifier(){
         if (this.rule.isValid()){
             Notifier newNotifier = new Notifier("");
             newNotifier.setRule(this.rule);
+            cleanFragment();
             this.mListener.onNotifierCreated(newNotifier);
             this.notifierDirector.addNotifier(newNotifier);
         }

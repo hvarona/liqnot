@@ -15,15 +15,15 @@ import java.util.ArrayList;
 public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
     private Account account;
-    private NotifierCurrency baseCurrency;
-    private NotifierCurrency quotedCurrency;
+    private Asset baseCurrency;
+    private Asset quotedCurrency;
     private NotifierRuleOperator operator;
     private double value;
 
     public CurrencyOperatorValueNotifierRule(){
         this.account = null;
-        this.baseCurrency = NotifierCurrency.UNKNOWN;
-        this.quotedCurrency = NotifierCurrency.UNKNOWN;
+        this.baseCurrency = null;
+        this.quotedCurrency = null;
         this.operator = NotifierRuleOperator.UNKNOWN;
         this.value = -1;
     }
@@ -33,8 +33,8 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
         try {
             JSONObject jsonObj = new JSONObject(json);
             this.account = new Account(jsonObj.getString("account_name"),jsonObj.getString("account_id"));
-            this.baseCurrency = NotifierCurrency.valueOf(jsonObj.getString("baseCurrency"));
-            this.quotedCurrency = NotifierCurrency.valueOf(jsonObj.getString("quotedCurrency"));
+            this.baseCurrency = SharedDataCentral.getAssetByID(jsonObj.getString("baseCurrency"));
+            this.quotedCurrency = SharedDataCentral.getAssetByID(jsonObj.getString("quotedCurrency"));
             this.operator = NotifierRuleOperator.fromSymbol(jsonObj.getString("operator"));
             this.value = jsonObj.getDouble("value");
         } catch (JSONException e) {
@@ -49,8 +49,8 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
             json.put("type", NotifierRuleFactory.getNotifierRuleTypeFromNotifierRule(this));
             json.put("account_name", this.account.getName());
             json.put("account_id", this.account.getId());
-            json.put("baseCurrency", this.baseCurrency.toString());
-            json.put("quotedCurrency", this.quotedCurrency.toString());
+            json.put("baseCurrency", this.baseCurrency.getId());
+            json.put("quotedCurrency", this.quotedCurrency.getId());
             json.put("operator", this.operator.toString());
             json.put("value", this.value);
             return json.toString();
@@ -69,12 +69,12 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
         return account;
     }
 
-    public void setBaseCurrency(NotifierCurrency currency){
-        this.baseCurrency = currency;
+    public void setBaseCurrency(Asset asset){
+        this.baseCurrency = asset;
     }
 
-    public void setQuotedCurrency(NotifierCurrency currency){
-        this.quotedCurrency = currency;
+    public void setQuotedCurrency(Asset asset){
+        this.quotedCurrency = asset;
     }
 
     public void setOperator(NotifierRuleOperator operator){
@@ -90,8 +90,8 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
     @Override
     public boolean evaluate() {
         AccountBalance balance = SharedDataCentral.getAccountBalance(this.account.getId());
-        Asset baseAsset = SharedDataCentral.getAsset(this.baseCurrency.getName());
-        Asset quotedAsset = SharedDataCentral.getAsset(this.quotedCurrency.getName());
+        Asset baseAsset = this.baseCurrency;
+        Asset quotedAsset = this.quotedCurrency;
         boolean result = false;
 
         if(balance.isValid() && baseAsset.isValid() && quotedAsset.isValid()){
@@ -127,8 +127,8 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
             }
         }
 
-        return this.baseCurrency != NotifierCurrency.UNKNOWN
-                && this.quotedCurrency != NotifierCurrency.UNKNOWN
+        return this.baseCurrency != null
+                && this.quotedCurrency != null
                 && this.operator != NotifierRuleOperator.UNKNOWN && this.value > 0;
 
     }
@@ -136,18 +136,18 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
     @Override
     public String toHumanReadableString() {
         return "Alert will fire when "
-                +this.baseCurrency.getName()
+                +this.baseCurrency.getSymbol()
                 +" from the account \""+this.account.getName()+"\" "
                 +(this.operator == NotifierRuleOperator.LESS_THAN?"reachs lower values than":"reachs higher values than")+" "
-                +this.value+" "+this.quotedCurrency.getName();
+                +this.value+" "+this.quotedCurrency.getSymbol();
     }
 
     @Override
     public String triggerText() {
-        return this.baseCurrency.getName()
+        return this.baseCurrency.getSymbol()
                 +" from \""+this.account.getName()+"\" "
                 +(this.operator == NotifierRuleOperator.LESS_THAN?"has reach lower values than":"has reach higher values than")+" "
-                +this.value+" "+this.quotedCurrency.getName();
+                +this.value+" "+this.quotedCurrency.getSymbol();
     }
 
     @Override
@@ -159,17 +159,15 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
             apiFunctions.add(balance.getUpdateFunction());
         }
 
-        Asset base = SharedDataCentral.getAsset(this.baseCurrency.getName());
-        if(!base.isValid()){
-            apiFunctions.add(base.getUpdateFunction());
+        if(!this.baseCurrency.isValid()){
+            apiFunctions.add(this.baseCurrency.getUpdateFunction());
         }
 
-        Asset quoted = SharedDataCentral.getAsset(this.quotedCurrency.getName());
-        if(!quoted.isValid()){
-            apiFunctions.add(quoted.getUpdateFunction());
+        if(!this.quotedCurrency.isValid()){
+            apiFunctions.add(quotedCurrency.getUpdateFunction());
         }
 
-        AssetEquivalentRate equivalentRate = SharedDataCentral.getEquivalentRate(base.getSymbol(),quoted.getSymbol());
+        AssetEquivalentRate equivalentRate = SharedDataCentral.getEquivalentRate(this.baseCurrency.getSymbol(),this.quotedCurrency.getSymbol());
         if(!equivalentRate.isValid()){
             apiFunctions.add(equivalentRate.getUpdateFunction());
         }

@@ -61,7 +61,7 @@ public class NotifierDirector {
     }
 
     private boolean checkAssetList(){
-        if(SharedDataCentral.getAssesList().size()<=0){
+        if(SharedDataCentral.getAssetsList().size()<=0){
             DAOAsset daoAsset = this.db.getAssetDAO();
             DAOEnumeration<DAO<Asset>, Asset> assets = daoAsset.getAsset(0,-1);
             System.out.println("Assets count : " + assets.count());
@@ -74,6 +74,7 @@ public class NotifierDirector {
                             public void OnAllDataReceived() {
                                 //TODO enable add notifier button
                                 processingAssets = false;
+                                tellAssetsLoadedToListeners();
                             }
 
                             @Override
@@ -144,6 +145,12 @@ public class NotifierDirector {
     private void tellNotifierRemovedToListeners(Notifier notifier){
         for (NotifierDirectorListener listener: this.listeners){
             listener.OnNotifierRemoved(notifier);
+        }
+    }
+
+    private void tellAssetsLoadedToListeners(){
+        for (NotifierDirectorListener listener: this.listeners){
+            listener.OnAssetsLoaded();
         }
     }
 
@@ -218,6 +225,8 @@ public class NotifierDirector {
         public void OnNewNotifier(Notifier notifier);
 
         public void OnNotifierRemoved(Notifier notifier);
+
+        public void OnAssetsLoaded();
     }
 
     public Context getContext() {

@@ -66,7 +66,7 @@ public class LiqNotService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(this, getResources().getString(R.string.liqnot_service_starting), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, getResources().getString(R.string.liqnot_service_starting), Toast.LENGTH_SHORT).show();
         //The thread to fillNotifiersData is created
         if (FillNotifiersDataThread == null) {
             FillNotifiersDataThread = new Thread() {
@@ -89,6 +89,6 @@ public class LiqNotService extends Service {
 
     @Override
     public void onDestroy() {
-        Toast.makeText(this, getResources().getString(R.string.liqnot_service_stopped), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, getResources().getString(R.string.liqnot_service_stopped), Toast.LENGTH_SHORT).show();
     }
 }

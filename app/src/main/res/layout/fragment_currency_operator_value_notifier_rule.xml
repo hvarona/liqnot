@@ -125,7 +125,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="number"
+            android:inputType="number|numberDecimal"
             android:ems="10"
             android:layout_below="@id/operator_spinner"
             android:id="@+id/value_edit_text"

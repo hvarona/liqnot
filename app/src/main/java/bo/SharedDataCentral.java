@@ -63,6 +63,15 @@ public abstract class SharedDataCentral {
         return new Asset(assetID);
     }
 
+    public static Asset getAssetBySymbol(String symbol) {
+        for(Asset asset : assets.values()){
+            if(asset != null && asset.getSymbol().equals(symbol)){
+                return asset;
+            }
+        }
+        return null;
+    }
+
     public static void putAsset(Asset asset){
         if(asset != null){
         if (assets.containsKey(asset.getSymbol())) {
@@ -70,6 +79,10 @@ public abstract class SharedDataCentral {
         }
         assets.put(asset.getSymbol(), asset);
         }
+    }
+
+    public static int getAssetsCount(){
+        return assets.size();
     }
 
     public static AccountBalance getAccountBalance(String accountID){
@@ -86,7 +99,7 @@ public abstract class SharedDataCentral {
         accountsBalances.put(accountID,balance);
     }
 
-    public static ArrayList<String> getAssesList(){
+    public static ArrayList<String> getAssetsList(){
         ArrayList<String> answer = new ArrayList<>();
         for(Asset asset : assets.values()){
             answer.add(asset.getSymbol());
@@ -113,4 +126,5 @@ public abstract class SharedDataCentral {
     public static Account getAccount(String accountName){
         return accounts.get(accountName);
     }
+
 }
