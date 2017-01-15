@@ -49,17 +49,20 @@ public class DAOAssetSQLite extends SQLiteOpenHelper implements DAOAsset, DAOSQL
     }
 
     public boolean insertAsset(Asset asset){
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues newAsset = new ContentValues();
-        newAsset.put(AssetTable.ID, asset.getId());
-        newAsset.put(AssetTable.SYMBOL, asset.getSymbol());
-        newAsset.put(AssetTable.PRECISION, asset.getPrecision());
-        newAsset.put(AssetTable.TYPE, asset.getType());
-        db.beginTransaction();
-        boolean answer = db.insert(AssetTable.TABLE_NAME, null, newAsset) != -1;
-        db.endTransaction();
-        db.close();
-        return answer;
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+            ContentValues newAsset = new ContentValues();
+            newAsset.put(AssetTable.ID, asset.getId());
+            newAsset.put(AssetTable.SYMBOL, asset.getSymbol());
+            newAsset.put(AssetTable.PRECISION, asset.getPrecision());
+            newAsset.put(AssetTable.TYPE, asset.getType());
+            boolean answer = db.insert(AssetTable.TABLE_NAME, null, newAsset) != -1;
+            db.close();
+            return answer;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public Asset rowToObject(Object row){
@@ -76,7 +79,7 @@ public class DAOAssetSQLite extends SQLiteOpenHelper implements DAOAsset, DAOSQL
         SQLiteDatabase db = getReadableDatabase();
 
         Cursor result = db.query(AssetTable.TABLE_NAME, null, null, null, null, null, null, (howMany >= 0?""+howMany:null));
-
+System.out.println("En getAssets : " + result.getCount());
         return new DAOAssetEnumerationSQLite(this, result, start, howMany);
     }
 

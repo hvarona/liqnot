@@ -41,13 +41,18 @@ public class DAOAccountSQLite extends SQLiteOpenHelper implements DAOAccount, DA
     }
 
     public boolean insertAccount(Account account){
-        SQLiteDatabase db = getWritableDatabase();
+        try {
+            SQLiteDatabase db = getWritableDatabase();
 
-        ContentValues newAccount = new ContentValues();
-        newAccount.put(AccountTable.ID, account.getId());
-        newAccount.put(AccountTable.NAME , account.getName());
+            ContentValues newAccount = new ContentValues();
+            newAccount.put(AccountTable.ID, account.getId());
+            newAccount.put(AccountTable.NAME, account.getName());
 
-        return db.insert(AccountTable.TABLE_NAME, null, newAccount) != -1;
+            return db.insert(AccountTable.TABLE_NAME, null, newAccount) != -1;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public Account rowToObject(Object row){

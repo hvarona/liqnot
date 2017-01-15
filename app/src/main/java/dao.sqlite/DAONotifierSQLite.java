@@ -44,13 +44,18 @@ public class DAONotifierSQLite extends SQLiteOpenHelper implements DAONotifier, 
     }
 
     public boolean insertNotifier(Notifier notifier){
-        SQLiteDatabase db = getWritableDatabase();
+        try {
+            SQLiteDatabase db = getWritableDatabase();
 
-        ContentValues newNotifier = new ContentValues();
-        newNotifier.put(NotifierTable.ID, notifier.getId());
-        newNotifier.put(NotifierTable.RULE, notifier.getRule().toJson());
+            ContentValues newNotifier = new ContentValues();
+            newNotifier.put(NotifierTable.ID, notifier.getId());
+            newNotifier.put(NotifierTable.RULE, notifier.getRule().toJson());
 
-        return db.insert(NotifierTable.TABLE_NAME, null, newNotifier) != -1;
+            return db.insert(NotifierTable.TABLE_NAME, null, newNotifier) != -1;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public Notifier rowToObject(Object row){

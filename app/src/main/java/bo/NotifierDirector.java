@@ -40,6 +40,7 @@ public class NotifierDirector {
         this.db = DAOFactory.getSQLiteFactory(this.context);
         DAOAsset daoAsset = this.db.getAssetDAO();
         DAOEnumeration<DAO<Asset>, Asset> assets = daoAsset.getAsset(0,-1);
+        System.out.println("Assets count : " + assets.count());
         if(assets.count()<=0){
             GetAssetList.getAllAssets(this);
         }else {
