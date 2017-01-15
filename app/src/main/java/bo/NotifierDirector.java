@@ -35,7 +35,8 @@ public class NotifierDirector {
     private DAOFactorySQLite db;
     private boolean processingAssets = false;
 
-    private static final long NOTIFIES_TIMEOUT = 86400000;
+    private static final long NOTIFIES_TIMEOUT = 300000;//86400000;
+    private static final int MINASSETSIZE = 1100;
 
     public NotifierDirector(Context context){
         this.notifiers = new ArrayList<>();
@@ -68,7 +69,7 @@ public class NotifierDirector {
             DAOAsset daoAsset = this.db.getAssetDAO();
             DAOEnumeration<DAO<Asset>, Asset> assets = daoAsset.getAsset(0,-1);
             System.out.println("Assets count : " + assets.count());
-            if(assets.count()<=0){
+            if(assets.count()<=MINASSETSIZE){
                 if(!processingAssets) {
                     processingAssets = true;
                     try {
