@@ -21,9 +21,11 @@ import bo.NotifierDirector;
 
 public class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<NotifierListRecyclerViewAdapter.ViewHolder> implements NotifierDirector.NotifierDirectorListener{
 
-    private int selectedPos = 0;
+    private int selectedPos = -1;
+    private int lastSelected = -1;
     private NotifierDirector notifierDirector;
     private ArrayList<Notifier> itemsData;
+    private ArrayList<NotifierListListener> listeners;
 
     @Override
     public void OnNewNotifier(Notifier notifier) {
@@ -31,11 +33,31 @@ public class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         this.notifyItemInserted(itemsData.size()-1);
     }
 
+    @Override
+    public void OnNotifierRemoved(Notifier notifier) {
+        int position = this.itemsData.indexOf(notifier);
+        this.itemsData.remove(notifier);
+        this.notifyItemRemoved(position);
+    }
+
     public interface NotifierListListener {
-        public void OnItemClick(Notifier notifier);
+        public void OnSelectedItem(Notifier notifier);
+    }
+
+    public void addListener(NotifierListListener listener){
+        if (this.listeners.indexOf(listener) == -1) {
+            this.listeners.add(listener);
+        }
+    }
+
+    public void notifyItemSelected(Notifier notifier){
+        for(NotifierListListener listener : this.listeners){
+            listener.OnSelectedItem(notifier);
+        }
     }
 
     public NotifierListRecyclerViewAdapter(NotifierDirector notifierDirector, ArrayList<Notifier> items) {
+        this.listeners = new ArrayList<NotifierListListener>();
         this.notifierDirector = notifierDirector;
         this.notifierDirector.addNotifierDirectorListener(this);
 
@@ -63,6 +85,14 @@ public class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         } else {
             holder.contentText.setText("ERROR - EMPTY RULE");
         }
+
+        if (!holder.itemView.isSelected()) {
+            if (selectedPos == position) {
+                notifyItemSelected(itemsData.get(position));
+            }
+        }
+
+        holder.itemView.setSelected(selectedPos == position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -74,6 +104,17 @@ public class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
             super(itemLayoutView);
             //idText = (TextView) itemLayoutView.findViewById(R.id.id_text);
             contentText = (TextView) itemLayoutView.findViewById(R.id.content_text);
+
+            itemLayoutView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Redraw the old selection and the new
+                    notifyItemChanged(selectedPos);
+                    lastSelected = selectedPos;
+                    selectedPos = getLayoutPosition();
+                    notifyItemChanged(selectedPos);
+                }
+            });
         }
 
 

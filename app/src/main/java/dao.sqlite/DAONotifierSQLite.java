@@ -58,6 +58,19 @@ public class DAONotifierSQLite extends SQLiteOpenHelper implements DAONotifier, 
         }
     }
 
+    public boolean removeNotifier(Notifier notifier){
+        try {
+            SQLiteDatabase db = getWritableDatabase();
+
+            String[] whereArgs = new String[] { notifier.getId() };
+
+            return db.delete(NotifierTable.TABLE_NAME, NotifierTable.ID+"=?", whereArgs) > 0;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public Notifier rowToObject(Object row){
         Cursor c = ((Cursor)row);
         Notifier notifier = new Notifier(

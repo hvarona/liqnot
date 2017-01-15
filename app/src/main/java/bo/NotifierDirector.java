@@ -82,6 +82,18 @@ public class NotifierDirector {
         }
     }
 
+    public void removeNotifier(Notifier notifier){
+        DAONotifier daoNotifier = this.db.getNotifierDAO();
+
+        if (daoNotifier.removeNotifier(notifier)) {
+            this.notifiers.remove(notifier);
+            tellNotifierRemovedToListeners(notifier);
+        } else {
+            System.err.println("error deleting notifier");
+            //TODO should throw an error
+        }
+    }
+
     public void addAsset(Asset asset){
         DAOAsset daoAsset = this.db.getAssetDAO();
         if(!daoAsset.insertAsset(asset))
@@ -91,6 +103,12 @@ public class NotifierDirector {
     private void tellNewNotifierToListeners(Notifier notifier){
         for (NotifierDirectorListener listener: this.listeners){
             listener.OnNewNotifier(notifier);
+        }
+    }
+
+    private void tellNotifierRemovedToListeners(Notifier notifier){
+        for (NotifierDirectorListener listener: this.listeners){
+            listener.OnNotifierRemoved(notifier);
         }
     }
 
@@ -155,6 +173,8 @@ public class NotifierDirector {
 
     public interface NotifierDirectorListener{
         public void OnNewNotifier(Notifier notifier);
+
+        public void OnNotifierRemoved(Notifier notifier);
     }
 
     public ArrayList<Notifier> getNotifiers(){

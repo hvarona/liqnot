@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ff33b5e5"
+        android:theme="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        android:id="@+id/notifier_list_toolbar"
+        app:title="Notifiers List" />
+
+    <!--<TextView
         android:text="Notifiers List"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
         android:background="#ff33b5e5"
         android:id="@+id/fragmentNotifierListTitle"
+        android:layout_below="@+id/notifier_list_toolbar"
         android:textStyle="normal|bold"
         android:padding="5sp"
-        android:textSize="24sp" />
+        android:textSize="24sp" />-->
 
 
 <android.support.v7.widget.RecyclerView
@@ -24,7 +36,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:layout_below="@+id/fragmentNotifierListTitle"
+    android:layout_below="@+id/notifier_list_toolbar"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.henja.liqnot.NotifierListFragment"
     tools:listitem="@layout/fragment_notifier" />

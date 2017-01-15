@@ -3,13 +3,18 @@ package com.henja.liqnot;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuItemImpl;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -39,8 +44,9 @@ public class NotifierListFragment extends Fragment{
 
     private static final String NOTIFIER_DIRECTOR_KEY = "notifier_director_key";
     private NotifierDirector notifierDirector;
-
+    private Toolbar toolbar;
     private OnNotifierListFragmentInteractionListener mListener;
+    private Notifier selectedNotifier;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -66,6 +72,9 @@ public class NotifierListFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifier_list, container, false);
 
+        toolbar = (Toolbar) view.findViewById(R.id.notifier_list_toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
         this.notifierDirector = ((LiqNotApp)getActivity().getApplication()).getNotifierDirector();
 
 
@@ -74,7 +83,30 @@ public class NotifierListFragment extends Fragment{
         if (listView instanceof RecyclerView) {
             Context context = listView.getContext();
             listView.setLayoutManager(new LinearLayoutManager(context));
-            listView.setAdapter(new NotifierListRecyclerViewAdapter(this.notifierDirector,this.notifierDirector.getNotifiers()));
+            NotifierListRecyclerViewAdapter adapter = new NotifierListRecyclerViewAdapter(this.notifierDirector,this.notifierDirector.getNotifiers());
+            adapter.addListener(new NotifierListRecyclerViewAdapter.NotifierListListener() {
+                @Override
+                public void OnSelectedItem(Notifier notifier) {
+                    selectedNotifier = notifier;
+                    MenuItemImpl deleteButton = (MenuItemImpl) toolbar.getMenu().findItem(R.id.delete_item);
+                    deleteButton.setVisible(true);
+                }
+            });
+            listView.setAdapter(adapter);
+
+            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if (item.getItemId() == R.id.delete_item) {
+                        if (selectedNotifier != null) {
+                            notifierDirector.removeNotifier(selectedNotifier);
+                            item.setVisible(false);
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            });
         }
         return view;
     }

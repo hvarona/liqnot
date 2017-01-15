@@ -9,5 +9,7 @@ import bo.Notifier;
 public interface DAONotifier extends DAO<Notifier>{
     public boolean insertNotifier(Notifier notifier);
 
+    public boolean removeNotifier(Notifier notifier);
+
     public DAOEnumeration<DAO<Notifier>, Notifier> getNotifiers(int start, int howMany);
 }
