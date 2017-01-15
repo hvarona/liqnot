@@ -1,5 +1,6 @@
 package bo;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -11,6 +12,8 @@ public class Notifier extends BO{
 
     private String id;
     private NotifierRule rule;
+    private boolean isActive = false;
+    private Date lastNotifyDate;
 
     public Notifier(String id){
         if (id.equals("")) {
@@ -54,4 +57,22 @@ public class Notifier extends BO{
         result = 31 * result + (rule != null ? rule.hashCode() : 0);
         return result;
     }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public Date getLastNotifyDate() {
+        return lastNotifyDate;
+    }
+
+    public void setActive(){
+        isActive = true;
+        lastNotifyDate = new Date();
+    }
+
+    public void setInactive(){
+        isActive = false;
+    }
+
 }

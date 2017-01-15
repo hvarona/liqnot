@@ -35,6 +35,8 @@ public class NotifierDirector {
     private DAOFactorySQLite db;
     private boolean processingAssets = false;
 
+    private static final long NOTIFIES_TIMEOUT = 86400000;
+
     public NotifierDirector(Context context){
         this.notifiers = new ArrayList<>();
         this.listeners = new ArrayList<>();
@@ -200,13 +202,17 @@ public class NotifierDirector {
         for(Notifier not : notifiers){
             try {
                 if (not.getRule().evaluate()) {
-                    
-                    notificationBuilder.setContentText(not.getRule().triggerText());
-                    Notification notification = notificationBuilder.build();
-                    NM.notify(not.hashCode(), notification);
-                    //TODO TRIGGER ALARM OR NOTIFICATION TO THE USER!!!
+                    if(!not.isActive()
+                            || (System.currentTimeMillis() - not.getLastNotifyDate().getTime()) >= NOTIFIES_TIMEOUT) {
+                        not.setActive();
+                        notificationBuilder.setContentText(not.getRule().triggerText());
+                        Notification notification = notificationBuilder.build();
+                        NM.notify(not.hashCode(), notification);
+                        //TODO TRIGGER ALARM OR NOTIFICATION TO THE USER!!!
+                    }
 
                 }else{
+                    not.setInactive();
                     NM.cancel(not.hashCode());
                     //TODO Notificitation stop
                 }
