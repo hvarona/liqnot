@@ -77,9 +77,7 @@ public class DAOAssetSQLite extends SQLiteOpenHelper implements DAOAsset, DAOSQL
 
     public DAOAssetEnumerationSQLite getAsset(int start, int howMany){
         SQLiteDatabase db = getReadableDatabase();
-
         Cursor result = db.query(AssetTable.TABLE_NAME, null, null, null, null, null, null, (howMany >= 0?""+howMany:null));
-System.out.println("En getAssets : " + result.getCount());
         return new DAOAssetEnumerationSQLite(this, result, start, howMany);
     }
 

@@ -22,6 +22,7 @@ import bo.SharedDataCentral;
 public class GetAssetList implements ApiFunction {
     private String startingAssetSymbol;
     private NotifierDirector director;
+    private static ApiCalls.ApiCallsListener listener;
 
     public GetAssetList(String startingAssetSymbol,NotifierDirector director) {
         this.startingAssetSymbol = startingAssetSymbol;
@@ -30,7 +31,8 @@ public class GetAssetList implements ApiFunction {
 
     public static void getAllAssets(NotifierDirector director, ApiCalls.ApiCallsListener listener) throws ConnectionException {
         ApiCalls apiCalls = new ApiCalls();
-        apiCalls.addListener(listener);
+        GetAssetList.listener = listener;
+        apiCalls.addListener(new GetAssetListApiCallListener());
         apiCalls.addFunction(new GetAssetList("",director));
         WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
         thread.start();
@@ -89,20 +91,42 @@ public class GetAssetList implements ApiFunction {
         if(response.length()>= 100 && !finalAsset.isEmpty()){
             ApiCalls apiCalls = new ApiCalls();
             apiCalls.addFunction(new GetAssetList(finalAsset,this.director));
-
+            apiCalls.addListener(new GetAssetListApiCallListener());
             WebsocketWorkerThread thread = null;
             try {
                 thread = new WebsocketWorkerThread(apiCalls);
                 thread.start();
             } catch (ConnectionException e) {
                 e.printStackTrace();
+                GetAssetList.listener.OnConnectError();
                 //TODO error conexion
             }
+        }else{
+            System.out.println("GetAssetsList On last call");
+            //Last call
+            GetAssetList.listener.OnAllDataReceived();
         }
     }
 
     @Override
     public void onResponse(JSONObject response) {
 
+    }
+
+    public static class GetAssetListApiCallListener implements ApiCalls.ApiCallsListener{
+        @Override
+        public void OnAllDataReceived() {
+
+        }
+
+        @Override
+        public void OnError(ApiFunction errorFunction) {
+            listener.OnError(errorFunction);
+        }
+
+        @Override
+        public void OnConnectError() {
+            listener.OnConnectError();
+        }
     }
 }
