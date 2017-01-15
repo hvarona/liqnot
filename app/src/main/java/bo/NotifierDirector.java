@@ -32,24 +32,14 @@ public class NotifierDirector {
     private Context context;
     private ArrayList<NotifierDirectorListener> listeners;
     private DAOFactorySQLite db;
+    private boolean processingAssets = false;
 
     public NotifierDirector(Context context){
         this.notifiers = new ArrayList<>();
         this.listeners = new ArrayList<>();
         this.context = context;
         this.db = DAOFactory.getSQLiteFactory(this.context);
-        DAOAsset daoAsset = this.db.getAssetDAO();
-        DAOEnumeration<DAO<Asset>, Asset> assets = daoAsset.getAsset(0,-1);
-        System.out.println("Assets count : " + assets.count());
-        if(assets.count()<=0){
-            GetAssetList.getAllAssets(this);
-        }else {
-            Asset nextAsset;
-            while (assets.hasNext()) {
-                nextAsset = assets.next();
-                SharedDataCentral.putAsset(nextAsset);
-            }
-        }
+        checkAssetList();
 
         DAOAccount daoAccount = this.db.getAccountDAO();
         DAOEnumeration<DAO<Account>,Account> accounts = daoAccount.getAccount(0,-1);
@@ -67,6 +57,51 @@ public class NotifierDirector {
         while(notifiers.hasNext()){
             nextNotifier = notifiers.next();
             this.notifiers.add(nextNotifier);
+        }
+    }
+
+    private boolean checkAssetList(){
+        if(SharedDataCentral.getAssesList().size()<=0){
+            DAOAsset daoAsset = this.db.getAssetDAO();
+            DAOEnumeration<DAO<Asset>, Asset> assets = daoAsset.getAsset(0,-1);
+            System.out.println("Assets count : " + assets.count());
+            if(assets.count()<=0){
+                if(!processingAssets) {
+                    processingAssets = true;
+                    try {
+                        GetAssetList.getAllAssets(this, new ApiCalls.ApiCallsListener() {
+                            @Override
+                            public void OnAllDataReceived() {
+                                //TODO enable add notifier button
+                                processingAssets = false;
+                            }
+
+                            @Override
+                            public void OnError(ApiFunction errorFunction) {
+                                processingAssets = false;
+                            }
+
+                            @Override
+                            public void OnConnectError() {
+                                processingAssets = false;
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        processingAssets = false;
+                        //TODO no hay conexion
+                    }
+                }
+            }else {
+                Asset nextAsset;
+                while (assets.hasNext()) {
+                    nextAsset = assets.next();
+                    SharedDataCentral.putAsset(nextAsset);
+                }
+            }
+            return false;
+        }else{
+            return true;
         }
     }
 
@@ -118,30 +153,38 @@ public class NotifierDirector {
     }
 
     public void execute(){
-        ApiCalls apiCalls = new ApiCalls();
-        for(Notifier not : notifiers){
-            NotifierRule notifierRule = not.getRule();
-            apiCalls.addFunctions(notifierRule.askData());
-        }
-        if(apiCalls.hasFunctions()) {
-            apiCalls.addListener(new ApiCalls.ApiCallsListener() {
-                @Override
-                public void OnAllDataReceived() {
-                    evaluateAllNotifiers();
+        if(checkAssetList()) {
+            ApiCalls apiCalls = new ApiCalls();
+            for (Notifier not : notifiers) {
+                NotifierRule notifierRule = not.getRule();
+                apiCalls.addFunctions(notifierRule.askData());
+            }
+            if (apiCalls.hasFunctions()) {
+                apiCalls.addListener(new ApiCalls.ApiCallsListener() {
+                    @Override
+                    public void OnAllDataReceived() {
+                        evaluateAllNotifiers();
+                    }
+
+                    @Override
+                    public void OnError(ApiFunction errorFunction) {
+
+                    }
+
+                    @Override
+                    public void OnConnectError() {
+
+                    }
+                });
+                WebsocketWorkerThread wsthread = null;
+                try {
+                    wsthread = new WebsocketWorkerThread(apiCalls,context);
+                    wsthread.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    //TODO no hay conexion
                 }
-
-                @Override
-                public void OnError(ApiFunction errorFunction) {
-
-                }
-
-                @Override
-                public void OnConnectError() {
-
-                }
-            });
-            WebsocketWorkerThread wsthread = new WebsocketWorkerThread(apiCalls);
-            wsthread.start();
+            }
         }
     }
 
@@ -175,6 +218,10 @@ public class NotifierDirector {
         public void OnNewNotifier(Notifier notifier);
 
         public void OnNotifierRemoved(Notifier notifier);
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     public ArrayList<Notifier> getNotifiers(){

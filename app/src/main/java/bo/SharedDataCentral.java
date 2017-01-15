@@ -1,5 +1,8 @@
 package bo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -81,6 +84,26 @@ public abstract class SharedDataCentral {
             accountsBalances.remove(accountID);
         }
         accountsBalances.put(accountID,balance);
+    }
+
+    public static ArrayList<String> getAssesList(){
+        ArrayList<String> answer = new ArrayList<>();
+        for(Asset asset : assets.values()){
+            answer.add(asset.getSymbol());
+        }
+        Collections.sort(answer);
+        return answer;
+    }
+
+    public static ArrayList<String> getSmartcoinAssesList(){
+        ArrayList<String> answer = new ArrayList<>();
+        for(Asset asset : assets.values()){
+            if(asset.getType().equalsIgnoreCase("smartcoin")){
+                answer.add(asset.getSymbol());
+            }
+        }
+        Collections.sort(answer);
+        return answer;
     }
 
     public static void putAccount(Account account){
