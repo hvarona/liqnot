@@ -52,4 +52,23 @@ public class Account extends BO {
     public ApiFunction getUpdateFunction(){
         return new GetAccountInfo(this.name);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Account account = (Account) o;
+
+        if (!name.equals(account.name)) return false;
+        return id != null ? id.equals(account.id) : account.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        return result;
+    }
 }
