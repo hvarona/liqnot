@@ -135,7 +135,7 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
     @Override
     public String toHumanReadableString() {
-        return "Alarm will fire when "
+        return "Alert will fire when "
                 +this.baseCurrency.getName()
                 +" from the account \""+this.account.getName()+"\" "
                 +(this.operator == NotifierRuleOperator.LESS_THAN?"reachs lower values than":"reachs higher values than")+" "

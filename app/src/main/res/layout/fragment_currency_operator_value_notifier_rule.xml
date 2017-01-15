@@ -16,7 +16,18 @@
             android:layout_height="wrap_content"
             android:id="@+id/relative_layout_account_name"
             >
+            <TextView
+                android:text="Creating Alert"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:background="#ff33b5e5"
+                android:id="@+id/fragmentCurrencyOperatorValueNotifierTitle"
+                android:textStyle="normal|bold"
+                android:padding="5sp"
+                android:textSize="24sp" />
             <EditText
+                android:layout_below="@+id/fragmentCurrencyOperatorValueNotifierTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/account_name_edit_text"
@@ -132,5 +143,4 @@
             android:id="@+id/button_ok"
             android:elevation="0dp" />
     </RelativeLayout>
-
 </FrameLayout>
