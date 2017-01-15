@@ -28,11 +28,11 @@ public class GetAssetList implements ApiFunction {
         this.director = director;
     }
 
-    public static void getAllAssets(NotifierDirector director, ApiCalls.ApiCallsListener listener) throws Exception {
+    public static void getAllAssets(NotifierDirector director, ApiCalls.ApiCallsListener listener) throws ConnectionException {
         ApiCalls apiCalls = new ApiCalls();
         apiCalls.addListener(listener);
         apiCalls.addFunction(new GetAssetList("",director));
-        WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls,director.getContext());
+        WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
         thread.start();
     }
 
@@ -92,9 +92,9 @@ public class GetAssetList implements ApiFunction {
 
             WebsocketWorkerThread thread = null;
             try {
-                thread = new WebsocketWorkerThread(apiCalls,director.getContext());
+                thread = new WebsocketWorkerThread(apiCalls);
                 thread.start();
-            } catch (Exception e) {
+            } catch (ConnectionException e) {
                 e.printStackTrace();
                 //TODO error conexion
             }

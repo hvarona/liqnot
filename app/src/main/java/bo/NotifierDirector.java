@@ -7,6 +7,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.henja.liqnot.R;
 import com.henja.liqnot.ws.ApiCalls;
+import com.henja.liqnot.ws.ConnectionException;
 import com.henja.liqnot.ws.GetAssetList;
 import com.henja.liqnot.ws.ApiFunction;
 import com.henja.liqnot.ws.WebsocketWorkerThread;
@@ -86,7 +87,7 @@ public class NotifierDirector {
                                 processingAssets = false;
                             }
                         });
-                    } catch (Exception e) {
+                    } catch (ConnectionException e) {
                         e.printStackTrace();
                         processingAssets = false;
                         //TODO no hay conexion
@@ -178,9 +179,9 @@ public class NotifierDirector {
                 });
                 WebsocketWorkerThread wsthread = null;
                 try {
-                    wsthread = new WebsocketWorkerThread(apiCalls,context);
+                    wsthread = new WebsocketWorkerThread(apiCalls);
                     wsthread.start();
-                } catch (Exception e) {
+                } catch (ConnectionException e) {
                     e.printStackTrace();
                     //TODO no hay conexion
                 }
@@ -197,11 +198,20 @@ public class NotifierDirector {
         notificationBuilder.setContentTitle("LiqNot Notification");
 
         for(Notifier not : notifiers){
-            if (not.getRule().evaluate()){
-                notificationBuilder.setContentText(not.getRule().triggerText());
-                Notification notification = notificationBuilder.build();
-                NM.notify(0, notification);
-                //TODO TRIGGER ALARM OR NOTIFICATION TO THE USER!!!
+            try {
+                if (not.getRule().evaluate()) {
+                    
+                    notificationBuilder.setContentText(not.getRule().triggerText());
+                    Notification notification = notificationBuilder.build();
+                    NM.notify(not.hashCode(), notification);
+                    //TODO TRIGGER ALARM OR NOTIFICATION TO THE USER!!!
+
+                }else{
+                    NM.cancel(not.hashCode());
+                    //TODO Notificitation stop
+                }
+            }catch(InvalidValuesException e){
+                e.printStackTrace();
             }
         }
     }

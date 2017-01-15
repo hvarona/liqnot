@@ -35,4 +35,23 @@ public class Notifier extends BO{
     public void setRuleJson(String json){
         this.rule = rule;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Notifier notifier = (Notifier) o;
+
+        if (!id.equals(notifier.id)) return false;
+        return rule != null ? rule.equals(notifier.rule) : notifier.rule == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (rule != null ? rule.hashCode() : 0);
+        return result;
+    }
 }

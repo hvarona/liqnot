@@ -186,7 +186,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                     });
                     WebsocketWorkerThread wsthread = null;
                     try {
-                        wsthread = new WebsocketWorkerThread(apiCalls,getContext());
+                        wsthread = new WebsocketWorkerThread(apiCalls);
                         wsthread.start();
                     } catch (Exception e) {
                         e.printStackTrace();

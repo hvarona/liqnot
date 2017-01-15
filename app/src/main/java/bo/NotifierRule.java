@@ -14,7 +14,7 @@ public abstract class NotifierRule {
 
     public abstract String toJson();
 
-    public abstract boolean evaluate();
+    public abstract boolean evaluate() throws InvalidValuesException;
 
     public abstract boolean isValid();
 

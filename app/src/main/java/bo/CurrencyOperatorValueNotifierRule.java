@@ -88,7 +88,7 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
 
     @Override
-    public boolean evaluate() {
+    public boolean evaluate() throws InvalidValuesException{
         AccountBalance balance = SharedDataCentral.getAccountBalance(this.account.getId());
         Asset baseAsset = SharedDataCentral.getAsset(this.baseCurrency.getName());
         Asset quotedAsset = SharedDataCentral.getAsset(this.quotedCurrency.getName());
@@ -111,7 +111,13 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
                         //return result;
                         break;
                 }
+
+            }else{
+                throw new InvalidValuesException("Equivalents Value invalid");
             }
+
+        }else{
+            throw new InvalidValuesException("Account Balance or Assets invalids");
         }
 
         return result;
@@ -144,10 +150,9 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
     @Override
     public String triggerText() {
-        return this.baseCurrency.getName()
-                +" from \""+this.account.getName()+"\" "
-                +(this.operator == NotifierRuleOperator.LESS_THAN?"has reach lower values than":"has reach higher values than")+" "
-                +this.value+" "+this.quotedCurrency.getName();
+        return this.account.getName()+"'s "+ this.baseCurrency.getName()+ " "+
+                (this.operator == NotifierRuleOperator.LESS_THAN?"low ":"high ")+" ";
+                //+this.value+" "+this.quotedCurrency.getName();
     }
 
     @Override
@@ -177,5 +182,31 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
         return apiFunctions;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        CurrencyOperatorValueNotifierRule that = (CurrencyOperatorValueNotifierRule) o;
+
+        if (Double.compare(that.value, value) != 0) return false;
+        if (!account.equals(that.account)) return false;
+        if (baseCurrency != that.baseCurrency) return false;
+        if (quotedCurrency != that.quotedCurrency) return false;
+        return operator == that.operator;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = account.hashCode();
+        result = 31 * result + baseCurrency.hashCode();
+        result = 31 * result + quotedCurrency.hashCode();
+        result = 31 * result + operator.hashCode();
+        temp = Double.doubleToLongBits(value);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 }
