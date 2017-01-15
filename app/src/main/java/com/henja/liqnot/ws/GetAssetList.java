@@ -28,12 +28,12 @@ public class GetAssetList implements ApiFunction {
         this.director = director;
     }
 
-    public static void getAllAssets(NotifierDirector director){
+    public static void getAllAssets(NotifierDirector director, ApiCalls.ApiCallsListener listener) throws Exception {
         ApiCalls apiCalls = new ApiCalls();
+        apiCalls.addListener(listener);
         apiCalls.addFunction(new GetAssetList("",director));
-        WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
+        WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls,director.getContext());
         thread.start();
-
     }
 
     @Override
@@ -74,7 +74,7 @@ public class GetAssetList implements ApiFunction {
                 if(symbol.equals("BTS")){
                     type="core";
                 }else if(LiqNotApp.SMARTCOINS.contains(symbol)){
-                    type="smatcoin";
+                    type="SMARTCOIN";
                 }
                 Asset asset = new Asset(id,symbol,precision,type);
                 finalAsset = asset.getSymbol();
@@ -89,8 +89,15 @@ public class GetAssetList implements ApiFunction {
         if(response.length()>= 100 && !finalAsset.isEmpty()){
             ApiCalls apiCalls = new ApiCalls();
             apiCalls.addFunction(new GetAssetList(finalAsset,this.director));
-            WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
-            thread.start();
+
+            WebsocketWorkerThread thread = null;
+            try {
+                thread = new WebsocketWorkerThread(apiCalls,director.getContext());
+                thread.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+                //TODO error conexion
+            }
         }
     }
 

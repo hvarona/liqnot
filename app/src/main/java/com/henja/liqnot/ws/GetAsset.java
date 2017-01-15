@@ -65,7 +65,7 @@ public class GetAsset implements ApiFunction {
                 if(symbol.equals("BTS")){
                     type="core";
                 }else if(LiqNotApp.SMARTCOINS.contains(symbol)){
-                    type="smatcoin";
+                    type="SMARTCOIN";
                 }
                 Asset asset = new Asset(id,symbol,precision,type);
                 SharedDataCentral.putAsset(asset);

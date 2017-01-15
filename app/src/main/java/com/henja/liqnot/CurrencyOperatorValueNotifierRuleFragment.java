@@ -184,22 +184,30 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                             });
                         }
                     });
-                    WebsocketWorkerThread wsthread = new WebsocketWorkerThread(apiCalls);
-                    wsthread.start();
+                    WebsocketWorkerThread wsthread = null;
+                    try {
+                        wsthread = new WebsocketWorkerThread(apiCalls,getContext());
+                        wsthread.start();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        //TODO no hay conexion
+                    }
+
                 }
             }
         };
 
-        ArrayList<String> baseCurrencyStringList = new ArrayList<String>();
+        /*ArrayList<String> baseCurrencyStringList = new ArrayList<String>();
         for(NotifierCurrency nc : NotifierCurrency.values()){
             if (nc == NotifierCurrency.UNKNOWN){
                 baseCurrencyStringList.add(getResources().getString(R.string.choose_base_currency));
             } else {
                 baseCurrencyStringList.add(nc.getName());
             }
-        }
+        }*/
 
-        ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
+        //ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
+        ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter(this.getContext(),R.layout.spinner_layout,SharedDataCentral.getAssesList());
         final Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
         baseCurrencySpinner.setAdapter(baseCurrencyAdapter);
         baseCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -229,7 +237,8 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             }
         }
 
-        ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
+        //ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
+        ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter(this.getContext(),R.layout.spinner_layout,SharedDataCentral.getSmartcoinAssesList());
         final Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
         quotedCurrencySpinner.setAdapter(quotedCurrencyAdapter);
         quotedCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
