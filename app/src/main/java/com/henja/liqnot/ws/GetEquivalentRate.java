@@ -82,9 +82,7 @@ public class GetEquivalentRate implements ApiFunction {
             getRateIndirect();
 
             synchronized (SYNC){
-                try {
-                    SYNC.wait(60000);
-                } catch (InterruptedException e) {                }
+                try {SYNC.wait(60000);} catch (InterruptedException ignored) {}
             }
         }
     }
@@ -112,8 +110,7 @@ public class GetEquivalentRate implements ApiFunction {
         return result;
     }
 
-    public void getRateIndirect(){
-        System.out.println("In indirect rate fo " + base.getSymbol() + " to " + quote.getSymbol());
+    private void getRateIndirect(){
         try {
             ApiCalls apiCalls = new ApiCalls();
             Asset core = SharedDataCentral.getCoreAsset();

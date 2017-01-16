@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 /**
+ *
  * Created by javier on 05/01/2017.
  */
 
@@ -24,20 +25,14 @@ public class NotifierMainViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (this.swipeByTouchEnabled) {
-            return super.onTouchEvent(event);
-        }
+        return this.swipeByTouchEnabled && super.onTouchEvent(event);
 
-        return false; //To prevent the swipe by touch
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if (this.swipeByTouchEnabled) {
-            return super.onInterceptTouchEvent(event);
-        }
+        return this.swipeByTouchEnabled && super.onInterceptTouchEvent(event);
 
-        return false; //To prevent the swipe by touch
     }
 
     public void setSwipeByTouchEnabled(boolean enabled) {

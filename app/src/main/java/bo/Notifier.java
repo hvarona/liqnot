@@ -46,8 +46,7 @@ public class Notifier extends BO{
 
         Notifier notifier = (Notifier) o;
 
-        if (!id.equals(notifier.id)) return false;
-        return rule != null ? rule.equals(notifier.rule) : notifier.rule == null;
+        return id.equals(notifier.id) && (rule != null ? rule.equals(notifier.rule) : notifier.rule == null);
 
     }
 
@@ -58,20 +57,20 @@ public class Notifier extends BO{
         return result;
     }
 
-    public boolean isActive() {
+    boolean isActive() {
         return isActive;
     }
 
-    public Date getLastNotifyDate() {
+    Date getLastNotifyDate() {
         return lastNotifyDate;
     }
 
-    public void setActive(){
+    void setActive(){
         isActive = true;
         lastNotifyDate = new Date();
     }
 
-    public void setInactive(){
+    void setInactive(){
         isActive = false;
     }
 

@@ -4,19 +4,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import bo.NotifierDirector;
-
 /**
+ *
  * Created by javier on 05/01/2017.
  */
 
-public class NotifierFragmentPagerAdapter extends FragmentPagerAdapter {
+class NotifierFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    private NotifierDirector notifierDirector;
-
-    public NotifierFragmentPagerAdapter(FragmentManager fragmentManager, NotifierDirector notifierDirector){
+    NotifierFragmentPagerAdapter(FragmentManager fragmentManager){
         super(fragmentManager);
-        this.notifierDirector = notifierDirector;
     }
 
     @Override

@@ -56,7 +56,6 @@ public class GetAccountBalances implements ApiFunction {
 
     @Override
     public void onResponse(JSONArray response) {
-        System.out.println("GetAccount Balance <<< "+response.toString());
         AccountBalance balance = SharedDataCentral.getAccountBalance(accountId);
         HashMap<String,Double> balances = new HashMap<>();
         for(int i = 0; i < response.length();i++) {

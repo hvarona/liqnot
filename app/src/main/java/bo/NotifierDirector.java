@@ -68,7 +68,6 @@ public class NotifierDirector {
         if(SharedDataCentral.getAssetsList().size()<=MINASSETSIZE){
             DAOAsset daoAsset = this.db.getAssetDAO();
             DAOEnumeration<DAO<Asset>, Asset> assets = daoAsset.getAsset(0,-1);
-            System.out.println("Assets count : " + assets.count());
             if(assets.count()<=MINASSETSIZE){
                 if(!processingAssets) {
                     processingAssets = true;
@@ -127,6 +126,9 @@ public class NotifierDirector {
 
         if (daoNotifier.removeNotifier(notifier)) {
             this.notifiers.remove(notifier);
+            NotificationManager NM = (NotificationManager)
+                    this.context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NM.cancel(notifier.hashCode());
             tellNotifierRemovedToListeners(notifier);
         } else {
             System.err.println("error deleting notifier");
@@ -187,7 +189,7 @@ public class NotifierDirector {
 
                 }
             });
-            WebsocketWorkerThread wsthread = null;
+            WebsocketWorkerThread wsthread;
             try {
                 wsthread = new WebsocketWorkerThread(apiCalls);
                 wsthread.start();

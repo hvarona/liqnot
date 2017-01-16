@@ -1,11 +1,9 @@
 package com.henja.liqnot;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,14 +12,13 @@ import bo.Notifier;
 import bo.NotifierDirector;
 
 /**
+ *
  * Created by javier on 06/01/2017.
  */
 
-public class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<NotifierListRecyclerViewAdapter.ViewHolder> implements NotifierDirector.NotifierDirectorListener{
+class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<NotifierListRecyclerViewAdapter.ViewHolder> implements NotifierDirector.NotifierDirectorListener{
 
     private int selectedPos = -1;
-    private int lastSelected = -1;
-    private NotifierDirector notifierDirector;
     private ArrayList<Notifier> itemsData;
     private ArrayList<NotifierListListener> listeners;
 
@@ -43,28 +40,27 @@ public class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         //
     }
 
-    public interface NotifierListListener {
-        public void OnSelectedItem(Notifier notifier);
+    interface NotifierListListener {
+        void OnSelectedItem(Notifier notifier);
     }
 
-    public void addListener(NotifierListListener listener){
+    void addListener(NotifierListListener listener){
         if (this.listeners.indexOf(listener) == -1) {
             this.listeners.add(listener);
         }
     }
 
-    public void notifyItemSelected(Notifier notifier){
+    private void notifyItemSelected(Notifier notifier){
         for(NotifierListListener listener : this.listeners){
             listener.OnSelectedItem(notifier);
         }
     }
 
-    public NotifierListRecyclerViewAdapter(NotifierDirector notifierDirector, ArrayList<Notifier> items) {
-        this.listeners = new ArrayList<NotifierListListener>();
-        this.notifierDirector = notifierDirector;
-        this.notifierDirector.addNotifierDirectorListener(this);
+    NotifierListRecyclerViewAdapter(NotifierDirector notifierDirector, ArrayList<Notifier> items) {
+        this.listeners = new ArrayList<>();
+        notifierDirector.addNotifierDirectorListener(this);
 
-        this.itemsData = new ArrayList<Notifier>();
+        this.itemsData = new ArrayList<>();
         for (Notifier item:items) {
             this.itemsData.add(item);
         }
@@ -76,13 +72,11 @@ public class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         View itemLayoutView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_notifier, null);
 
-        ViewHolder viewHolder = new ViewHolder(itemLayoutView);
-        return viewHolder;
+        return new ViewHolder(itemLayoutView);
     }
 
     @Override
     public void onBindViewHolder(NotifierListRecyclerViewAdapter.ViewHolder holder, int position) {
-        //holder.idText.setText(itemsData.get(position).getId());
         if (itemsData.get(position).getRule() != null) {
             holder.contentText.setText(itemsData.get(position).getRule().toHumanReadableString());
         } else {
@@ -98,22 +92,17 @@ public class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         holder.itemView.setSelected(selectedPos == position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView contentText;
 
-        //public TextView idText;
-        public TextView contentText;
-
-        public ViewHolder(View itemLayoutView) {
+        ViewHolder(View itemLayoutView) {
             super(itemLayoutView);
-            //idText = (TextView) itemLayoutView.findViewById(R.id.id_text);
             contentText = (TextView) itemLayoutView.findViewById(R.id.content_text);
 
             itemLayoutView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // Redraw the old selection and the new
                     notifyItemChanged(selectedPos);
-                    lastSelected = selectedPos;
                     selectedPos = getLayoutPosition();
                     notifyItemChanged(selectedPos);
                 }

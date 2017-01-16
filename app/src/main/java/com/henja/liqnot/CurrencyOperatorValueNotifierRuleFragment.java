@@ -44,7 +44,6 @@ import bo.SharedDataCentral;
  * create an instance of this fragment.
  */
 public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
-    private static final String NOTIFIER_DIRECTOR_KEY = "notifier_director_key";
     private NotifierDirector notifierDirector;
     private CurrencyOperatorValueNotifierRule rule;
     private OnCurrencyOperatorValueNotifierFragmentInteractionListener mListener;
@@ -156,7 +155,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                 final ProgressBar accountNameProgressBar = (ProgressBar) getView().findViewById(R.id.accountNameProgressBar);
                 accountNameProgressBar.setVisibility(View.VISIBLE);
 
-                if (account.getName() != "") {
+                if (account.getName().equals("")) {
                     lastAccountNameCall = account.getName();
                     ApiCalls apiCalls = new ApiCalls();
                     ApiFunction function = new GetAccountInfo(account.getName());
@@ -167,7 +166,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                         public void OnAllDataReceived() {
                             getActivity().runOnUiThread(new Runnable() {
                                 public void run() {
-                                    if (lastAccountNameCall == account.getName()) {
+                                    if (lastAccountNameCall.equals(account.getName())) {
                                         accountNameProgressBar.setVisibility(View.GONE);
 
                                         Account accountInfo = SharedDataCentral.getAccount(account.getName());
@@ -239,7 +238,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             baseCurrencyStringList = SharedDataCentral.getAssetsList();
         }
 
-        ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
+        ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter<>(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
         final Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
         baseCurrencySpinner.setAdapter(baseCurrencyAdapter);
         baseCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -262,13 +261,13 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
 
         ArrayList<String> quotedCurrencyStringList;
         if (SharedDataCentral.getAssetsCount() <= 0){
-            quotedCurrencyStringList = new ArrayList<String>();
+            quotedCurrencyStringList = new ArrayList<>();
             quotedCurrencyStringList.add("Loading...");
         } else {
             quotedCurrencyStringList = SharedDataCentral.getSmartcoinAssesList();
         }
 
-        ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
+        ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter<>(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
         final Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
         quotedCurrencySpinner.setAdapter(quotedCurrencyAdapter);
         quotedCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

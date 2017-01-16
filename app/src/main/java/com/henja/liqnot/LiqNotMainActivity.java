@@ -10,23 +10,17 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.henja.liqnot.app.LiqNotApp;
 import com.henja.liqnot.dummy.DummyContent;
 import com.henja.liqnot.service.LiqNotService;
 
 import bo.Notifier;
-import bo.NotifierDirector;
 
 public class LiqNotMainActivity extends AppCompatActivity implements NotifierListFragment.OnNotifierListFragmentInteractionListener, CurrencyOperatorValueNotifierRuleFragment.OnCurrencyOperatorValueNotifierFragmentInteractionListener {
-
-    private NotifierDirector notifierDirector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifier_main);
-        //The directorNotifier
-        this.notifierDirector = ((LiqNotApp)getApplication()).getNotifierDirector();
 
         Intent intent = new Intent(getApplicationContext(), LiqNotService.class);
         startService(intent);
@@ -40,7 +34,7 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
             }
         });
 
-        NotifierFragmentPagerAdapter fragmentPagerAdapter = new NotifierFragmentPagerAdapter(getSupportFragmentManager(), this.notifierDirector);
+        NotifierFragmentPagerAdapter fragmentPagerAdapter = new NotifierFragmentPagerAdapter(getSupportFragmentManager());
 
         ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
         notifierPager.setAdapter(fragmentPagerAdapter);
@@ -55,16 +49,6 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        //if (id == R.id.action_settings) {
-        //    return true;
-        //}
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -74,7 +58,7 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
     }
 
     @Override
-    public void OnNotifierListFragmentInteractionListener(DummyContent.DummyItem item) {
+    public void OnNotifierListFragmentInteraction(DummyContent.DummyItem item) {
         //
     }
 

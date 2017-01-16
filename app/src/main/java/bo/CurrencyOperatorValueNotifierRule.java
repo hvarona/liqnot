@@ -99,17 +99,20 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
             if(equivalentRate.isValid()) {
                 double baseBalancePrecise = balance.getAssetBalance(baseAsset.getId());
-                System.out.println("Balance to process " + baseBalancePrecise + " rate " + equivalentRate.getValue());
                 double quotedBalance = baseBalancePrecise * equivalentRate.getValue();
+
+                System.out.println("Evaluating account " + this.getAccount().getName() + " "
+                        + this.baseCurrency.getSymbol() + " " + baseBalancePrecise + " ("
+                        + quotedBalance+" " + this.quotedCurrency.getSymbol() +") "
+                        + this.operator.toString() + " " + this.value +" rate "
+                        + equivalentRate.getValue());
 
                 switch (this.operator) {
                     case LESS_THAN:
                         result = (quotedBalance < this.value);
                         break;
-                        //return result;
                     case BIGGER_THAN:
                         result = (quotedBalance > this.value);
-                        //return result;
                         break;
                 }
 
@@ -153,7 +156,6 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
     public String triggerText() {
         return this.account.getName()+"'s "+ this.baseCurrency.getSymbol()+ " "+
                 (this.operator == NotifierRuleOperator.LESS_THAN?"low ":"high ")+" ";
-                //+this.value+" "+this.quotedCurrency.getName();
     }
 
     @Override
@@ -188,11 +190,9 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
         CurrencyOperatorValueNotifierRule that = (CurrencyOperatorValueNotifierRule) o;
 
-        if (Double.compare(that.value, value) != 0) return false;
-        if (!account.equals(that.account)) return false;
-        if (baseCurrency != that.baseCurrency) return false;
-        if (quotedCurrency != that.quotedCurrency) return false;
-        return operator == that.operator;
+        return Double.compare(that.value, value) == 0 && account.equals(that.account)
+                && baseCurrency == that.baseCurrency && quotedCurrency == that.quotedCurrency
+                && operator == that.operator;
 
     }
 

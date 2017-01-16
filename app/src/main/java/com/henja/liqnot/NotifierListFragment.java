@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuItemImpl;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,26 +12,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.henja.liqnot.app.LiqNotApp;
-import com.henja.liqnot.dummy.DummyContent;
 import com.henja.liqnot.dummy.DummyContent.DummyItem;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import bo.Notifier;
 import bo.NotifierDirector;
-import dao.DAO;
-import dao.DAOEnumeration;
-import dao.DAOFactory;
-import dao.DAONotifier;
-import dao.sqlite.DAOFactorySQLite;
 
 /**
  * A fragment representing a list of Items.
@@ -42,10 +27,8 @@ import dao.sqlite.DAOFactorySQLite;
  */
 public class NotifierListFragment extends Fragment{
 
-    private static final String NOTIFIER_DIRECTOR_KEY = "notifier_director_key";
     private NotifierDirector notifierDirector;
     private Toolbar toolbar;
-    private OnNotifierListFragmentInteractionListener mListener;
     private Notifier selectedNotifier;
 
     /**
@@ -58,8 +41,7 @@ public class NotifierListFragment extends Fragment{
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static NotifierListFragment newInstance() {
-        NotifierListFragment fragment = new NotifierListFragment();
-        return fragment;
+        return new NotifierListFragment();
     }
 
     @Override
@@ -80,7 +62,7 @@ public class NotifierListFragment extends Fragment{
 
         RecyclerView listView = (RecyclerView) view.findViewById(R.id.notifier_list_view);
         // Set the adapter
-        if (listView instanceof RecyclerView) {
+        if (listView != null) {
             Context context = listView.getContext();
             listView.setLayoutManager(new LinearLayoutManager(context));
             NotifierListRecyclerViewAdapter adapter = new NotifierListRecyclerViewAdapter(this.notifierDirector,this.notifierDirector.getNotifiers());
@@ -115,9 +97,7 @@ public class NotifierListFragment extends Fragment{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnNotifierListFragmentInteractionListener) {
-            mListener = (OnNotifierListFragmentInteractionListener) context;
-        } else {
+        if (!(context instanceof OnNotifierListFragmentInteractionListener)) {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
@@ -126,7 +106,6 @@ public class NotifierListFragment extends Fragment{
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     /**
@@ -141,6 +120,6 @@ public class NotifierListFragment extends Fragment{
      */
     public interface OnNotifierListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void OnNotifierListFragmentInteractionListener(DummyItem item);
+        void OnNotifierListFragmentInteraction(DummyItem item);
     }
 }

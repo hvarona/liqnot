@@ -1,8 +1,5 @@
 package bo;
 
-import com.henja.liqnot.ws.ApiFunction;
-import com.henja.liqnot.ws.GetAccountInfo;
-
 /**
  * Account Bussiness Object, holds the name and the id of a BitShare Account
  *
@@ -49,10 +46,6 @@ public class Account extends BO {
         }
     }
 
-    public ApiFunction getUpdateFunction(){
-        return new GetAccountInfo(this.name);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,8 +53,7 @@ public class Account extends BO {
 
         Account account = (Account) o;
 
-        if (!name.equals(account.name)) return false;
-        return id != null ? id.equals(account.id) : account.id == null;
+        return name.equals(account.name) && (id != null ? id.equals(account.id) : account.id == null);
 
     }
 
