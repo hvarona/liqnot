@@ -101,20 +101,20 @@ public abstract class SharedDataCentral {
         accountsBalances.put(accountID,balance);
     }
 
-    public static ArrayList<String> getAssetsList(){
-        ArrayList<String> answer = new ArrayList<>();
+    public static ArrayList<Asset> getAssetsList(){
+        ArrayList<Asset> answer = new ArrayList<>();
         for(Asset asset : assets.values()){
-            answer.add(asset.getSymbol());
+            answer.add(asset);
         }
         Collections.sort(answer);
         return answer;
     }
 
-    public static ArrayList<String> getSmartcoinAssesList(){
-        ArrayList<String> answer = new ArrayList<>();
+    public static ArrayList<Asset> getSmartcoinAssesList(){
+        ArrayList<Asset> answer = new ArrayList<>();
         for(Asset asset : assets.values()){
-            if(asset.getType().equalsIgnoreCase("smartcoin")){
-                answer.add(asset.getSymbol());
+            if(asset.getType().equalsIgnoreCase("SMARTCOIN")){
+                answer.add(asset);
             }
         }
         Collections.sort(answer);
