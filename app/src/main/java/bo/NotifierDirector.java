@@ -35,7 +35,7 @@ public class NotifierDirector {
     private DAOFactorySQLite db;
     private boolean processingAssets = false;
 
-    private static final long NOTIFIES_TIMEOUT = 300000;//86400000;
+    private static final long NOTIFIES_TIMEOUT = 86400000;
     private static final int MINASSETSIZE = 1100;
 
     public NotifierDirector(Context context){
@@ -65,7 +65,7 @@ public class NotifierDirector {
     }
 
     private boolean checkAssetList(){
-        if(SharedDataCentral.getAssetsList().size()<=0){
+        if(SharedDataCentral.getAssetsList().size()<=MINASSETSIZE){
             DAOAsset daoAsset = this.db.getAssetDAO();
             DAOEnumeration<DAO<Asset>, Asset> assets = daoAsset.getAsset(0,-1);
             System.out.println("Assets count : " + assets.count());
@@ -164,39 +164,41 @@ public class NotifierDirector {
     }
 
     public void execute(){
-        if(checkAssetList()) {
-            ApiCalls apiCalls = new ApiCalls();
-            for (Notifier not : notifiers) {
-                NotifierRule notifierRule = not.getRule();
-                apiCalls.addFunctions(notifierRule.askData());
-            }
-            if (apiCalls.hasFunctions()) {
-                apiCalls.addListener(new ApiCalls.ApiCallsListener() {
-                    @Override
-                    public void OnAllDataReceived() {
-                        evaluateAllNotifiers();
-                    }
-
-                    @Override
-                    public void OnError(ApiFunction errorFunction) {
-
-                    }
-
-                    @Override
-                    public void OnConnectError() {
-
-                    }
-                });
-                WebsocketWorkerThread wsthread = null;
-                try {
-                    wsthread = new WebsocketWorkerThread(apiCalls);
-                    wsthread.start();
-                } catch (ConnectionException e) {
-                    e.printStackTrace();
-                    //TODO no hay conexion
-                }
-            }
+        checkAssetList();
+        ApiCalls apiCalls = new ApiCalls();
+        for (Notifier not : notifiers) {
+            NotifierRule notifierRule = not.getRule();
+            apiCalls.addFunctions(notifierRule.askData());
         }
+        if (apiCalls.hasFunctions()) {
+            apiCalls.addListener(new ApiCalls.ApiCallsListener() {
+                @Override
+                public void OnAllDataReceived() {
+                    evaluateAllNotifiers();
+                }
+
+                @Override
+                public void OnError(ApiFunction errorFunction) {
+
+                }
+
+                @Override
+                public void OnConnectError() {
+
+                }
+            });
+            WebsocketWorkerThread wsthread = null;
+            try {
+                wsthread = new WebsocketWorkerThread(apiCalls);
+                wsthread.start();
+            } catch (ConnectionException e) {
+                e.printStackTrace();
+                //TODO no hay conexion
+            }
+        }else{
+            evaluateAllNotifiers();
+        }
+
     }
 
     private void evaluateAllNotifiers(){
@@ -239,11 +241,11 @@ public class NotifierDirector {
     }
 
     public interface NotifierDirectorListener{
-        public void OnNewNotifier(Notifier notifier);
+        void OnNewNotifier(Notifier notifier);
 
-        public void OnNotifierRemoved(Notifier notifier);
+        void OnNotifierRemoved(Notifier notifier);
 
-        public void OnAssetsLoaded();
+        void OnAssetsLoaded();
     }
 
     public Context getContext() {

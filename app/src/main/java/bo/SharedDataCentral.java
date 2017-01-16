@@ -1,5 +1,7 @@
 package bo;
 
+import com.henja.liqnot.ws.GetAsset;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -125,6 +127,10 @@ public abstract class SharedDataCentral {
 
     public static Account getAccount(String accountName){
         return accounts.get(accountName);
+    }
+
+    public static Asset getCoreAsset(){
+        return getAssetBySymbol("BTS");
     }
 
 }

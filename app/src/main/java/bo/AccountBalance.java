@@ -31,7 +31,10 @@ public class AccountBalance implements SharedData {
     }
 
     Double getAssetBalance(String assetId){
-        return balances.get(assetId);
+        if(balances.containsKey(assetId)) {
+            return balances.get(assetId);
+        }
+        return 0.0;
     }
 
     @Override

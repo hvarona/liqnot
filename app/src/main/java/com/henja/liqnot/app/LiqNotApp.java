@@ -7,7 +7,9 @@ import com.henja.liqnot.ws.GetAssetList;
 import java.util.Arrays;
 import java.util.List;
 
+import bo.Asset;
 import bo.NotifierDirector;
+import bo.SharedDataCentral;
 
 /**
  * Created by javier on 10/01/2017.
@@ -39,6 +41,13 @@ public class LiqNotApp extends Application {
     public void onCreate() {
         super.onCreate();
         lastServerIndexResponse = 0;
+        SharedDataCentral.putAsset(new Asset("1.3.0","BTS",5,"core"));
+        SharedDataCentral.putAsset(new Asset("1.3.105","SILVER",4,"smartcoin"));
+        SharedDataCentral.putAsset(new Asset("1.3.120","EUR",4,"smartcoin"));
+        SharedDataCentral.putAsset(new Asset("1.3.121","USD",4,"smartcoin"));
+        SharedDataCentral.putAsset(new Asset("1.3.861","OPEN.BTC",8,"UIA"));
+        SharedDataCentral.putAsset(new Asset("1.3.113","CNY",4,"smartcoin"));
+        SharedDataCentral.putAsset(new Asset("1.3.562","OBITS",8,"UIA"));
         this.notifierDirector = new NotifierDirector(this.getApplicationContext());
     }
 

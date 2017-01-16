@@ -196,7 +196,10 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                                     }
                                 }
                             });
+                            searchForAccountInfoTimer.cancel();
+                            searchForAccountInfoTimer.start();
                         }
+
 
                         @Override
                         public void OnConnectError() {
@@ -205,6 +208,8 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                                     accountNameProgressBar.setVisibility(View.GONE);
                                 }
                             });
+                            searchForAccountInfoTimer.cancel();
+                            searchForAccountInfoTimer.start();
                         }
                     });
                     WebsocketWorkerThread wsthread = null;
@@ -213,21 +218,18 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                         wsthread.start();
                     } catch (Exception e) {
                         e.printStackTrace();
-                        //TODO no hay conexion
+                        getActivity().runOnUiThread(new Runnable() {
+                            public void run() {
+                                accountNameProgressBar.setVisibility(View.GONE);
+                            }
+                        });
+                        searchForAccountInfoTimer.cancel();
+                        searchForAccountInfoTimer.start();
                     }
 
                 }
             }
         };
-
-        /*ArrayList<String> baseCurrencyStringList = new ArrayList<String>();
-        for(NotifierCurrency nc : NotifierCurrency.values()){
-            if (nc == NotifierCurrency.UNKNOWN){
-                baseCurrencyStringList.add(getResources().getString(R.string.choose_base_currency));
-            } else {
-                baseCurrencyStringList.add(nc.getName());
-            }
-        }*/
 
         ArrayList<String> baseCurrencyStringList;
         if (SharedDataCentral.getAssetsCount() <= 0){
@@ -237,8 +239,6 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             baseCurrencyStringList = SharedDataCentral.getAssetsList();
         }
 
-
-        //ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
         ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
         final Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
         baseCurrencySpinner.setAdapter(baseCurrencyAdapter);
@@ -268,7 +268,6 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             quotedCurrencyStringList = SharedDataCentral.getSmartcoinAssesList();
         }
 
-        //ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter<String>(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
         ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
         final Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
         quotedCurrencySpinner.setAdapter(quotedCurrencyAdapter);
