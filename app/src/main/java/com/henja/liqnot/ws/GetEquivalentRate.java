@@ -22,6 +22,8 @@ public class GetEquivalentRate implements ApiFunction {
     private Asset base;
     private Asset quote;
 
+    private final Object SYNC = new Object();
+
     public GetEquivalentRate(Asset base, Asset quote) {
         this.base = base;
         this.quote = quote;
@@ -61,8 +63,9 @@ public class GetEquivalentRate implements ApiFunction {
                 JSONObject sellPriceObject =(JSONObject)eqObject.get("sell_price");
                 JSONObject baseObject =(JSONObject)sellPriceObject.get("base");
                 JSONObject quoteObject =(JSONObject)sellPriceObject.get("quote");
-                if(baseObject.get("asset_id").toString().equals(base.getId())){
+                if(baseObject.get("asset_id").toString().equals(quote.getId())){
                     double value = Double.parseDouble(quoteObject.get("amount").toString())/Double.parseDouble(baseObject.get("amount").toString());
+                    value = 1/value;
                     value = value * Math.pow(10,base.getPrecision()-quote.getPrecision());
                     AssetEquivalentRate eqRate = SharedDataCentral.getEquivalentRate(base.getSymbol(),quote.getSymbol());
                     eqRate.setValue(value);
@@ -71,6 +74,17 @@ public class GetEquivalentRate implements ApiFunction {
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+        }
+
+        if(!base.getType().equalsIgnoreCase("core") && !quote.getType().equalsIgnoreCase("core")){
+            System.out.println("Getting indirect rate");
+            getRateIndirect();
+
+            synchronized (SYNC){
+                try {
+                    SYNC.wait(60000);
+                } catch (InterruptedException e) {                }
             }
         }
     }
@@ -96,5 +110,90 @@ public class GetEquivalentRate implements ApiFunction {
         int result = base.hashCode();
         result = 31 * result + quote.hashCode();
         return result;
+    }
+
+    public void getRateIndirect(){
+        System.out.println("In indirect rate fo " + base.getSymbol() + " to " + quote.getSymbol());
+        try {
+            ApiCalls apiCalls = new ApiCalls();
+            Asset core = SharedDataCentral.getCoreAsset();
+            if (!core.isValid()) {
+                apiCalls.addFunction(core.getUpdateFunction());
+                apiCalls.addListener(new ApiCalls.ApiCallsListener() {
+                    @Override
+                    public void OnAllDataReceived() {
+                        getRateIndirect();
+                        synchronized (SYNC) {
+                            SYNC.notifyAll();
+                        }
+                    }
+
+                    @Override
+                    public void OnError(ApiFunction errorFunction) {
+                        synchronized (SYNC) {
+                            SYNC.notifyAll();
+                        }
+                    }
+
+                    @Override
+                    public void OnConnectError() {
+                        synchronized (SYNC) {
+                            SYNC.notifyAll();
+                        }
+                    }
+                });
+                WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
+                thread.start();
+            } else {
+                AssetEquivalentRate eqRateBase = SharedDataCentral.getEquivalentRate(base.getSymbol(),core.getSymbol());
+                if(!eqRateBase.isValid()){
+                    apiCalls.addFunction(eqRateBase.getUpdateFunction());
+                }
+                AssetEquivalentRate eqRateQuoted = SharedDataCentral.getEquivalentRate(core.getSymbol(),quote.getSymbol());
+                if(!eqRateQuoted.isValid()){
+                    apiCalls.addFunction(eqRateQuoted.getUpdateFunction());
+                }
+
+                if(apiCalls.hasFunctions()){
+                    apiCalls.addListener(new ApiCalls.ApiCallsListener() {
+                        @Override
+                        public void OnAllDataReceived() {
+                            getRateIndirect();
+                            synchronized (SYNC) {
+                                SYNC.notifyAll();
+                            }
+                        }
+
+                        @Override
+                        public void OnError(ApiFunction errorFunction) {
+                            synchronized (SYNC) {
+                                SYNC.notifyAll();
+                            }
+                        }
+
+                        @Override
+                        public void OnConnectError() {
+                            synchronized (SYNC) {
+                                SYNC.notifyAll();
+                            }
+                        }
+                    });
+                    WebsocketWorkerThread thread = new WebsocketWorkerThread(apiCalls);
+                    thread.start();
+                }else{
+                    AssetEquivalentRate eqRate = SharedDataCentral.getEquivalentRate(base.getSymbol(),quote.getSymbol());
+                    eqRate.setValue(eqRateBase.getValue()*eqRateQuoted.getValue());
+                    SharedDataCentral.putEquivalentsRate(eqRate);
+                    synchronized (SYNC) {
+                        SYNC.notifyAll();
+                    }
+                }
+            }
+        } catch (ConnectionException e) {
+            e.printStackTrace();
+            synchronized (SYNC) {
+                SYNC.notifyAll();
+            }
+        }
     }
 }

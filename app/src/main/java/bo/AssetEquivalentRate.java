@@ -51,7 +51,7 @@ public class AssetEquivalentRate implements SharedData {
         return new GetEquivalentRate(baseCurrency, quotedCurrency);
     }
 
-    double getValue() {
+    public double getValue() {
         return value;
     }
 
