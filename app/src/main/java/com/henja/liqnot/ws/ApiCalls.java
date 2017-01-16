@@ -60,6 +60,7 @@ public class ApiCalls extends WebSocketAdapter {
 
     @Override
     public void onTextFrame(WebSocket websocket, WebSocketFrame frame) throws Exception {
+        System.out.println("recieved : " + frame.getPayloadText());
         JSONObject incoming = new JSONObject(frame.getPayloadText());
         int index = incoming.getInt("id");
         try {
@@ -100,6 +101,7 @@ public class ApiCalls extends WebSocketAdapter {
     @Override
     public void onError(WebSocket websocket, WebSocketException cause) throws Exception {
         super.onError(websocket, cause);
+        System.out.println("APICALLS Error");
     }
 
     @Override

@@ -16,7 +16,7 @@ import com.henja.liqnot.service.LiqNotService;
 import bo.Notifier;
 
 public class LiqNotMainActivity extends AppCompatActivity implements NotifierListFragment.OnNotifierListFragmentInteractionListener, CurrencyOperatorValueNotifierRuleFragment.OnCurrencyOperatorValueNotifierFragmentInteractionListener {
-
+    FloatingActionButton newNotifierButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +26,7 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
         startService(intent);
 
 
-        FloatingActionButton newNotifierButton = (FloatingActionButton) findViewById(R.id.newNotifierButton);
+        newNotifierButton = (FloatingActionButton) findViewById(R.id.newNotifierButton);
         newNotifierButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,6 +55,12 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
     public void onNewNotifierAction(){
         ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
         notifierPager.setCurrentItem(1);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                newNotifierButton.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -67,6 +73,12 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
     {
         ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
         notifierPager.setCurrentItem(0);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                newNotifierButton.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     @Override

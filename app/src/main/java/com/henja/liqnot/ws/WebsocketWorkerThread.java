@@ -33,6 +33,7 @@ public class WebsocketWorkerThread extends Thread {
 
     @Override
     public void run() {
+        System.out.println("Connecting");
         android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
         try {
             mWebSocket.connect();

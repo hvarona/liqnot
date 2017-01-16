@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,6 +22,7 @@ import android.widget.Spinner;
 import com.henja.liqnot.app.LiqNotApp;
 import com.henja.liqnot.ws.ApiCalls;
 import com.henja.liqnot.ws.ApiFunction;
+import com.henja.liqnot.ws.ConnectionException;
 import com.henja.liqnot.ws.GetAccountInfo;
 import com.henja.liqnot.ws.WebsocketWorkerThread;
 
@@ -152,10 +154,15 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
 
             @Override
             public void onFinish() {
+                try{
                 final ProgressBar accountNameProgressBar = (ProgressBar) getView().findViewById(R.id.accountNameProgressBar);
-                accountNameProgressBar.setVisibility(View.VISIBLE);
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        accountNameProgressBar.setVisibility(View.VISIBLE);
+                    }
+                });
 
-                if (account.getName().equals("")) {
+                if (!account.getName().equals("")) {
                     lastAccountNameCall = account.getName();
                     ApiCalls apiCalls = new ApiCalls();
                     ApiFunction function = new GetAccountInfo(account.getName());
@@ -202,6 +209,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
 
                         @Override
                         public void OnConnectError() {
+                            System.out.println("account " + account.getName() + " connection error");
                             getActivity().runOnUiThread(new Runnable() {
                                 public void run() {
                                     accountNameProgressBar.setVisibility(View.GONE);
@@ -211,11 +219,13 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                             searchForAccountInfoTimer.start();
                         }
                     });
-                    WebsocketWorkerThread wsthread = null;
+                    System.out.println("Preparing the websocketthread");
+                    WebsocketWorkerThread wsthread;
                     try {
                         wsthread = new WebsocketWorkerThread(apiCalls);
                         wsthread.start();
-                    } catch (Exception e) {
+                    } catch (ConnectionException e) {
+                        System.out.println("account" + account.getName() + " connection error");
                         e.printStackTrace();
                         getActivity().runOnUiThread(new Runnable() {
                             public void run() {
@@ -225,7 +235,10 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                         searchForAccountInfoTimer.cancel();
                         searchForAccountInfoTimer.start();
                     }
+                }
 
+                }catch(Exception e){
+                    e.printStackTrace();
                 }
             }
         };
@@ -405,6 +418,14 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             cleanFragment();
             this.mListener.onNotifierCreated(newNotifier);
             this.notifierDirector.addNotifier(newNotifier);
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    FloatingActionButton viewById = (FloatingActionButton) getActivity().findViewById(R.id.newNotifierButton);
+                    viewById.setVisibility(View.VISIBLE);
+                }
+            });
+
         }
     }
 
