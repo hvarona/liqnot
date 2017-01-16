@@ -150,7 +150,7 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
     @Override
     public String triggerText() {
-        return this.account.getName()+"'s "+ this.baseCurrency.getName()+ " "+
+        return this.account.getName()+"'s "+ this.baseCurrency.getSymbol()+ " "+
                 (this.operator == NotifierRuleOperator.LESS_THAN?"low ":"high ")+" ";
                 //+this.value+" "+this.quotedCurrency.getName();
     }

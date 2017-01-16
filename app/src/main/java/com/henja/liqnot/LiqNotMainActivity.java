@@ -79,6 +79,13 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
     }
 
     @Override
+    public void onBackPressed()
+    {
+        ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
+        notifierPager.setCurrentItem(0);
+    }
+
+    @Override
     public void OnCurrencyOperatorValueNotifierFragmentInteractionListener(Uri uri) {
         //
     }
