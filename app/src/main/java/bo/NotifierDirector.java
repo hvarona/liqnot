@@ -217,6 +217,7 @@ public class NotifierDirector {
                         not.setActive();
                         notificationBuilder.setContentText(not.getRule().triggerText());
                         Notification notification = notificationBuilder.build();
+                        notification.defaults |= Notification.DEFAULT_SOUND;
                         NM.notify(not.hashCode(), notification);
                         //TODO TRIGGER ALARM OR NOTIFICATION TO THE USER!!!
                     }
