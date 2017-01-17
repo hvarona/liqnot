@@ -1,5 +1,6 @@
 package com.henja.liqnot;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,6 +98,12 @@ class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<NotifierListR
         }*/
 
         holder.itemView.setSelected(selectedPos == position);
+        if (selectedPos == position) {
+
+            holder.contentText.setBackgroundColor(0x99009999);
+        }else{
+            holder.contentText.setBackgroundColor(Color.LTGRAY);
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
