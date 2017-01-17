@@ -1,7 +1,9 @@
 package com.henja.liqnot.app;
 
 import android.app.Application;
+import android.content.Intent;
 
+import com.henja.liqnot.service.LiqNotService;
 import com.henja.liqnot.ws.GetAssetList;
 
 import java.util.Arrays;
@@ -49,6 +51,10 @@ public class LiqNotApp extends Application {
         SharedDataCentral.putAsset(new Asset("1.3.113","CNY",4,"SMARTCOIN"));
         SharedDataCentral.putAsset(new Asset("1.3.562","OBITS",8,"UIA"));
         this.notifierDirector = new NotifierDirector(this.getApplicationContext());
+
+        Intent intent = new Intent(getApplicationContext(), LiqNotService.class);
+        startService(intent);
+
     }
 
     public NotifierDirector getNotifierDirector(){

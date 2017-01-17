@@ -125,6 +125,8 @@ public class NotifierDirector {
         DAONotifier daoNotifier = this.db.getNotifierDAO();
 
         if (daoNotifier.modifyNotifier(notifier)) {
+            notifier.resolvePending();
+
             tellNotifierModifiedToListeners(notifier);
         } else {
             System.err.println("error modifying notifier");

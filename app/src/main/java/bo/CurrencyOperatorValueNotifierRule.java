@@ -200,6 +200,18 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
     }
 
     @Override
+    public NotifierRule clone() {
+        CurrencyOperatorValueNotifierRule clonedRule = new CurrencyOperatorValueNotifierRule();
+        clonedRule.setAccount(this.account);
+        clonedRule.setBaseCurrency(this.baseCurrency);
+        clonedRule.setQuotedCurrency(this.quotedCurrency);
+        clonedRule.setOperator(this.operator);
+        clonedRule.setValue(this.value);
+
+        return clonedRule;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

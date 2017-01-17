@@ -34,8 +34,8 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifier_main);
 
-        Intent intent = new Intent(getApplicationContext(), LiqNotService.class);
-        startService(intent);
+        //Intent intent = new Intent(getApplicationContext(), LiqNotService.class);
+        //startService(intent);
 
         NotifierFragmentPagerAdapter fragmentPagerAdapter = new NotifierFragmentPagerAdapter(getSupportFragmentManager());
 

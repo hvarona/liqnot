@@ -23,4 +23,6 @@ public abstract class NotifierRule {
     public abstract String triggerText();
 
     public abstract ArrayList<ApiFunction> askData();
+
+    public abstract NotifierRule clone();
 }

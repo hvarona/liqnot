@@ -65,7 +65,7 @@ public class DAONotifierSQLite extends SQLiteOpenHelper implements DAONotifier, 
             String[] whereArgs = new String[] { notifier.getId() };
 
             ContentValues newNotifier = new ContentValues();
-            newNotifier.put(NotifierTable.RULE, notifier.getRule().toJson());
+            newNotifier.put(NotifierTable.RULE, notifier.getPendingRule().toJson());
 
             return db.update(NotifierTable.TABLE_NAME, newNotifier, NotifierTable.ID+"=?", whereArgs) > 0;
         }catch(Exception e){

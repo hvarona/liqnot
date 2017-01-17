@@ -393,7 +393,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         notifierToModify = ((LiqNotMainActivity)getActivity()).getNotifierToModify();
 
         if (notifierToModify != null){
-                this.rule = (CurrencyOperatorValueNotifierRule) notifierToModify.getRule();
+                this.rule = (CurrencyOperatorValueNotifierRule) notifierToModify.getRule().clone();
                 EditText accountNameEditText = (EditText) v.findViewById(R.id.account_name_edit_text);
                 Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
                 Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
@@ -441,10 +441,6 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         this.account = null;
         this.lastAccountNameCall = null;
         this.lastApiFunctionCall = null;
-        this.rule = new CurrencyOperatorValueNotifierRule();
-        this.account = null;
-        this.lastAccountNameCall = null;
-        this.lastApiFunctionCall = null;
         this.notifierToModify = null;
 
         EditText accountNameEditText = (EditText) v.findViewById(R.id.account_name_edit_text);
@@ -470,7 +466,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             } else {
                 newNotifier = new Notifier("");
             }
-            newNotifier.setRule(this.rule);
+            newNotifier.setPendingRule(this.rule);
 
             if (notifierToModify != null) {
                 this.mListener.onNotifierModified(newNotifier);

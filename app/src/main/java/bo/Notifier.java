@@ -12,6 +12,7 @@ public class Notifier extends BO{
 
     private String id;
     private NotifierRule rule;
+    private NotifierRule pendingRule;
     private boolean isActive = false;
     private Date lastNotifyDate;
 
@@ -31,8 +32,16 @@ public class Notifier extends BO{
         return this.rule;
     }
 
+    public NotifierRule getPendingRule(){
+        return this.pendingRule;
+    }
+
     public void setRule(NotifierRule rule){
         this.rule = rule;
+    }
+
+    public void setPendingRule(NotifierRule rule){
+        this.pendingRule = rule;
     }
 
     public void setRuleJson(String json){
@@ -72,6 +81,10 @@ public class Notifier extends BO{
 
     void setInactive(){
         isActive = false;
+    }
+
+    void resolvePending(){
+        this.rule = this.pendingRule;
     }
 
 }
