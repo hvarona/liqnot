@@ -17,4 +17,5 @@
         app:layoutManager="LinearLayoutManager"
         tools:context="com.henja.liqnot.NotifierListFragment"
         tools:listitem="@layout/fragment_notifier" />
+
 </RelativeLayout>

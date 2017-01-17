@@ -9,7 +9,7 @@ import com.henja.liqnot.ws.GetAsset;
  * Created by henry on 09/01/2017.
  */
 
-public class Asset extends BO implements SharedData{
+public class Asset extends BO implements SharedData,Comparable{
 
     private String id;
     private String symbol;
@@ -42,6 +42,13 @@ public class Asset extends BO implements SharedData{
         return symbol;
     }
 
+    public String toString() {
+        if(this.getType().equals("SMARTCOIN")){
+            return "bit"+this.symbol;
+        }
+        return symbol;
+    }
+
     public int getPrecision() {
         return precision;
     }
@@ -58,5 +65,10 @@ public class Asset extends BO implements SharedData{
     @Override
     public ApiFunction getUpdateFunction() {
         return new GetAsset(this.symbol);
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.toString().compareTo(o.toString());
     }
 }

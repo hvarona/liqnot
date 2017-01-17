@@ -18,7 +18,7 @@
             android:theme="?attr/actionBarTheme"
             android:minHeight="?attr/actionBarSize"
             android:id="@+id/notifier_list_toolbar"
-            app:title="Notifiers List" />
+            app:title="Alert List" />
 
         <com.henja.liqnot.NotifierMainViewPager
             android:layout_width="match_parent"

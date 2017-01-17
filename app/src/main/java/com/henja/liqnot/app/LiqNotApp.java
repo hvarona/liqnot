@@ -42,11 +42,11 @@ public class LiqNotApp extends Application {
         super.onCreate();
         lastServerIndexResponse = 0;
         SharedDataCentral.putAsset(new Asset("1.3.0","BTS",5,"core"));
-        SharedDataCentral.putAsset(new Asset("1.3.105","SILVER",4,"smartcoin"));
-        SharedDataCentral.putAsset(new Asset("1.3.120","EUR",4,"smartcoin"));
-        SharedDataCentral.putAsset(new Asset("1.3.121","USD",4,"smartcoin"));
+        SharedDataCentral.putAsset(new Asset("1.3.105","SILVER",4,"SMARTCOIN"));
+        SharedDataCentral.putAsset(new Asset("1.3.120","EUR",4,"SMARTCOIN"));
+        SharedDataCentral.putAsset(new Asset("1.3.121","USD",4,"SMARTCOIN"));
         SharedDataCentral.putAsset(new Asset("1.3.861","OPEN.BTC",8,"UIA"));
-        SharedDataCentral.putAsset(new Asset("1.3.113","CNY",4,"smartcoin"));
+        SharedDataCentral.putAsset(new Asset("1.3.113","CNY",4,"SMARTCOIN"));
         SharedDataCentral.putAsset(new Asset("1.3.562","OBITS",8,"UIA"));
         this.notifierDirector = new NotifierDirector(this.getApplicationContext());
     }

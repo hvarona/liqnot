@@ -102,8 +102,8 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
                 double quotedBalance = baseBalancePrecise * equivalentRate.getValue();
 
                 System.out.println("Evaluating account " + this.getAccount().getName() + " "
-                        + this.baseCurrency.getSymbol() + " " + baseBalancePrecise + " ("
-                        + quotedBalance+" " + this.quotedCurrency.getSymbol() +") "
+                        + this.baseCurrency.toString() + " " + baseBalancePrecise + " ("
+                        + quotedBalance+" " + this.quotedCurrency.toString() +") "
                         + this.operator.toString() + " " + this.value +" rate "
                         + equivalentRate.getValue());
 
@@ -154,7 +154,7 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
 
     @Override
     public String triggerText() {
-        return this.account.getName()+"'s "+ this.baseCurrency.getSymbol()+ " "+
+        return this.account.getName()+"'s "+ this.baseCurrency.toString()+ " "+
                 (this.operator == NotifierRuleOperator.LESS_THAN?"low ":"high ")+" ";
     }
 

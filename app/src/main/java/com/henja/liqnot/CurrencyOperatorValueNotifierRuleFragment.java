@@ -99,10 +99,10 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                         final Spinner baseCurrencySpinner = (Spinner) getView().findViewById(R.id.base_currency_recycler_view);
                         final Spinner quotedCurrencySpinner = (Spinner) getView().findViewById(R.id.quoted_currency_recycler_view);
 
-                        ArrayAdapter<String> baseCurrencyAdapter = (ArrayAdapter) baseCurrencySpinner.getAdapter();
+                        ArrayAdapter<Asset> baseCurrencyAdapter = (ArrayAdapter) baseCurrencySpinner.getAdapter();
                         baseCurrencyAdapter.clear();
                         baseCurrencyAdapter.addAll(SharedDataCentral.getAssetsList());
-                        ArrayAdapter<String> quotedCurrencyAdapter = (ArrayAdapter) quotedCurrencySpinner.getAdapter();
+                        ArrayAdapter<Asset> quotedCurrencyAdapter = (ArrayAdapter) quotedCurrencySpinner.getAdapter();
                         quotedCurrencyAdapter.clear();
                         quotedCurrencyAdapter.addAll(SharedDataCentral.getSmartcoinAssesList());
                     }
@@ -243,22 +243,17 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             }
         };
 
-        ArrayList<String> baseCurrencyStringList;
-        if (SharedDataCentral.getAssetsCount() <= 0){
-            baseCurrencyStringList = new ArrayList<String>();
-            baseCurrencyStringList.add("Loading...");
-        } else {
+        ArrayList<Asset> baseCurrencyStringList;
             baseCurrencyStringList = SharedDataCentral.getAssetsList();
-        }
 
-        ArrayAdapter<String> baseCurrencyAdapter = new ArrayAdapter<>(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
+        ArrayAdapter<Asset> baseCurrencyAdapter = new ArrayAdapter<>(this.getContext(),R.layout.spinner_layout,baseCurrencyStringList);
         final Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
         baseCurrencySpinner.setAdapter(baseCurrencyAdapter);
         baseCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    Asset baseCurrency = SharedDataCentral.getAssetBySymbol(baseCurrencySpinner.getSelectedItem().toString());
+                    Asset baseCurrency = (Asset) baseCurrencySpinner.getSelectedItem();
                     rule.setBaseCurrency(baseCurrency);
                 } catch(IllegalArgumentException e){
                     rule.setBaseCurrency(null);
@@ -272,22 +267,18 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             }
         });
 
-        ArrayList<String> quotedCurrencyStringList;
-        if (SharedDataCentral.getAssetsCount() <= 0){
-            quotedCurrencyStringList = new ArrayList<>();
-            quotedCurrencyStringList.add("Loading...");
-        } else {
-            quotedCurrencyStringList = SharedDataCentral.getSmartcoinAssesList();
-        }
+        ArrayList<Asset> quotedCurrencyStringList;
+        quotedCurrencyStringList = SharedDataCentral.getSmartcoinAssesList();
 
-        ArrayAdapter<String> quotedCurrencyAdapter = new ArrayAdapter<>(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
+        ArrayAdapter<Asset> quotedCurrencyAdapter = new ArrayAdapter<>(this.getContext(),R.layout.spinner_layout,quotedCurrencyStringList);
         final Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
         quotedCurrencySpinner.setAdapter(quotedCurrencyAdapter);
         quotedCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    Asset quotedCurrency = SharedDataCentral.getAssetBySymbol(quotedCurrencySpinner.getSelectedItem().toString());
+                    //Asset quotedCurrency = SharedDataCentral.getAssetBySymbol(quotedCurrencySpinner.getSelectedItem().toString());
+                    Asset quotedCurrency = (Asset) quotedCurrencySpinner.getSelectedItem();
                     rule.setQuotedCurrency(quotedCurrency);
                 } catch(IllegalArgumentException e){
                     rule.setQuotedCurrency(null);
