@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -18,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.henja.liqnot.app.LiqNotApp;
 import com.henja.liqnot.ws.ApiCalls;
@@ -102,15 +104,20 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        final Spinner baseCurrencySpinner = (Spinner) getView().findViewById(R.id.base_currency_recycler_view);
-                        final Spinner quotedCurrencySpinner = (Spinner) getView().findViewById(R.id.quoted_currency_recycler_view);
+                        try {
+                            final Spinner baseCurrencySpinner = (Spinner) getView().findViewById(R.id.base_currency_recycler_view);
+                            final Spinner quotedCurrencySpinner = (Spinner) getView().findViewById(R.id.quoted_currency_recycler_view);
 
-                        ArrayAdapter<Asset> baseCurrencyAdapter = (ArrayAdapter) baseCurrencySpinner.getAdapter();
-                        baseCurrencyAdapter.clear();
-                        baseCurrencyAdapter.addAll(SharedDataCentral.getAssetsList());
-                        ArrayAdapter<Asset> quotedCurrencyAdapter = (ArrayAdapter) quotedCurrencySpinner.getAdapter();
-                        quotedCurrencyAdapter.clear();
-                        quotedCurrencyAdapter.addAll(SharedDataCentral.getSmartcoinAssesList());
+                            ArrayAdapter<Asset> baseCurrencyAdapter = (ArrayAdapter) baseCurrencySpinner.getAdapter();
+                            baseCurrencyAdapter.clear();
+                            baseCurrencyAdapter.addAll(SharedDataCentral.getAssetsList());
+                            ArrayAdapter<Asset> quotedCurrencyAdapter = (ArrayAdapter) quotedCurrencySpinner.getAdapter();
+                            quotedCurrencyAdapter.clear();
+                            quotedCurrencyAdapter.addAll(SharedDataCentral.getSmartcoinAssesList());
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+
                     }
                 });
             }
@@ -360,40 +367,51 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         });
 
 
-        loadNotifier();
+        //loadNotifier(v);
 
         return v;
     }
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
         if ((isVisibleToUser) && (getView() != null)){
-            loadNotifier();
+          //  loadNotifier(getView());
         }
     }
 
-    public void loadNotifier(){
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        loadNotifier(getView());
+    }
+
+
+    public void loadNotifier(View v){
         notifierToModify = ((LiqNotMainActivity)getActivity()).getNotifierToModify();
 
         if (notifierToModify != null){
-            View v = getView();
-            this.rule = (CurrencyOperatorValueNotifierRule) notifierToModify.getRule();
-            EditText accountNameEditText = (EditText) v.findViewById(R.id.account_name_edit_text);
-            Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
-            Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
-            Spinner operatorSpinner = (Spinner) v.findViewById(R.id.operator_spinner);
-            EditText valueEditText = (EditText) v.findViewById(R.id.value_edit_text);
+                this.rule = (CurrencyOperatorValueNotifierRule) notifierToModify.getRule();
+                EditText accountNameEditText = (EditText) v.findViewById(R.id.account_name_edit_text);
+                Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
+                Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
+                Spinner operatorSpinner = (Spinner) v.findViewById(R.id.operator_spinner);
+                EditText valueEditText = (EditText) v.findViewById(R.id.value_edit_text);
 
-            accountNameEditText.setText(this.rule.getAccount().getName());
-            baseCurrencySpinner.setSelection(
-                    ((ArrayAdapter<Asset>)baseCurrencySpinner.getAdapter()).getPosition(this.rule.getBaseCurrency()));
-            quotedCurrencySpinner.setSelection(
-                    ((ArrayAdapter<Asset>)quotedCurrencySpinner.getAdapter()).getPosition(this.rule.getQuotedCurrency()));
-            operatorSpinner.setSelection(
-                    ((ArrayAdapter<CharSequence>)operatorSpinner.getAdapter()).getPosition(this.rule.getOperator().toString()));
-            valueEditText.setText(""+this.rule.getValue());
+                accountNameEditText.setText(this.rule.getAccount().getName());
+                baseCurrencySpinner.setSelection(
+                        ((ArrayAdapter<Asset>) baseCurrencySpinner.getAdapter()).getPosition(this.rule.getBaseCurrency()));
+                quotedCurrencySpinner.setSelection(
+                        ((ArrayAdapter<Asset>) quotedCurrencySpinner.getAdapter()).getPosition(this.rule.getQuotedCurrency()));
+                operatorSpinner.setSelection(
+                        ((ArrayAdapter<CharSequence>) operatorSpinner.getAdapter()).getPosition(this.rule.getOperator().toString()));
+                valueEditText.setText("" + this.rule.getValue());
+                TextView title = (TextView) v.findViewById(R.id.fragmentCurrencyOperatorValueNotifierTitle);
+                title.setText("Edit Alert");
+                Button button = (Button) v.findViewById(R.id.button_ok);
+                button.setText("Modify Alert");
         }
     }
 
@@ -410,7 +428,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         if (context instanceof OnCurrencyOperatorValueNotifierFragmentInteractionListener) {
             mListener = (OnCurrencyOperatorValueNotifierFragmentInteractionListener) context;
 
-            loadNotifier();
+//            loadNotifier(getView());
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -493,12 +511,16 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
     }
 
     public void checkRule(){
-        Button okButton = (Button) getView().findViewById(R.id.button_ok);
+        try {
+            Button okButton = (Button) getView().findViewById(R.id.button_ok);
 
-        if (rule.isValid()){
-            okButton.setEnabled(true);
-        } else {
-            okButton.setEnabled(false);
+            if (rule.isValid()) {
+                okButton.setEnabled(true);
+            } else {
+                okButton.setEnabled(false);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 }

@@ -99,13 +99,17 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
 
     public void loadNotifierCreationFragment(){
         ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
+        ((NotifierFragmentPagerAdapter)notifierPager.getAdapter()).notifyChangeInPosition(1);
+        notifierPager.getAdapter().notifyDataSetChanged();
         notifierPager.setCurrentItem(1);
         toolbar.setVisibility(View.GONE);
     }
 
     public void loadNotifierListFragment(){
+
         ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
         notifierPager.setCurrentItem(0);
         toolbar.setVisibility(View.VISIBLE);
+
     }
 }

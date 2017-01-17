@@ -85,11 +85,12 @@ class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<NotifierListR
 
     @Override
     public void onBindViewHolder(NotifierListRecyclerViewAdapter.ViewHolder holder, int position) {
-        if (itemsData.get(position).getRule() != null) {
-            holder.contentText.setText(itemsData.get(position).getRule().toHumanReadableString());
-        } else {
-            holder.contentText.setText("ERROR - EMPTY RULE");
-        }
+        try {
+            if (itemsData.get(position).getRule() != null) {
+                holder.contentText.setText(itemsData.get(position).getRule().toHumanReadableString());
+            } else {
+                holder.contentText.setText("ERROR - EMPTY RULE");
+            }
 
         /*if (!holder.itemView.isSelected()) {
             if (selectedPos == position) {
@@ -97,13 +98,15 @@ class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<NotifierListR
             }
         }*/
 
-        holder.itemView.setSelected(selectedPos == position);
-        if (selectedPos == position) {
+            holder.itemView.setSelected(selectedPos == position);
+            if (selectedPos == position) {
 
-            holder.contentText.setBackgroundColor(0x99009999);
-        }else{
-            holder.contentText.setBackgroundColor(Color.LTGRAY);
-        }
+                holder.contentText.setBackgroundColor(0x99009999);
+            } else {
+                holder.contentText.setBackgroundColor(Color.LTGRAY);
+            }
+        }catch(Exception e)
+        {e.printStackTrace();}
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

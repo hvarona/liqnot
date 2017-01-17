@@ -3,6 +3,7 @@ package com.henja.liqnot;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
@@ -13,7 +14,8 @@ import android.view.ViewGroup;
 
 class NotifierFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+    SparseArray<Fragment> registeredFragments = new SparseArray<>();
+    private long baseId = 0;
 
     NotifierFragmentPagerAdapter(FragmentManager fragmentManager){
         super(fragmentManager);
@@ -32,8 +34,19 @@ class NotifierFragmentPagerAdapter extends FragmentPagerAdapter {
     }
 
     @Override
+    public int getItemPosition(Object object) {
+        if( object.getClass().equals(CurrencyOperatorValueNotifierRuleFragment.class))return POSITION_NONE;
+        return super.getItemPosition(object);
+    }
+
+    @Override
     public int getCount() {
         return 2;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return baseId+position;
     }
 
     @Override
@@ -49,7 +62,7 @@ class NotifierFragmentPagerAdapter extends FragmentPagerAdapter {
         super.destroyItem(container, position, object);
     }
 
-    public Fragment getRegisteredFragment(int position) {
-        return registeredFragments.get(position);
+    public void notifyChangeInPosition(int n) {
+        baseId += 2 + n;
     }
 }
