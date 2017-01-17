@@ -19,9 +19,14 @@ import bo.Notifier;
 public class LiqNotMainActivity extends AppCompatActivity implements NotifierListFragment.OnNotifierListFragmentInteractionListener, CurrencyOperatorValueNotifierRuleFragment.OnCurrencyOperatorValueNotifierFragmentInteractionListener {
     FloatingActionButton newNotifierButton;
     Toolbar toolbar;
+    Notifier notifierToModify;
 
     public Toolbar getToolbar(){
         return this.toolbar;
+    }
+
+    public Notifier getNotifierToModify(){
+        return notifierToModify;
     }
 
     @Override
@@ -57,6 +62,12 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
     }
 
     public void onNewNotifierAction(){
+        this.notifierToModify = null;
+        loadNotifierCreationFragment();
+    }
+
+    public void onModifyNotifierAction(Notifier notifier){
+        this.notifierToModify = notifier;
         loadNotifierCreationFragment();
     }
 
@@ -78,6 +89,11 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
 
     @Override
     public void onNotifierCreated(Notifier notifier) {
+        loadNotifierListFragment();
+    }
+
+    @Override
+    public void onNotifierModified(Notifier notifier) {
         loadNotifierListFragment();
     }
 

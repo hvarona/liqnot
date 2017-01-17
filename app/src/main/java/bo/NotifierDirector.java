@@ -121,6 +121,17 @@ public class NotifierDirector {
         }
     }
 
+    public void modifyNotifier(Notifier notifier){
+        DAONotifier daoNotifier = this.db.getNotifierDAO();
+
+        if (daoNotifier.modifyNotifier(notifier)) {
+            tellNotifierModifiedToListeners(notifier);
+        } else {
+            System.err.println("error modifying notifier");
+            //TODO should throw an error
+        }
+    }
+
     public void removeNotifier(Notifier notifier){
         DAONotifier daoNotifier = this.db.getNotifierDAO();
 
@@ -145,6 +156,12 @@ public class NotifierDirector {
     private void tellNewNotifierToListeners(Notifier notifier){
         for (NotifierDirectorListener listener: this.listeners){
             listener.OnNewNotifier(notifier);
+        }
+    }
+
+    private void tellNotifierModifiedToListeners(Notifier notifier){
+        for (NotifierDirectorListener listener: this.listeners){
+            listener.OnNotifierModified(notifier);
         }
     }
 
@@ -245,6 +262,8 @@ public class NotifierDirector {
 
     public interface NotifierDirectorListener{
         void OnNewNotifier(Notifier notifier);
+
+        void OnNotifierModified(Notifier notifier);
 
         void OnNotifierRemoved(Notifier notifier);
 

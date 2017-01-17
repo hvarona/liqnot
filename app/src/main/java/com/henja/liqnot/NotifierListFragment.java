@@ -40,12 +40,18 @@ public class NotifierListFragment extends Fragment{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (selectedNotifier != null) {
-            notifierDirector.removeNotifier(selectedNotifier);
-            item.setVisible(false);
-            return true;
+        if (item.getItemId() == R.id.delete_item) {
+            if (selectedNotifier != null) {
+                notifierDirector.removeNotifier(selectedNotifier);
+                item.setVisible(false);
+                return true;
+            }
+        } else if (item.getItemId() == R.id.modify_item) {
+            if (selectedNotifier != null) {
+                ((LiqNotMainActivity)getActivity()).onModifyNotifierAction(selectedNotifier);
+                return true;
+            }
         }
-
         return false;
     }
 
@@ -82,30 +88,19 @@ public class NotifierListFragment extends Fragment{
                 @Override
                 public void OnSelectedItem(Notifier notifier) {
                     MenuItemImpl deleteButton = (MenuItemImpl) toolbar.getMenu().findItem(R.id.delete_item);
+                    MenuItemImpl modifiyButton = (MenuItemImpl) toolbar.getMenu().findItem(R.id.modify_item);
 
                     if (notifier != null) {
                         selectedNotifier = notifier;
                         deleteButton.setVisible(true);
+                        modifiyButton.setVisible(true);
                     } else {
                         deleteButton.setVisible(false);
+                        modifiyButton.setVisible(false);
                     }
                 }
             });
             listView.setAdapter(adapter);
-
-            /*toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId() == R.id.delete_item) {
-                        if (selectedNotifier != null) {
-                            notifierDirector.removeNotifier(selectedNotifier);
-                            item.setVisible(false);
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            });*/
         }
         return view;
     }

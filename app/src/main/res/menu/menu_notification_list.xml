@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.henja.liqnot.LiqNotMainActivity">
     <item
+        android:id="@+id/modify_item"
+        android:orderInCategory="100"
+        android:title="Modifiy Alert"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:visible="false"
+        app:showAsAction="ifRoom"></item>
+    <item
         android:id="@+id/delete_item"
         android:orderInCategory="200"
         android:title="Delete Alert"

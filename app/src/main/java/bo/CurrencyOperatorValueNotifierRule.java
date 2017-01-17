@@ -69,6 +69,22 @@ public class CurrencyOperatorValueNotifierRule extends NotifierRule {
         return account;
     }
 
+    public Asset getBaseCurrency() {
+        return baseCurrency;
+    }
+
+    public Asset getQuotedCurrency() {
+        return quotedCurrency;
+    }
+
+    public NotifierRuleOperator getOperator() {
+        return operator;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
     public void setBaseCurrency(Asset asset){
         this.baseCurrency = asset;
     }

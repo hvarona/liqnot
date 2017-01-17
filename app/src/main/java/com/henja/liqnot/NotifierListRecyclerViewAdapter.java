@@ -29,6 +29,12 @@ class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<NotifierListR
     }
 
     @Override
+    public void OnNotifierModified(Notifier notifier) {
+        int position = this.itemsData.indexOf(notifier);
+        this.notifyItemChanged(position);
+    }
+
+    @Override
     public void OnNotifierRemoved(Notifier notifier) {
         int position = this.itemsData.indexOf(notifier);
         this.itemsData.remove(notifier);

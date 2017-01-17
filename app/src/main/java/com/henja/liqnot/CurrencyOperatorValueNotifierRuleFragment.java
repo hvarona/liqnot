@@ -53,6 +53,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
     private Account account;
     private String lastAccountNameCall;
     private ApiFunction lastApiFunctionCall;
+    private Notifier notifierToModify;
 
     public CurrencyOperatorValueNotifierRuleFragment() {
         // Required empty public constructor
@@ -84,6 +85,11 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             @Override
             public void OnNewNotifier(Notifier notifier) {
                 //
+            }
+
+            @Override
+            public void OnNotifierModified(Notifier notifier) {
+
             }
 
             @Override
@@ -144,7 +150,6 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
 
             }
         });
-
 
         //Creation of the timer for searching the user info inserted by the user
         this.searchForAccountInfoTimer = new CountDownTimer(1000,1000) {
@@ -355,7 +360,41 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         });
 
 
+        loadNotifier();
+
         return v;
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if ((isVisibleToUser) && (getView() != null)){
+            loadNotifier();
+        }
+    }
+
+    public void loadNotifier(){
+        notifierToModify = ((LiqNotMainActivity)getActivity()).getNotifierToModify();
+
+        if (notifierToModify != null){
+            View v = getView();
+            this.rule = (CurrencyOperatorValueNotifierRule) notifierToModify.getRule();
+            EditText accountNameEditText = (EditText) v.findViewById(R.id.account_name_edit_text);
+            Spinner baseCurrencySpinner = (Spinner) v.findViewById(R.id.base_currency_recycler_view);
+            Spinner quotedCurrencySpinner = (Spinner) v.findViewById(R.id.quoted_currency_recycler_view);
+            Spinner operatorSpinner = (Spinner) v.findViewById(R.id.operator_spinner);
+            EditText valueEditText = (EditText) v.findViewById(R.id.value_edit_text);
+
+            accountNameEditText.setText(this.rule.getAccount().getName());
+            baseCurrencySpinner.setSelection(
+                    ((ArrayAdapter<Asset>)baseCurrencySpinner.getAdapter()).getPosition(this.rule.getBaseCurrency()));
+            quotedCurrencySpinner.setSelection(
+                    ((ArrayAdapter<Asset>)quotedCurrencySpinner.getAdapter()).getPosition(this.rule.getQuotedCurrency()));
+            operatorSpinner.setSelection(
+                    ((ArrayAdapter<CharSequence>)operatorSpinner.getAdapter()).getPosition(this.rule.getOperator().toString()));
+            valueEditText.setText(""+this.rule.getValue());
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -370,6 +409,8 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnCurrencyOperatorValueNotifierFragmentInteractionListener) {
             mListener = (OnCurrencyOperatorValueNotifierFragmentInteractionListener) context;
+
+            loadNotifier();
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -386,6 +427,7 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         this.account = null;
         this.lastAccountNameCall = null;
         this.lastApiFunctionCall = null;
+        this.notifierToModify = null;
 
         EditText accountNameEditText = (EditText) v.findViewById(R.id.account_name_edit_text);
         accountNameEditText.setText("");
@@ -404,11 +446,23 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
 
     public void createNotifier(){
         if (this.rule.isValid()){
-            Notifier newNotifier = new Notifier("");
+            Notifier newNotifier;
+            if (notifierToModify != null){
+                newNotifier = notifierToModify;
+            } else {
+                newNotifier = new Notifier("");
+            }
             newNotifier.setRule(this.rule);
+
+            if (notifierToModify != null) {
+                this.mListener.onNotifierModified(newNotifier);
+                this.notifierDirector.modifyNotifier(newNotifier);
+            } else {
+                this.mListener.onNotifierCreated(newNotifier);
+                this.notifierDirector.addNotifier(newNotifier);
+            }
+
             cleanFragment();
-            this.mListener.onNotifierCreated(newNotifier);
-            this.notifierDirector.addNotifier(newNotifier);
         }
     }
 
@@ -434,6 +488,8 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
         void OnCurrencyOperatorValueNotifierFragmentInteractionListener(Uri uri);
 
         public void onNotifierCreated(Notifier notifier);
+
+        public void onNotifierModified(Notifier notifier);
     }
 
     public void checkRule(){
