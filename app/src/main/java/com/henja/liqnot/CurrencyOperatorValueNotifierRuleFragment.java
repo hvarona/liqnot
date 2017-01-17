@@ -418,14 +418,6 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             cleanFragment();
             this.mListener.onNotifierCreated(newNotifier);
             this.notifierDirector.addNotifier(newNotifier);
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    FloatingActionButton viewById = (FloatingActionButton) getActivity().findViewById(R.id.newNotifierButton);
-                    viewById.setVisibility(View.VISIBLE);
-                }
-            });
-
         }
     }
 

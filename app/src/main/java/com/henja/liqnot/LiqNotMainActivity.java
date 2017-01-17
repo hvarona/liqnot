@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,12 @@ import bo.Notifier;
 
 public class LiqNotMainActivity extends AppCompatActivity implements NotifierListFragment.OnNotifierListFragmentInteractionListener, CurrencyOperatorValueNotifierRuleFragment.OnCurrencyOperatorValueNotifierFragmentInteractionListener {
     FloatingActionButton newNotifierButton;
+    Toolbar toolbar;
+
+    public Toolbar getToolbar(){
+        return this.toolbar;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,19 +32,12 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
         Intent intent = new Intent(getApplicationContext(), LiqNotService.class);
         startService(intent);
 
-
-        newNotifierButton = (FloatingActionButton) findViewById(R.id.newNotifierButton);
-        newNotifierButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onNewNotifierAction();
-            }
-        });
-
         NotifierFragmentPagerAdapter fragmentPagerAdapter = new NotifierFragmentPagerAdapter(getSupportFragmentManager());
 
         ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
         notifierPager.setAdapter(fragmentPagerAdapter);
+        toolbar = (Toolbar) findViewById(R.id.notifier_list_toolbar);
+        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -49,18 +49,15 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.add_item) {
+            onNewNotifierAction();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
     public void onNewNotifierAction(){
-        ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
-        notifierPager.setCurrentItem(1);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                newNotifierButton.setVisibility(View.GONE);
-            }
-        });
+        loadNotifierCreationFragment();
     }
 
     @Override
@@ -71,14 +68,7 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
     @Override
     public void onBackPressed()
     {
-        ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
-        notifierPager.setCurrentItem(0);
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                newNotifierButton.setVisibility(View.VISIBLE);
-            }
-        });
+        loadNotifierListFragment();
     }
 
     @Override
@@ -88,7 +78,18 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
 
     @Override
     public void onNotifierCreated(Notifier notifier) {
+        loadNotifierListFragment();
+    }
+
+    public void loadNotifierCreationFragment(){
+        ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
+        notifierPager.setCurrentItem(1);
+        toolbar.setVisibility(View.GONE);
+    }
+
+    public void loadNotifierListFragment(){
         ViewPager notifierPager = (ViewPager) findViewById(R.id.NotifierViewPager);
         notifierPager.setCurrentItem(0);
+        toolbar.setVisibility(View.VISIBLE);
     }
 }

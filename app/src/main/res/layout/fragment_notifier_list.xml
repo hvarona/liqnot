@@ -5,39 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
+    <android.support.v7.widget.RecyclerView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/notifier_list_view"
+        android:name="com.henja.liqnot.NotifierListFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#ff33b5e5"
-        android:theme="?attr/actionBarTheme"
-        android:minHeight="?attr/actionBarSize"
-        android:id="@+id/notifier_list_toolbar"
-        app:title="Notifiers List" />
-
-    <!--<TextView
-        android:text="Notifiers List"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="#ffffff"
-        android:background="#ff33b5e5"
-        android:id="@+id/fragmentNotifierListTitle"
-        android:layout_below="@+id/notifier_list_toolbar"
-        android:textStyle="normal|bold"
-        android:padding="5sp"
-        android:textSize="24sp" />-->
-
-
-<android.support.v7.widget.RecyclerView
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/notifier_list_view"
-    android:name="com.henja.liqnot.NotifierListFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_below="@+id/notifier_list_toolbar"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="com.henja.liqnot.NotifierListFragment"
-    tools:listitem="@layout/fragment_notifier" />
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.henja.liqnot.NotifierListFragment"
+        tools:listitem="@layout/fragment_notifier" />
 </RelativeLayout>

@@ -38,6 +38,17 @@ public class NotifierListFragment extends Fragment{
     public NotifierListFragment() {
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (selectedNotifier != null) {
+            notifierDirector.removeNotifier(selectedNotifier);
+            item.setVisible(false);
+            return true;
+        }
+
+        return false;
+    }
+
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static NotifierListFragment newInstance() {
@@ -53,10 +64,11 @@ public class NotifierListFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifier_list, container, false);
-
-        toolbar = (Toolbar) view.findViewById(R.id.notifier_list_toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-
+        setHasOptionsMenu(true);
+        //toolbar = (Toolbar) view.findViewById(R.id.notifier_list_toolbar);
+        //((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        //toolbar = (Toolbar)(getActivity().findViewById(R.id.notifier_list_toolbar));
+        toolbar = ((LiqNotMainActivity)getActivity()).getToolbar();
         this.notifierDirector = ((LiqNotApp)getActivity().getApplication()).getNotifierDirector();
 
 
@@ -69,14 +81,19 @@ public class NotifierListFragment extends Fragment{
             adapter.addListener(new NotifierListRecyclerViewAdapter.NotifierListListener() {
                 @Override
                 public void OnSelectedItem(Notifier notifier) {
-                    selectedNotifier = notifier;
                     MenuItemImpl deleteButton = (MenuItemImpl) toolbar.getMenu().findItem(R.id.delete_item);
-                    deleteButton.setVisible(true);
+
+                    if (notifier != null) {
+                        selectedNotifier = notifier;
+                        deleteButton.setVisible(true);
+                    } else {
+                        deleteButton.setVisible(false);
+                    }
                 }
             });
             listView.setAdapter(adapter);
 
-            toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            /*toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     if (item.getItemId() == R.id.delete_item) {
@@ -88,7 +105,7 @@ public class NotifierListFragment extends Fragment{
                     }
                     return false;
                 }
-            });
+            });*/
         }
         return view;
     }

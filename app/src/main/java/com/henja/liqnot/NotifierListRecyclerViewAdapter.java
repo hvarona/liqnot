@@ -33,6 +33,7 @@ class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<NotifierListR
         int position = this.itemsData.indexOf(notifier);
         this.itemsData.remove(notifier);
         this.notifyItemRemoved(position);
+        this.selectedPos = -1;
     }
 
     @Override
@@ -83,11 +84,11 @@ class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<NotifierListR
             holder.contentText.setText("ERROR - EMPTY RULE");
         }
 
-        if (!holder.itemView.isSelected()) {
+        /*if (!holder.itemView.isSelected()) {
             if (selectedPos == position) {
                 notifyItemSelected(itemsData.get(position));
             }
-        }
+        }*/
 
         holder.itemView.setSelected(selectedPos == position);
     }
@@ -103,7 +104,14 @@ class NotifierListRecyclerViewAdapter extends RecyclerView.Adapter<NotifierListR
                 @Override
                 public void onClick(View v) {
                     notifyItemChanged(selectedPos);
-                    selectedPos = getLayoutPosition();
+
+                    if (selectedPos == getLayoutPosition()){
+                        selectedPos = -1;
+                        notifyItemSelected(null);
+                    } else {
+                        selectedPos = getLayoutPosition();
+                        notifyItemSelected(itemsData.get(selectedPos));
+                    }
                     notifyItemChanged(selectedPos);
                 }
             });

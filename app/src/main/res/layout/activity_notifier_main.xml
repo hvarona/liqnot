@@ -7,28 +7,31 @@
     android:fitsSystemWindows="true"
     tools:context="com.henja.liqnot.LiqNotMainActivity">
 
-    <com.henja.liqnot.NotifierMainViewPager
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/NotifierViewPager">
+        android:layout_height="match_parent">
 
-        <android.support.v4.view.PagerTitleStrip
+        <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:id="@+id/NotiferViewPagerTitleStrip" />
+            android:background="#ff33b5e5"
+            android:theme="?attr/actionBarTheme"
+            android:minHeight="?attr/actionBarSize"
+            android:id="@+id/notifier_list_toolbar"
+            app:title="Notifiers List" />
 
-    </com.henja.liqnot.NotifierMainViewPager>
+        <com.henja.liqnot.NotifierMainViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/NotifierViewPager"
+            android:layout_below="@+id/notifier_list_toolbar">
 
+            <android.support.v4.view.PagerTitleStrip
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:id="@+id/NotiferViewPagerTitleStrip" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/newNotifierButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_input_add" />
-
-
-
+        </com.henja.liqnot.NotifierMainViewPager>
+    </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

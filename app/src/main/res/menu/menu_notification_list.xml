@@ -5,8 +5,14 @@
     <item
         android:id="@+id/delete_item"
         android:orderInCategory="200"
-        android:title="Search"
+        android:title="Delete Alert"
         android:icon="@android:drawable/ic_menu_delete"
         app:showAsAction="ifRoom"
         android:visible="false"></item>
+    <item
+        android:id="@+id/add_item"
+        android:orderInCategory="300"
+        android:title="Add Alert"
+        android:icon="@android:drawable/ic_input_add"
+        app:showAsAction="ifRoom"></item>
 </menu>
