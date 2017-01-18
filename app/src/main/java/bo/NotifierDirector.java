@@ -3,6 +3,7 @@ package bo;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.NotificationCompat;
 
 import com.henja.liqnot.R;
@@ -228,6 +229,7 @@ public class NotifierDirector {
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this.context);
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
         notificationBuilder.setContentTitle("LiqNot Notification");
 
         for(Notifier not : notifiers){

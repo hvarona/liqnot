@@ -62,7 +62,7 @@ public class Notifier extends BO{
     @Override
     public int hashCode() {
         int result = id.hashCode();
-        result = 31 * result + (rule != null ? rule.hashCode() : 0);
+        result = 31 * result;
         return result;
     }
 
