@@ -463,10 +463,12 @@ public class CurrencyOperatorValueNotifierRuleFragment extends Fragment {
             Notifier newNotifier;
             if (notifierToModify != null){
                 newNotifier = notifierToModify;
+                newNotifier.setPendingRule(this.rule);
             } else {
                 newNotifier = new Notifier("");
+                newNotifier.setRule(this.rule);
             }
-            newNotifier.setPendingRule(this.rule);
+
 
             if (notifierToModify != null) {
                 this.mListener.onNotifierModified(newNotifier);
