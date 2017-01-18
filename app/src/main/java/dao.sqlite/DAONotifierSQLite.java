@@ -21,13 +21,14 @@ import dao.DAONotifier;
 public class DAONotifierSQLite extends SQLiteOpenHelper implements DAONotifier, DAOSQLite<Notifier> {
 
     public DAONotifierSQLite(Context context){
-        super(context, "liqnotnotifier.db", null, 1);
+        super(context, "liqnotnotifier.db", null, 2);
     }
 
     public static abstract class NotifierTable implements BaseColumns {
         public static final String TABLE_NAME ="notifier";
         public static final String ID = "id";
         public static final String RULE = "rule";
+        public static final String LAST_NOTIFICATION = "last_notification";
     }
 
     @Override
@@ -40,7 +41,11 @@ public class DAONotifierSQLite extends SQLiteOpenHelper implements DAONotifier, 
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //
+        if (oldVersion < 2){
+            db.execSQL("ALTER TABLE " + NotifierTable.TABLE_NAME + " "
+                + " ADD " + NotifierTable.LAST_NOTIFICATION + " INTEGER "
+            );
+        }
     }
 
     public boolean insertNotifier(Notifier notifier){
