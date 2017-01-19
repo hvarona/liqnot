@@ -14,7 +14,7 @@ public class Notifier extends BO{
     private NotifierRule rule;
     private NotifierRule pendingRule;
     private boolean isActive = false;
-    private Date lastNotifyDate;
+    private Date lastNotifyDate = new Date();
 
     public Notifier(String id){
         if (id.equals("")) {
@@ -66,12 +66,20 @@ public class Notifier extends BO{
         return result;
     }
 
-    boolean isActive() {
+    public boolean isActive() {
         return isActive;
     }
 
-    Date getLastNotifyDate() {
+    public Date getLastNotifyDate() {
         return lastNotifyDate;
+    }
+
+    public void setLastNotifyDate(Date lastNotifyDate) {
+        this.lastNotifyDate = lastNotifyDate;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     void setActive(){
