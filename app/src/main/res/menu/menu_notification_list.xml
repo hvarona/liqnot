@@ -16,10 +16,4 @@
         android:icon="@android:drawable/ic_menu_delete"
         app:showAsAction="ifRoom"
         android:visible="false"></item>
-    <item
-        android:id="@+id/add_item"
-        android:orderInCategory="300"
-        android:title="Add Alert"
-        android:icon="@android:drawable/ic_input_add"
-        app:showAsAction="ifRoom"></item>
 </menu>
