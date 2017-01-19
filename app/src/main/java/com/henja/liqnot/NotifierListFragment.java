@@ -2,6 +2,7 @@ package com.henja.liqnot;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuItemImpl;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -71,9 +73,15 @@ public class NotifierListFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifier_list, container, false);
         setHasOptionsMenu(true);
-        //toolbar = (Toolbar) view.findViewById(R.id.notifier_list_toolbar);
-        //((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        //toolbar = (Toolbar)(getActivity().findViewById(R.id.notifier_list_toolbar));
+
+        FloatingActionButton addNotifierButton = (FloatingActionButton) view.findViewById(R.id.add_notifier_floating_button);
+        addNotifierButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((LiqNotMainActivity)getActivity()).onNewNotifierAction();
+            }
+        });
+
         toolbar = ((LiqNotMainActivity)getActivity()).getToolbar();
         this.notifierDirector = ((LiqNotApp)getActivity().getApplication()).getNotifierDirector();
 

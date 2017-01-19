@@ -54,9 +54,9 @@ public class LiqNotMainActivity extends AppCompatActivity implements NotifierLis
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.add_item) {
-            onNewNotifierAction();
-        }
+        //if (item.getItemId() == R.id.add_item) {
+        //    onNewNotifierAction();
+       // }
 
         return super.onOptionsItemSelected(item);
     }
