@@ -238,6 +238,7 @@ public class NotifierDirector {
                     if(!not.isActive()
                             || (System.currentTimeMillis() - not.getLastNotifyDate().getTime()) >= NOTIFIES_TIMEOUT) {
                         not.setActive();
+                        this.db.getNotifierDAO().modifyNotifier(not);
                         notificationBuilder.setContentText(not.getRule().triggerText());
                         Notification notification = notificationBuilder.build();
                         notification.defaults |= Notification.DEFAULT_SOUND;
@@ -247,6 +248,7 @@ public class NotifierDirector {
 
                 }else{
                     not.setInactive();
+                    this.db.getNotifierDAO().modifyNotifier(not);
                     NM.cancel(not.hashCode());
                     //TODO Notificitation stop
                 }
